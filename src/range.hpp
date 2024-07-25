@@ -30,6 +30,9 @@ private:
         inline operator T() const noexcept { return _i; }
     };
 public:
+    // number type
+    typedef T num_t;
+    // iterator type
     typedef _iter iter;
     // constructor for number of elements, iterates range [0,n)
     // for increment, 0 to n-1, for decrement, n-1 to 0
@@ -37,22 +40,24 @@ public:
     // iterates range starting at start, ending 1 before stop
     // for increment, start to stop-1, for decrement, start to stop+1
     inline constexpr _step1range(T start, T stop) noexcept: _start(start), _stop(stop) {}
+    // iterator to start number
     inline constexpr _iter begin() const noexcept { return _iter(_start); }
+    // iterator to 1 past last number
     inline constexpr _iter end() const noexcept { return _iter(_stop); }
 };
 
 // increment range
 template <typename T = std::size_t>
-using irange = _step1range<true,T>;
+using IncRange = _step1range<true,T>;
 
 // decrement range
 template <typename T = std::size_t>
-using drange = _step1range<false,T>;
+using DecRange = _step1range<false,T>;
 
 // general range (increment only)
 // TODO support negative step size
 template <typename T = std::size_t>
-class range
+class Range
 {
 private:
     T _start, _stop, _step;
@@ -74,18 +79,23 @@ private:
         inline operator T() const noexcept { return _i; }
     };
 public:
+    // number type
+    typedef T num_t;
+    // iterator type
     typedef _iter iter;
     // increment from 0 to n-1
-    inline constexpr range(T n = 0) noexcept: _start(0), _stop(n), _step(1) {}
+    inline constexpr Range(T n = 0) noexcept: _start(0), _stop(n), _step(1) {}
     // increment from start to stop-1
-    inline constexpr range(T start, T stop) noexcept: _start(start), _stop(stop), _step(1) {}
+    inline constexpr Range(T start, T stop) noexcept: _start(start), _stop(stop), _step(1) {}
     // range with step size (undefined behavior if step <= 0 or stop < start)
-    inline range(T start, T stop, T step) noexcept: _start(start), _step(step)
+    inline Range(T start, T stop, T step) noexcept: _start(start), _step(step)
     {
         T m = (stop-start) % step;
         _stop = m == 0 ? stop : stop + step - m;
     }
+    // iterator to start number
     inline constexpr _iter begin() const noexcept { return _iter(_start,_step); }
+    // iterator 1 past last number
     inline constexpr _iter end() const noexcept { return _iter(_stop,_step); }
 };
 

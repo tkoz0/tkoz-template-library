@@ -50,6 +50,12 @@ int main()
         bool pp = primes.find(p++) != primes.end();
         assert(b == pp);
     }
+    p = 0;
+    for (auto bi = b2.begin(); bi != b2.end(); ++bi)
+    {
+        bool pp = primes.find(p++) != primes.end();
+        assert(*bi == pp);
+    }
     // copy ctor
     BitArray b4(b2);
     for (size_t i = 0; i < N; ++i)
