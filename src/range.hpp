@@ -1,7 +1,13 @@
 /*
 Range similar to in python3
 */
+
+#pragma once
 #include <cstddef>
+#ifdef DEBUG_PRINT
+#include <iostream>
+#include "../test/test_common.hpp"
+#endif
 
 namespace tkoz
 {
@@ -54,8 +60,10 @@ using IncRange = _step1range<true,T>;
 template <typename T = std::size_t>
 using DecRange = _step1range<false,T>;
 
-// general range (increment only)
-// TODO support negative step size
+// general range
+// if step size is 1 (or -1), should use IncRange (or DecRange) instead
+// to have negative step size, a signed type must be used
+// if the range involves overflow or underflow, then the result is undefined
 template <typename T = std::size_t>
 class Range
 {
@@ -90,8 +98,18 @@ public:
     // range with step size (undefined behavior if step <= 0 or stop < start)
     inline Range(T start, T stop, T step) noexcept: _start(start), _step(step)
     {
+#ifdef DEBUG_PRINT
+        std::cout << "tkoz::Range(" << debug_int(start) << "," << debug_int(stop) << "," << debug_int(step) << ")" << std::endl;
+#endif
         T m = (stop-start) % step;
+#ifdef DEBUG_PRINT
+        std::cout << "tkoz::Range temp m = (" << debug_int(stop) << "-" << debug_int(start) << ")%" << debug_int(step)
+            << "=" << debug_int(stop-start) << "%" << debug_int(step) << "=" << debug_int(m) << std::endl;
+#endif
         _stop = m == 0 ? stop : stop + step - m;
+#ifdef DEBUG_PRINT
+        std::cout << "tkoz::Range{_start=" << debug_int(_start) << ",_stop=" << debug_int(_stop) << ",step=" << debug_int(_step) << "}" << std::endl;
+#endif
     }
     // iterator to start number
     inline constexpr _iter begin() const noexcept { return _iter(_start,_step); }
