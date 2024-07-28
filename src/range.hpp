@@ -52,18 +52,18 @@ public:
     inline constexpr _iter end() const noexcept { return _iter(_stop); }
 };
 
-// increment range
+// increment range (allows overflow)
 template <typename T = std::size_t>
 using IncRange = _step1range<true,T>;
 
-// decrement range
+// decrement range (allows underflow)
 template <typename T = std::size_t>
 using DecRange = _step1range<false,T>;
 
 // general range
 // if step size is 1 (or -1), should use IncRange (or DecRange) instead
 // to have negative step size, a signed type must be used
-// if the range involves overflow or underflow, then the result is undefined
+// behavior is undefined if step size is 0
 template <typename T = std::size_t>
 class Range
 {
@@ -94,8 +94,12 @@ public:
     // increment from 0 to n-1
     inline constexpr Range(T n = 0) noexcept: _start(0), _stop(n), _step(1) {}
     // increment from start to stop-1
-    inline constexpr Range(T start, T stop) noexcept: _start(start), _stop(stop), _step(1) {}
-    // range with step size (undefined behavior if step <= 0 or stop < start)
+    // if stop <= start, range is empty
+    inline constexpr Range(T start, T stop) noexcept: _start(start), _stop(stop < start ? start : stop), _step(1) {}
+    // range with step size
+    // for positive step, range is empty when stop <= start
+    // for negative step, range is empty when stop >= start
+    // undefined behavior if step is 0
     inline Range(T start, T stop, T step) noexcept: _start(start), _step(step)
     {
 #ifdef DEBUG_PRINT
@@ -106,7 +110,10 @@ public:
         std::cout << "tkoz::Range temp m = (" << debug_int(stop) << "-" << debug_int(start) << ")%" << debug_int(step)
             << "=" << debug_int(stop-start) << "%" << debug_int(step) << "=" << debug_int(m) << std::endl;
 #endif
-        _stop = m == 0 ? stop : stop + step - m;
+        if ((step > 0 && stop <= start) || (step < 0 && stop >= start))
+            _stop = start;
+        else
+            _stop = m == 0 ? stop : stop + step - m;
 #ifdef DEBUG_PRINT
         std::cout << "tkoz::Range{_start=" << debug_int(_start) << ",_stop=" << debug_int(_stop) << ",step=" << debug_int(_step) << "}" << std::endl;
 #endif

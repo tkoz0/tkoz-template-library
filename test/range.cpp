@@ -28,6 +28,8 @@ void check_range(TKOZ_RANGE r, std::initializer_list<typename TKOZ_RANGE::num_t>
         v.push_back(i);
         assert(v.size() < 1000); // if it gets too big, expect there is an issue
     }
+    if (v.empty())
+        assert(r.begin() == r.end());
 #ifdef DEBUG_PRINT
     cout << "calculated:";
     for (auto i : v)
@@ -42,9 +44,36 @@ int main()
     check_range(Range<std::size_t>(5),{0,1,2,3,4});
     check_range(Range<std::size_t>(5,10),{5,6,7,8,9});
     check_range(Range<std::size_t>(),{});
+    check_range(Range<std::size_t>(0),{});
     check_range(Range<std::size_t>(11,99,11),{11,22,33,44,55,66,77,88});
     check_range(Range<std::size_t>(11,100,11),{11,22,33,44,55,66,77,88,99});
     check_range(Range<std::size_t>(25,25,6),{});
+    check_range(Range<size_t>(25,26),{25});
+    check_range(Range<size_t>(25,25),{});
+    check_range(Range<size_t>(25,24),{});
+    check_range(Range<size_t>(40,50,3),{40,43,46,49});
+    check_range(Range<size_t>(40,49,3),{40,43,46});
+    check_range(Range<size_t>(40,40,3),{});
+    check_range(Range<size_t>(40,39,3),{});
+    check_range(Range<size_t>(40,10,3),{});
+    check_range(Range<int64_t>(),{});
+    check_range(Range<int64_t>(7),{0,1,2,3,4,5,6});
+    check_range(Range<int64_t>(4,9),{4,5,6,7,8});
+    check_range(Range<int64_t>(4,18,5),{4,9,14});
+    check_range(Range<int64_t>(4,19,5),{4,9,14});
+    check_range(Range<int64_t>(4,20,5),{4,9,14,19});
+    check_range(Range<int64_t>(4,-8,-3),{4,1,-2,-5});
+    check_range(Range<int64_t>(4,-9,-3),{4,1,-2,-5,-8});
+    check_range(Range<int64_t>(4,1,-3),{4});
+    check_range(Range<int64_t>(4,2,-3),{4});
+    check_range(Range<int64_t>(4,3,-3),{4});
+    check_range(Range<int64_t>(4,4,-3),{});
+    check_range(Range<int64_t>(4,5,-3),{});
+    check_range(Range<int64_t>(-12,-11,-6),{});
+    check_range(Range<int64_t>(-12,-12,-6),{});
+    check_range(Range<int64_t>(-12,-13,-6),{-12});
+    check_range(Range<int64_t>(-12,-24,-6),{-12,-18});
+    check_range(Range<int64_t>(-12,-25,-6),{-12,-18,-24});
     check_range(IncRange<std::size_t>(),{});
     check_range(IncRange<std::size_t>(4),{0,1,2,3});
     check_range(IncRange<std::size_t>(3,7),{3,4,5,6});
