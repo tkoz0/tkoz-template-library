@@ -2,6 +2,7 @@
 
 TODO specialize std::numeric_limits
 TODO specialize std::hash
+TODO specialize std::to_string
 TODO https://en.cppreference.com/w/cpp/language/user_literal
 
 */
@@ -11,6 +12,7 @@ TODO https://en.cppreference.com/w/cpp/language/user_literal
 #include <array>
 #include <cstdint>
 #include <iostream>
+
 #include "util.hpp"
 
 namespace tkoz
@@ -20,6 +22,7 @@ class uint128_t
 {
 private:
     std::array<uint64_t,2> _v;
+    static_assert(sizeof(_v) == 16);
 public:
     inline constexpr uint128_t() noexcept: _v{0,0} {}
     inline constexpr uint128_t(uint64_t w0, uint64_t w1) noexcept: _v{w0,w1} {}

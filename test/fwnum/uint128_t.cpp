@@ -1,12 +1,8 @@
 
-#define DEBUG_MEMBER
-
 #include <cassert>
 #include <sstream>
 #include <vector>
 
-//class uint128_t;
-//void check_u128(uint128_t,uint64_t,uint64_t);
 #include "../../src/fwnum/uint128_t.hpp"
 #include "../test_common.hpp"
 using tkoz::uint128_t;
