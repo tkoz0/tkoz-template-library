@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include "../util/cpp.hpp"
 
 static_assert(sizeof(bool) == 1);
 static_assert(sizeof(float) == 4);
@@ -19,11 +20,11 @@ namespace tkoz
 template <typename T> struct fp_exp_size {};
 template <> struct fp_exp_size<float> { static constexpr size_t value = 8; };
 template <> struct fp_exp_size<double> { static constexpr size_t value = 11; };
-#if __cplusplus >= 201402L
+#if TKOZ_CPP14_OR_NEWER
 template <typename T> constexpr size_t fp_exp_size_v = fp_exp_size<T>::value;
 #endif
 
-#if __cplusplus >= 201402L
+#if TKOZ_CPP14_OR_NEWER
 template <typename T> struct fp_exp_bias { static constexpr size_t value = (1ull << (fp_exp_size_v<T> - 1)) - 1; };
 template <typename T> constexpr size_t fp_exp_bias_v = fp_exp_bias<T>::value;
 #else
@@ -33,11 +34,11 @@ template <typename T> struct fp_exp_bias { static constexpr size_t value = (1ull
 template <typename T> struct fp_mant_size {};
 template <> struct fp_mant_size<float> { static constexpr size_t value = 23; };
 template <> struct fp_mant_size<double> { static constexpr size_t value = 52; };
-#if __cplusplus >= 201402L
+#if TKOZ_CPP14_OR_NEWER
 template <typename T> constexpr size_t fp_mant_size_v = fp_mant_size<T>::value;
 #endif
 
-#if __cplusplus >= 201402L
+#if TKOZ_CPP14_OR_NEWER
 static_assert(1 + fp_exp_size_v<float> + fp_mant_size_v<float> == 32);
 static_assert(1 + fp_exp_size_v<double> + fp_mant_size_v<double> == 64);
 static_assert(fp_exp_bias_v<float> == 127);

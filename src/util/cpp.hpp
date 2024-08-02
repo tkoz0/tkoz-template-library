@@ -97,5 +97,8 @@ Macros for handling C++ standards
 #define TKOZ_CPP23_OR_NEWER 1
 
 #else
-#error "unknown cpp standard: " __cplusplus
+#define STR(x) XSTR(x)
+#define XSTR(x) #x
+#pragma message "unknown cpp standard: " STR(__cplusplus)
+#error "unknown cpp standard"
 #endif

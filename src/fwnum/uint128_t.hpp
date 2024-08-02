@@ -14,6 +14,7 @@ TODO https://en.cppreference.com/w/cpp/language/user_literal
 #include <iostream>
 
 #include "util.hpp"
+#include "../util/cpp.hpp"
 
 namespace tkoz
 {
@@ -203,7 +204,7 @@ public:
     inline bool operator>=(const uint128_t &a) const noexcept { return _v[1] > a._v[1] || (_v[1] == a._v[1] && _v[0] >= a._v[0]); }
     inline bool operator==(const uint128_t &a) const noexcept { return _v[0] == a._v[0] && _v[1] == a._v[1]; }
     inline bool operator!=(const uint128_t &a) const noexcept { return _v[0] != a._v[0] || _v[1] != a._v[1]; }
-#if __cplusplus >= 202002L
+#if TKOZ_CPP20_OR_NEWER
     inline auto operator<=>(const uint128_t &a) const noexcept { return (_v[1] == a._v[1]) ? (_v[0] <=> a._v[0]) : (_v[1] <=> a._v[1]); }
 #endif
 
