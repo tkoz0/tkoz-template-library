@@ -16,18 +16,47 @@ static_assert(sizeof(int64_t) == 8);
 namespace tkoz
 {
 
+template <typename T> struct fp_exp_size {};
+template <> struct fp_exp_size<float> { static constexpr size_t value = 8; };
+template <> struct fp_exp_size<double> { static constexpr size_t value = 11; };
+#if __cplusplus >= 201402L
+template <typename T> constexpr size_t fp_exp_size_v = fp_exp_size<T>::value;
+#endif
+
+#if __cplusplus >= 201402L
+template <typename T> struct fp_exp_bias { static constexpr size_t value = (1ull << (fp_exp_size_v<T> - 1)) - 1; };
+template <typename T> constexpr size_t fp_exp_bias_v = fp_exp_bias<T>::value;
+#else
+template <typename T> struct fp_exp_bias { static constexpr size_t value = (1ull << (fp_exp_size<T>::value - 1)) - 1; };
+#endif
+
+template <typename T> struct fp_mant_size {};
+template <> struct fp_mant_size<float> { static constexpr size_t value = 23; };
+template <> struct fp_mant_size<double> { static constexpr size_t value = 52; };
+#if __cplusplus >= 201402L
+template <typename T> constexpr size_t fp_mant_size_v = fp_mant_size<T>::value;
+#endif
+
+#if __cplusplus >= 201402L
+static_assert(1 + fp_exp_size_v<float> + fp_mant_size_v<float> == 32);
+static_assert(1 + fp_exp_size_v<double> + fp_mant_size_v<double> == 64);
+static_assert(fp_exp_bias_v<float> == 127);
+static_assert(fp_exp_bias_v<double> == 1023);
+#endif
+
+static_assert(1 + fp_exp_size<float>::value + fp_mant_size<float>::value == 32);
+static_assert(1 + fp_exp_size<double>::value + fp_mant_size<double>::value == 64);
+static_assert(fp_exp_bias<float>::value == 127);
+static_assert(fp_exp_bias<double>::value == 1023);
+
 // higher 64 bits of 64 bit multiplication
 // (x86_64 computes 128 bit result)
 inline uint64_t _umul64hi(uint64_t a, uint64_t b)
-{
-    return ((__uint128_t)a * (__uint128_t)b) >> 64;
-}
+{ return ((__uint128_t)(a) * (__uint128_t)(b)) >> 64; }
 
 // lower 64 bits of 64 bit multiplication
 inline uint64_t _umul64lo(uint64_t a, uint64_t b)
-{
-    return a*b;
-}
+{ return a*b; }
 
 // multiplies a*b and stores the 128 bit result in {r0,r1}
 inline void _umul64full(uint64_t a, uint64_t b, uint64_t &r0, uint64_t &r1)
