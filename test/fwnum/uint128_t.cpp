@@ -148,7 +148,26 @@ void test1()
                      1,1,0,1,0,1,0,0,0,1,0,1,0,1,0,0,0,1,1,0,1,0,0,1,1,0,0,1,0,1,0,1)
         == uint128_t(7617186964671749594ull,12220001005671563757ull));
         // 225419231132096679587794432454698130906
-    // test cases for conversion from float/double
+    // implicit conversion from primitive types
+    n1 = (char) 0;
+    n1 = (tkoz::schar_t) 0;
+    n1 = (tkoz::uchar_t) 0;
+    n1 = (tkoz::sshort_t) 0;
+    n1 = (tkoz::ushort_t) 0;
+    n1 = (tkoz::sint_t) 0;
+    n1 = (tkoz::uint_t) 0;
+    n1 = (tkoz::sll_t) 0;
+    n1 = (tkoz::ull_t) 0;
+}
+
+void test2()
+{
+    // TODO float/double conversions
+    uint128_t n1;
+    n1 = 0.0f;
+    assert(n1 == 0);
+    n1 = 0.0;
+    assert(n1 == 0);
 }
 
 #if 1
@@ -156,6 +175,11 @@ void test1()
 int main()
 {
     test1();
+    test2();
+    assert(factorial(64).array()[0] == (1ul << 63));
+    assert(factorial(64).array()[0] == (1ull << 63));
+    assert(factorial(128) == uint128_t(1) << 127);
+    assert(factorial(130) == 0);
     return 0;
 }
 
