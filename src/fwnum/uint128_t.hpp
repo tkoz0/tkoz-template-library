@@ -41,9 +41,11 @@ public:
     inline constexpr uint128_t(uint8_t n) noexcept: uint128_t((uint64_t)n) {}
     inline constexpr uint128_t(int8_t n) noexcept: uint128_t((int64_t)n) {}
     inline constexpr uint128_t(bool b) noexcept: _v{b,0} {}
+    inline constexpr uint128_t(ull_t n) noexcept: uint128_t((uint64_t)n) {}
+    inline constexpr uint128_t(sll_t n) noexcept: uint128_t((int64_t)n) {}
 
     // result is undefined for nan and inf
-    inline explicit uint128_t(float f) noexcept
+    inline uint128_t(float f) noexcept
     {
         uint32_t bits = *(uint32_t*)(&f);
         bool neg = bits >> 31;
@@ -68,7 +70,7 @@ public:
     }
 
     // result is undefined for nan and inf
-    inline explicit uint128_t(double f) noexcept
+    inline uint128_t(double f) noexcept
     {
         uint64_t bits = *(uint64_t*)(&f);
         bool neg = bits >> 63;
@@ -105,6 +107,8 @@ public:
     inline explicit operator int32_t() const noexcept { return _v[0]; }
     inline explicit operator int16_t() const noexcept { return _v[0]; }
     inline explicit operator int8_t() const noexcept { return _v[0]; }
+    inline explicit operator ull_t() const noexcept { return _v[0]; }
+    inline explicit operator sll_t() const noexcept { return _v[0]; }
 
     static_assert(1.8446744e19f == float(1ull<<32)*float(1ll<<32));
     static_assert(1.8446744e19f == float(1.8446744073709552e+19));
