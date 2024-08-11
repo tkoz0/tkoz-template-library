@@ -2,6 +2,12 @@
 #include <cstdint>
 #include "../util/cpp.hpp"
 
+// these assumptions are made throughout the code
+// which may not be a good practice
+
+// for now, this library is written to compile with gcc for x86_64 systems
+// significant changes may be needed to make it work elsewhere
+
 static_assert(sizeof(bool) == 1);
 static_assert(sizeof(float) == 4);
 static_assert(sizeof(double) == 8);
@@ -22,6 +28,17 @@ static_assert(std::is_same<int8_t, signed char>::value);
 static_assert(std::is_same<int16_t, signed short>::value);
 static_assert(std::is_same<int32_t, signed int>::value);
 static_assert(std::is_same<int64_t, signed long>::value);
+
+#if TKOZ_CPP17_OR_NEWER
+static_assert(std::is_same_v<uint8_t, unsigned char>);
+static_assert(std::is_same_v<uint16_t, unsigned short>);
+static_assert(std::is_same_v<uint32_t, unsigned int>);
+static_assert(std::is_same_v<uint64_t, unsigned long>);
+static_assert(std::is_same_v<int8_t, signed char>);
+static_assert(std::is_same_v<int16_t, signed short>);
+static_assert(std::is_same_v<int32_t, signed int>);
+static_assert(std::is_same_v<int64_t, signed long>);
+#endif
 
 static_assert(sizeof(void*) == 8);
 static_assert(sizeof(bool*) == 8);
@@ -144,23 +161,29 @@ inline void _udiv64_2(uint64_t x0, uint64_t x1, uint64_t d, uint64_t &q0, uint64
 }
 
 // interpret bits as floating point
-inline constexpr float _bits_as_fp32(uint32_t a) { return *(float*)(&a); }
+inline constexpr float _bits_to_fp32(uint32_t a) { return *(float*)(&a); }
 
 // interpret bits as floating point
-inline constexpr double _bits_as_fp64(uint64_t a) { return *(double*)(&a); }
+inline constexpr double _bits_to_fp64(uint64_t a) { return *(double*)(&a); }
+
+// bit representation of a floating point
+inline constexpr uint32_t _to_bits(float f) { return *(uint32_t*)(&f); }
+
+// bit representation of a floating point
+inline constexpr uint64_t _to_bits(double f) { return *(uint64_t*)(&f); }
 
 // power of 2 single precision floating point
 // numeric value when -126 <= p <= 127
 // p = -127 gives a signed zero, p = 128 gives an infinity
 // result undefined when p is outside this range
 inline constexpr float _2pow_fp32(int p, bool neg = false)
-{ return _bits_as_fp32((uint32_t(neg) << 31) | (uint32_t(p+127) << 23)); }
+{ return _bits_to_fp32((uint32_t(neg) << 31) | (uint32_t(p+127) << 23)); }
 
 // power of 2 double precision floating point
 // numeric value when -1022 <= p <= 1023
 // p = -1023 gives a signed zero, p = 1024 gives an infinity
 // result undefined when p is outside this range
 inline constexpr double _2pow_fp64(int p, bool neg = false)
-{ return _bits_as_fp64((uint64_t(neg) << 63) | (uint64_t(p+1023) << 52)); }
+{ return _bits_to_fp64((uint64_t(neg) << 63) | (uint64_t(p+1023) << 52)); }
 
 }

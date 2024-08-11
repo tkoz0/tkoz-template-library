@@ -27,10 +27,18 @@ private:
 public:
     inline constexpr uint128_t() noexcept: _v{0,0} {}
     inline constexpr uint128_t(uint64_t w0, uint64_t w1) noexcept: _v{w0,w1} {}
-    inline const std::array<uint64_t,2> &array() const { return _v; }
-    inline std::array<uint64_t,2> &array() { return _v; }
+    inline constexpr uint128_t(const std::array<uint64_t,2> &v) noexcept: _v(v) {}
+    inline constexpr const std::array<uint64_t,2> &array() const noexcept { return _v; }
+    inline constexpr std::array<uint64_t,2> &array() noexcept { return _v; }
 
-    // conversion constructors (primitives can be implicitly converted to uint128_t except float and double)
+    template <size_t i>
+    inline constexpr uint64_t get() const noexcept { static_assert(i < 2); return _v[i]; }
+
+    template <size_t i>
+    inline void set(uint64_t v) noexcept { static_assert(i < 2); _v[i] = v; }
+
+    // conversion constructors
+    // all primitives can be implicitly constructed by having constructors for all of them
 
     inline constexpr uint128_t(uint64_t n) noexcept: _v{n,0} {}
     inline constexpr uint128_t(int64_t n) noexcept: _v{(uint64_t)n,(uint64_t)(n>>63)} {}
@@ -113,6 +121,7 @@ public:
     static_assert(1.8446744e19f == float(1ull<<32)*float(1ll<<32));
     static_assert(1.8446744e19f == float(1.8446744073709552e+19));
     static_assert(1.8446744073709552e19 == double(1ull<<32)*double(1ull<<32));
+    // reinterpret_cast is not compatible with constexpr
     //static_assert(1.8446744e19f == _2pow_fp32(64));
     //static_assert(1.8446744073709552e19 == _2pow_fp64(64));
 
@@ -172,7 +181,7 @@ public:
 
     inline uint128_t &operator++() noexcept { _v[1] += (++_v[0] == 0); return *this; }
     inline uint128_t operator++(int) noexcept { uint128_t ret = *this; ++(*this); return ret; }
-    inline uint128_t &operator--() noexcept { _v[0] -= (_v[1]-- == 0); return *this; }
+    inline uint128_t &operator--() noexcept { _v[1] -= (_v[0]-- == 0); return *this; }
     inline uint128_t operator--(int) noexcept { uint128_t ret = *this; --(*this); return ret; }
 
     // unary operators
@@ -189,23 +198,31 @@ public:
     inline friend uint128_t operator+(uint64_t a, uint128_t b) noexcept { b += a; return b; }
     inline friend uint128_t operator-(uint128_t a, const uint128_t &b) noexcept { a -= b; return a; }
     inline friend uint128_t operator-(uint128_t a, uint64_t b) noexcept { a -= b; return a; }
-    inline friend uint128_t operator-(uint64_t a, uint128_t b) noexcept { b -= a; return b; }
+    inline friend uint128_t operator-(uint64_t a, uint128_t b) noexcept { b -= a; return -b; }
     inline friend uint128_t operator*(uint128_t a, const uint128_t &b) noexcept { a *= b; return a; }
     inline friend uint128_t operator*(uint128_t a, uint64_t b) noexcept { a *= b; return a; }
     inline friend uint128_t operator*(uint64_t a, uint128_t b) noexcept { b *= a; return b; }
     inline friend uint128_t operator/(uint128_t a, const uint128_t &b) noexcept { a /= b; return a; }
     inline friend uint128_t operator/(uint128_t a, uint64_t b) noexcept { a /= b; return a; }
+    inline friend uint64_t operator/(uint64_t a, const uint128_t &b) noexcept { return b._v[1] ? 0 : a / b._v[0]; }
     inline friend uint128_t operator%(uint128_t a, const uint128_t &b) noexcept { a %= b; return a; }
     inline friend uint64_t operator%(uint128_t a, uint64_t b) noexcept { a %= b; return a._v[0]; }
+    inline friend uint64_t operator%(uint64_t a, const uint128_t &b) { return b._v[1] ? a : a % b._v[0]; }
     inline friend uint128_t operator<<(uint128_t a, uint32_t s) noexcept { a <<= s; return a; }
     inline friend uint128_t operator>>(uint128_t a, uint32_t s) noexcept { a >>= s; return a; }
 
     // compare
-
+#if 0
     inline bool operator<(const uint128_t &a) const noexcept { return _v[1] < a._v[1] || (_v[1] == a._v[1] && _v[0] < a._v[0]); }
     inline bool operator>(const uint128_t &a) const noexcept { return _v[1] > a._v[1] || (_v[1] == a._v[1] && _v[0] > a._v[0]); }
     inline bool operator<=(const uint128_t &a) const noexcept { return _v[1] < a._v[1] || (_v[1] == a._v[1] && _v[0] <= a._v[0]); }
     inline bool operator>=(const uint128_t &a) const noexcept { return _v[1] > a._v[1] || (_v[1] == a._v[1] && _v[0] >= a._v[0]); }
+#else
+    inline bool operator<(const uint128_t &a) const noexcept { return _v[1] == a._v[1] ? _v[0] < a._v[0] : _v[1] < a._v[1]; }
+    inline bool operator>(const uint128_t &a) const noexcept { return _v[1] == a._v[1] ? _v[0] > a._v[0] : _v[1] > a._v[1]; }
+    inline bool operator<=(const uint128_t &a) const noexcept { return _v[1] == a._v[1] ? _v[0] <= a._v[0] : _v[1] < a._v[1]; }
+    inline bool operator>=(const uint128_t &a) const noexcept { return _v[1] == a._v[1] ? _v[0] >= a._v[0] : _v[1] > a._v[1]; }
+#endif
     inline bool operator==(const uint128_t &a) const noexcept { return _v[0] == a._v[0] && _v[1] == a._v[1]; }
     inline bool operator!=(const uint128_t &a) const noexcept { return _v[0] != a._v[0] || _v[1] != a._v[1]; }
 #if TKOZ_CPP20_OR_NEWER
@@ -281,7 +298,7 @@ public:
         {
             if (*this < a)
                 _v[0] = _v[1] = 0;
-            else
+            else // *this >= a -> quotient is nonzero
             {
                 uint128_t d = a;
                 // amount to shift divisor to match msb with *this
@@ -297,6 +314,7 @@ public:
                     --s1;
                 }
                 _v[0] = q;
+                _v[1] = 0;
             }
         }
         else
@@ -342,7 +360,7 @@ public:
         if (s >= 64)
             _v[1] = _v[0], _v[0] = 0, _v[1] <<= s - 64;
         // shift by 64 bits does nothing on x86, which is desired here (s=0)
-        else
+        else if (s > 0)
             _v[1] <<= s, _v[1] |= _v[0] >> (64 - s), _v[0] <<= s;
         return *this;
     }
@@ -352,7 +370,7 @@ public:
         if (s >= 64)
             _v[0] = _v[1], _v[1] = 0, _v[0] >>= s - 64;
         // shift by 64 bits does nothing on x86, which is desired here (s=0)
-        else
+        else if (s > 0)
             _v[0] >>= s, _v[0] |= _v[1] << (64 - s), _v[1] >>= s;
         return *this;
     }
