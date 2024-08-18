@@ -28,12 +28,18 @@ public:
     inline constexpr uint128_t() noexcept: _v{0,0} {}
     inline constexpr uint128_t(uint64_t w0, uint64_t w1) noexcept: _v{w0,w1} {}
     inline constexpr uint128_t(const std::array<uint64_t,2> &v) noexcept: _v(v) {}
-    inline constexpr const std::array<uint64_t,2> &array() const noexcept { return _v; }
-    inline constexpr std::array<uint64_t,2> &array() noexcept { return _v; }
 
+    // access the internal std::array representation
+    inline constexpr const std::array<uint64_t,2> &array() const noexcept { return _v; }
+
+    // access the internal std::array representation
+    inline std::array<uint64_t,2> &array() noexcept { return _v; }
+
+    // access one of the 2 words (index must be 0 or 1)
     template <size_t i>
     inline constexpr uint64_t get() const noexcept { static_assert(i < 2); return _v[i]; }
 
+    // set one of the 2 words (index must be 0 or 1)
     template <size_t i>
     inline void set(uint64_t v) noexcept { static_assert(i < 2); _v[i] = v; }
 
@@ -132,15 +138,18 @@ public:
 
     inline constexpr uint128_t(uint32_t w0, uint32_t w1, uint32_t w2, uint32_t w3) noexcept:
         _v{w0|_W(w1,32), w2|_W(w3,32)} {}
+
     inline constexpr uint128_t(uint16_t w0, uint16_t w1, uint16_t w2, uint16_t w3,
                                uint16_t w4, uint16_t w5, uint16_t w6, uint16_t w7) noexcept:
         _v{w0|_W(w1,16)|_W(w2,32)|_W(w3,48), w4|_W(w5,16)|_W(w6,32)|_W(w7,48)} {}
+
     inline constexpr uint128_t(uint8_t w0 , uint8_t w1 , uint8_t w2 , uint8_t w3 ,
                                uint8_t w4 , uint8_t w5 , uint8_t w6 , uint8_t w7 ,
                                uint8_t w8 , uint8_t w9 , uint8_t w10, uint8_t w11,
                                uint8_t w12, uint8_t w13, uint8_t w14, uint8_t w15) noexcept:
         _v{w0|_W(w1,8)|_W(w2 ,16)|_W(w3 ,24)|_W(w4 ,32)|_W(w5 ,40)|_W(w6 ,48)|_W(w7 ,56),
            w8|_W(w9,8)|_W(w10,16)|_W(w11,24)|_W(w12,32)|_W(w13,40)|_W(w14,48)|_W(w15,56)} {}
+
     inline constexpr uint128_t(
         bool b0  , bool b1  , bool b2  , bool b3  , bool b4  , bool b5  , bool b6  , bool b7  ,
         bool b8  , bool b9  , bool b10 , bool b11 , bool b12 , bool b13 , bool b14 , bool b15 ,
@@ -212,21 +221,22 @@ public:
     inline friend uint128_t operator>>(uint128_t a, uint32_t s) noexcept { a >>= s; return a; }
 
     // compare
-#if 0
-    inline bool operator<(const uint128_t &a) const noexcept { return _v[1] < a._v[1] || (_v[1] == a._v[1] && _v[0] < a._v[0]); }
-    inline bool operator>(const uint128_t &a) const noexcept { return _v[1] > a._v[1] || (_v[1] == a._v[1] && _v[0] > a._v[0]); }
-    inline bool operator<=(const uint128_t &a) const noexcept { return _v[1] < a._v[1] || (_v[1] == a._v[1] && _v[0] <= a._v[0]); }
-    inline bool operator>=(const uint128_t &a) const noexcept { return _v[1] > a._v[1] || (_v[1] == a._v[1] && _v[0] >= a._v[0]); }
-#else
-    inline bool operator<(const uint128_t &a) const noexcept { return _v[1] == a._v[1] ? _v[0] < a._v[0] : _v[1] < a._v[1]; }
-    inline bool operator>(const uint128_t &a) const noexcept { return _v[1] == a._v[1] ? _v[0] > a._v[0] : _v[1] > a._v[1]; }
-    inline bool operator<=(const uint128_t &a) const noexcept { return _v[1] == a._v[1] ? _v[0] <= a._v[0] : _v[1] < a._v[1]; }
-    inline bool operator>=(const uint128_t &a) const noexcept { return _v[1] == a._v[1] ? _v[0] >= a._v[0] : _v[1] > a._v[1]; }
-#endif
-    inline bool operator==(const uint128_t &a) const noexcept { return _v[0] == a._v[0] && _v[1] == a._v[1]; }
-    inline bool operator!=(const uint128_t &a) const noexcept { return _v[0] != a._v[0] || _v[1] != a._v[1]; }
+
+    inline friend bool operator<(const uint128_t &a, const uint128_t &b) noexcept
+    { return a._v[1] == b._v[1] ? a._v[0] < b._v[0] : a._v[1] < b._v[1]; }
+    inline friend bool operator>(const uint128_t &a, const uint128_t &b) noexcept
+    { return a._v[1] == b._v[1] ? a._v[0] > b._v[0] : a._v[1] > b._v[1]; }
+    inline friend bool operator<=(const uint128_t &a, const uint128_t &b) noexcept
+    { return a._v[1] == b._v[1] ? a._v[0] <= b._v[0] : a._v[1] < b._v[1]; }
+    inline friend bool operator>=(const uint128_t &a, const uint128_t &b) noexcept
+    { return a._v[1] == b._v[1] ? a._v[0] >= b._v[0] : a._v[1] > b._v[1]; }
+    inline friend bool operator==(const uint128_t &a, const uint128_t &b) noexcept
+    { return a._v[0] == b._v[0] && a._v[1] == b._v[1]; }
+    inline friend bool operator!=(const uint128_t &a, const uint128_t &b) noexcept
+    { return a._v[0] != b._v[0] || a._v[1] != b._v[1]; }
 #if TKOZ_CPP20_OR_NEWER
-    inline auto operator<=>(const uint128_t &a) const noexcept { return (_v[1] == a._v[1]) ? (_v[0] <=> a._v[0]) : (_v[1] <=> a._v[1]); }
+    inline friend auto operator<=>(const uint128_t &a, const uint128_t &b) noexcept
+    { return a._v[1] == b._v[1] ? a._v[0] <=> b._v[0] : a._v[0] <=> b._v[0]; }
 #endif
 
     // bitwise
@@ -317,11 +327,8 @@ public:
                 _v[1] = 0;
             }
         }
-        else
-        {
-            uint64_t r; // unused
-            _udiv64_2(_v[0],_v[1],a._v[0],_v[0],_v[1],r);
-        }
+        else // small divisor
+            *this /= a._v[0];
         return *this;
     }
     inline uint128_t &operator%=(uint64_t a) noexcept
@@ -350,7 +357,7 @@ public:
                 }
             }
         }
-        else
+        else // small divisor
             *this %= a._v[0];
         return *this;
     }
@@ -425,46 +432,6 @@ public:
         else
             is.setstate(std::ios::failbit);
         return is;
-    }
-
-    // helpful operations
-
-    inline static std::pair<uint128_t,uint128_t> divmod(const uint128_t &n, const uint128_t &d) noexcept
-    {
-        // TODO
-        ;
-        (void)n;
-        (void)d;
-        return std::make_pair(uint128_t(),uint128_t());
-    }
-
-    inline static std::pair<uint128_t,uint64_t> divmod(const uint128_t &n, uint64_t d) noexcept
-    {
-        // TODO
-        ;
-        (void)n;
-        (void)d;
-        return std::make_pair(uint128_t(),0ull);
-    }
-
-    inline static uint128_t modpow(const uint128_t &b, const uint128_t &p, const uint128_t &m) noexcept
-    {
-        // TODO
-        ;
-        (void)b;
-        (void)p;
-        (void)m;
-        return uint128_t();
-    }
-
-    inline static uint128_t modpow(const uint128_t &b, const uint64_t p, const uint128_t &m) noexcept
-    {
-        // TODO
-        ;
-        (void)b;
-        (void)p;
-        (void)m;
-        return uint128_t();
     }
 };
 
