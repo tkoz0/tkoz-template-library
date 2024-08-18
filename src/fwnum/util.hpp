@@ -167,10 +167,10 @@ inline constexpr float _bits_to_fp32(uint32_t a) { return *(float*)(&a); }
 inline constexpr double _bits_to_fp64(uint64_t a) { return *(double*)(&a); }
 
 // bit representation of a floating point
-inline constexpr uint32_t _to_bits(float f) { return *(uint32_t*)(&f); }
+inline constexpr uint32_t _fp32_to_bits(float f) { return *(uint32_t*)(&f); }
 
 // bit representation of a floating point
-inline constexpr uint64_t _to_bits(double f) { return *(uint64_t*)(&f); }
+inline constexpr uint64_t _fp64_to_bits(double f) { return *(uint64_t*)(&f); }
 
 // power of 2 single precision floating point
 // numeric value when -126 <= p <= 127
