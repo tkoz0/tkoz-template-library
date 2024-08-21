@@ -29,6 +29,12 @@ namespace tkoz
     inline void set(const TV &val) { MV = val; }
 
 template <typename T1, typename T2 = T1>
+struct tuple2;
+
+template <typename T1, typename T2>
+inline constexpr tuple2<T1,T2> make_tuple2(const T1 &a, const T2 &b);
+
+template <typename T1, typename T2>
 struct tuple2
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple2>,bool> = true> \
@@ -67,6 +73,12 @@ template <typename T1, typename T2>
 inline constexpr tuple2<T1,T2> make_tuple2(const T1 &a, const T2 &b) { return tuple2<T1,T2>(a,b); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2>
+struct tuple3;
+
+template <typename T1, typename T2, typename T3>
+inline constexpr tuple3<T1,T2,T3> make_tuple3(const T1 &a, const T2 &b, const T3 &c);
+
+template <typename T1, typename T2, typename T3>
 struct tuple3
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple3>,bool> = true> \
@@ -105,6 +117,12 @@ template <typename T1, typename T2, typename T3>
 inline constexpr tuple3<T1,T2,T3> make_tuple3(const T1 &a, const T2 &b, const T3 &c) { return tuple3<T1,T2,T3>(a,b,c); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3>
+struct tuple4;
+
+template <typename T1, typename T2, typename T3, typename T4>
+inline constexpr tuple4<T1,T2,T3,T4> make_tuple4(const T1 &a, const T2 &b, const T3 &c, const T4 &d);
+
+template <typename T1, typename T2, typename T3, typename T4>
 struct tuple4
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple4>,bool> = true> \
@@ -143,6 +161,12 @@ template <typename T1, typename T2, typename T3, typename T4>
 inline constexpr tuple4<T1,T2,T3,T4> make_tuple4(const T1 &a, const T2 &b, const T3 &c, const T4 &d) { return tuple4<T1,T2,T3,T4>(a,b,c,d); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4>
+struct tuple5;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5>
+inline constexpr tuple5<T1,T2,T3,T4,T5> make_tuple5(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e);
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5>
 struct tuple5
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple5>,bool> = true> \
@@ -181,6 +205,12 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5>
 inline constexpr tuple5<T1,T2,T3,T4,T5> make_tuple5(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e) { return tuple5<T1,T2,T3,T4,T5>(a,b,c,d,e); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5>
+struct tuple6;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
+inline constexpr tuple6<T1,T2,T3,T4,T5,T6> make_tuple6(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f);
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
 struct tuple6
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple6>,bool> = true> \
@@ -219,6 +249,12 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5, typen
 inline constexpr tuple6<T1,T2,T3,T4,T5,T6> make_tuple6(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f) { return tuple6<T1,T2,T3,T4,T5,T6>(a,b,c,d,e,f); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6>
+struct tuple7;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7>
+inline constexpr tuple7<T1,T2,T3,T4,T5,T6,T7> make_tuple7(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g);
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7>
 struct tuple7
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple7>,bool> = true> \
@@ -257,6 +293,12 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5, typen
 inline constexpr tuple7<T1,T2,T3,T4,T5,T6,T7> make_tuple7(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g) { return tuple7<T1,T2,T3,T4,T5,T6,T7>(a,b,c,d,e,f,g); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7>
+struct tuple8;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8>
+inline constexpr tuple8<T1,T2,T3,T4,T5,T6,T7,T8> make_tuple8(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h);
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8>
 struct tuple8
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple8>,bool> = true> \
@@ -295,6 +337,12 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5, typen
 inline constexpr tuple8<T1,T2,T3,T4,T5,T6,T7,T8> make_tuple8(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h) { return tuple8<T1,T2,T3,T4,T5,T6,T7,T8>(a,b,c,d,e,f,g,h); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8>
+struct tuple9;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9>
+inline constexpr tuple9<T1,T2,T3,T4,T5,T6,T7,T8,T9> make_tuple9(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i);
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9>
 struct tuple9
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple9>,bool> = true> \
@@ -333,6 +381,12 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5, typen
 inline constexpr tuple9<T1,T2,T3,T4,T5,T6,T7,T8,T9> make_tuple9(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i) { return tuple9<T1,T2,T3,T4,T5,T6,T7,T8,T9>(a,b,c,d,e,f,g,h,i); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9>
+struct tuple10;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10>
+inline constexpr tuple10<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10> make_tuple10(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j);
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10>
 struct tuple10
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple10>,bool> = true> \
@@ -371,6 +425,12 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5, typen
 inline constexpr tuple10<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10> make_tuple10(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j) { return tuple10<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10>(a,b,c,d,e,f,g,h,i,j); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10>
+struct tuple11;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11>
+inline constexpr tuple11<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11> make_tuple11(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k);
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11>
 struct tuple11
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple11>,bool> = true> \
@@ -409,6 +469,12 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5, typen
 inline constexpr tuple11<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11> make_tuple11(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k) { return tuple11<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11>(a,b,c,d,e,f,g,h,i,j,k); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11>
+struct tuple12;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12>
+inline constexpr tuple12<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12> make_tuple12(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l);
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12>
 struct tuple12
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple12>,bool> = true> \
@@ -447,6 +513,12 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5, typen
 inline constexpr tuple12<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12> make_tuple12(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l) { return tuple12<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12>(a,b,c,d,e,f,g,h,i,j,k,l); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12>
+struct tuple13;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13>
+inline constexpr tuple13<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13> make_tuple13(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m);
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13>
 struct tuple13
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple13>,bool> = true> \
@@ -485,6 +557,12 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5, typen
 inline constexpr tuple13<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13> make_tuple13(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m) { return tuple13<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13>(a,b,c,d,e,f,g,h,i,j,k,l,m); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13>
+struct tuple14;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14>
+inline constexpr tuple14<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14> make_tuple14(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n);
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14>
 struct tuple14
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple14>,bool> = true> \
@@ -523,6 +601,12 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5, typen
 inline constexpr tuple14<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14> make_tuple14(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n) { return tuple14<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14>(a,b,c,d,e,f,g,h,i,j,k,l,m,n); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14>
+struct tuple15;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15>
+inline constexpr tuple15<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15> make_tuple15(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o);
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15>
 struct tuple15
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple15>,bool> = true> \
@@ -561,6 +645,12 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5, typen
 inline constexpr tuple15<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15> make_tuple15(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o) { return tuple15<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15>(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14, typename T16 = T15>
+struct tuple16;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16>
+inline constexpr tuple16<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16> make_tuple16(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p);
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16>
 struct tuple16
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple16>,bool> = true> \
@@ -599,6 +689,12 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5, typen
 inline constexpr tuple16<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16> make_tuple16(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p) { return tuple16<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16>(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14, typename T16 = T15, typename T17 = T16>
+struct tuple17;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16, typename T17>
+inline constexpr tuple17<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17> make_tuple17(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q);
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16, typename T17>
 struct tuple17
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple17>,bool> = true> \
@@ -637,6 +733,12 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5, typen
 inline constexpr tuple17<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17> make_tuple17(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q) { return tuple17<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17>(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14, typename T16 = T15, typename T17 = T16, typename T18 = T17>
+struct tuple18;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16, typename T17, typename T18>
+inline constexpr tuple18<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18> make_tuple18(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r);
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16, typename T17, typename T18>
 struct tuple18
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple18>,bool> = true> \
@@ -675,6 +777,12 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5, typen
 inline constexpr tuple18<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18> make_tuple18(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r) { return tuple18<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18>(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14, typename T16 = T15, typename T17 = T16, typename T18 = T17, typename T19 = T18>
+struct tuple19;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16, typename T17, typename T18, typename T19>
+inline constexpr tuple19<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19> make_tuple19(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s);
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16, typename T17, typename T18, typename T19>
 struct tuple19
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple19>,bool> = true> \
@@ -713,6 +821,12 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5, typen
 inline constexpr tuple19<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19> make_tuple19(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s) { return tuple19<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19>(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14, typename T16 = T15, typename T17 = T16, typename T18 = T17, typename T19 = T18, typename T20 = T19>
+struct tuple20;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16, typename T17, typename T18, typename T19, typename T20>
+inline constexpr tuple20<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20> make_tuple20(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s, const T20 &t);
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16, typename T17, typename T18, typename T19, typename T20>
 struct tuple20
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple20>,bool> = true> \
@@ -751,6 +865,12 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5, typen
 inline constexpr tuple20<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20> make_tuple20(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s, const T20 &t) { return tuple20<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20>(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14, typename T16 = T15, typename T17 = T16, typename T18 = T17, typename T19 = T18, typename T20 = T19, typename T21 = T20>
+struct tuple21;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16, typename T17, typename T18, typename T19, typename T20, typename T21>
+inline constexpr tuple21<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21> make_tuple21(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s, const T20 &t, const T21 &u);
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16, typename T17, typename T18, typename T19, typename T20, typename T21>
 struct tuple21
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple21>,bool> = true> \
@@ -789,6 +909,12 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5, typen
 inline constexpr tuple21<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21> make_tuple21(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s, const T20 &t, const T21 &u) { return tuple21<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21>(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14, typename T16 = T15, typename T17 = T16, typename T18 = T17, typename T19 = T18, typename T20 = T19, typename T21 = T20, typename T22 = T21>
+struct tuple22;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16, typename T17, typename T18, typename T19, typename T20, typename T21, typename T22>
+inline constexpr tuple22<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22> make_tuple22(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s, const T20 &t, const T21 &u, const T22 &v);
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16, typename T17, typename T18, typename T19, typename T20, typename T21, typename T22>
 struct tuple22
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple22>,bool> = true> \
@@ -827,6 +953,12 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5, typen
 inline constexpr tuple22<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22> make_tuple22(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s, const T20 &t, const T21 &u, const T22 &v) { return tuple22<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22>(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14, typename T16 = T15, typename T17 = T16, typename T18 = T17, typename T19 = T18, typename T20 = T19, typename T21 = T20, typename T22 = T21, typename T23 = T22>
+struct tuple23;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16, typename T17, typename T18, typename T19, typename T20, typename T21, typename T22, typename T23>
+inline constexpr tuple23<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22,T23> make_tuple23(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s, const T20 &t, const T21 &u, const T22 &v, const T23 &w);
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16, typename T17, typename T18, typename T19, typename T20, typename T21, typename T22, typename T23>
 struct tuple23
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple23>,bool> = true> \
@@ -865,6 +997,12 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5, typen
 inline constexpr tuple23<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22,T23> make_tuple23(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s, const T20 &t, const T21 &u, const T22 &v, const T23 &w) { return tuple23<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22,T23>(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14, typename T16 = T15, typename T17 = T16, typename T18 = T17, typename T19 = T18, typename T20 = T19, typename T21 = T20, typename T22 = T21, typename T23 = T22, typename T24 = T23>
+struct tuple24;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16, typename T17, typename T18, typename T19, typename T20, typename T21, typename T22, typename T23, typename T24>
+inline constexpr tuple24<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22,T23,T24> make_tuple24(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s, const T20 &t, const T21 &u, const T22 &v, const T23 &w, const T24 &x);
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16, typename T17, typename T18, typename T19, typename T20, typename T21, typename T22, typename T23, typename T24>
 struct tuple24
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple24>,bool> = true> \
@@ -903,6 +1041,12 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5, typen
 inline constexpr tuple24<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22,T23,T24> make_tuple24(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s, const T20 &t, const T21 &u, const T22 &v, const T23 &w, const T24 &x) { return tuple24<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22,T23,T24>(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14, typename T16 = T15, typename T17 = T16, typename T18 = T17, typename T19 = T18, typename T20 = T19, typename T21 = T20, typename T22 = T21, typename T23 = T22, typename T24 = T23, typename T25 = T24>
+struct tuple25;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16, typename T17, typename T18, typename T19, typename T20, typename T21, typename T22, typename T23, typename T24, typename T25>
+inline constexpr tuple25<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22,T23,T24,T25> make_tuple25(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s, const T20 &t, const T21 &u, const T22 &v, const T23 &w, const T24 &x, const T25 &y);
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16, typename T17, typename T18, typename T19, typename T20, typename T21, typename T22, typename T23, typename T24, typename T25>
 struct tuple25
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple25>,bool> = true> \
@@ -941,6 +1085,12 @@ template <typename T1, typename T2, typename T3, typename T4, typename T5, typen
 inline constexpr tuple25<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22,T23,T24,T25> make_tuple25(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s, const T20 &t, const T21 &u, const T22 &v, const T23 &w, const T24 &x, const T25 &y) { return tuple25<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22,T23,T24,T25>(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y); }
 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14, typename T16 = T15, typename T17 = T16, typename T18 = T17, typename T19 = T18, typename T20 = T19, typename T21 = T20, typename T22 = T21, typename T23 = T22, typename T24 = T23, typename T25 = T24, typename T26 = T25>
+struct tuple26;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16, typename T17, typename T18, typename T19, typename T20, typename T21, typename T22, typename T23, typename T24, typename T25, typename T26>
+inline constexpr tuple26<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22,T23,T24,T25,T26> make_tuple26(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s, const T20 &t, const T21 &u, const T22 &v, const T23 &w, const T24 &x, const T25 &y, const T26 &z);
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16, typename T17, typename T18, typename T19, typename T20, typename T21, typename T22, typename T23, typename T24, typename T25, typename T26>
 struct tuple26
 {
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple26>,bool> = true> \

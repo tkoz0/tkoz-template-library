@@ -6,6 +6,12 @@ def tuple(n):
     assert 2 <= n <= 26
     return f'''\
 template <typename T1, {', '.join(f'typename T{i} = T{i-1}' for i in range(2,n+1))}>
+struct tuple{n};
+
+template <{', '.join(f'typename T{i}' for i in range(1,n+1))}>
+inline constexpr tuple{n}<{','.join(f'T{i}' for i in range(1,n+1))}> make_tuple{n}({', '.join(f'const T{i} &{L[i]}' for i in range(1,n+1))});
+
+template <{', '.join(f'typename T{i}' for i in range(1,n+1))}>
 struct tuple{n}
 {{
 #define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple{n}>,bool> = true> \\
