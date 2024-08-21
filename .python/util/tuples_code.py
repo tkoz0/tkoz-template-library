@@ -8,9 +8,9 @@ def tuple(n):
 template <typename T1, {', '.join(f'typename T{i} = T{i-1}' for i in range(2,n+1))}>
 struct tuple{n}
 {{
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple{n}>::value,bool>::type = true> \\
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple{n}>,bool> = true> \\
     inline tuple{n} &operator OP(const U &rhs) {{ {' '.join(f'{L[i]} OP rhs.{L[i]};' for i in range(1,n+1))} return *this; }}
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple{n}>::value,bool>::type = true> \\
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple{n}>,bool> = true> \\
     inline tuple{n} &operator OP(const U &rhs) {{ {' '.join(f'{L[i]} OP rhs;' for i in range(1,n+1))} return *this; }}
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple{n} &lhs, const tuple{n} &rhs) \\
     {{ return make_tuple{n}({', '.join(f'lhs.{L[i]} OP rhs.{L[i]}' for i in range(1,n+1))}); }}
@@ -54,11 +54,11 @@ print(f'''\
 namespace tkoz
 {{
 
-#define GET(IV,TV,MV) template <size_t i, typename std::enable_if<i==IV,bool>::type = true> \\
+#define GET(IV,TV,MV) template <size_t i, typename std::enable_if_t<i==IV,bool> = true> \\
     inline constexpr TV &get() {{ return MV; }}
-#define GETC(IV,TV,MV) template <size_t i, typename std::enable_if<i==IV,bool>::type = true> \\
+#define GETC(IV,TV,MV) template <size_t i, typename std::enable_if_t<i==IV,bool> = true> \\
     inline constexpr const TV &get() const {{ return MV; }}
-#define SET(IV,TV,MV) template <size_t i, typename std::enable_if<i==IV,bool>::type = true> \\
+#define SET(IV,TV,MV) template <size_t i, typename std::enable_if_t<i==IV,bool> = true> \\
     inline void set(const TV &val) {{ MV = val; }}
 ''')
 

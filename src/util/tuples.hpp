@@ -21,19 +21,19 @@ Convenient tuples for more sizes than just std::pair
 namespace tkoz
 {
 
-#define GET(IV,TV,MV) template <size_t i, typename std::enable_if<i==IV,bool>::type = true> \
+#define GET(IV,TV,MV) template <size_t i, typename std::enable_if_t<i==IV,bool> = true> \
     inline constexpr TV &get() { return MV; }
-#define GETC(IV,TV,MV) template <size_t i, typename std::enable_if<i==IV,bool>::type = true> \
+#define GETC(IV,TV,MV) template <size_t i, typename std::enable_if_t<i==IV,bool> = true> \
     inline constexpr const TV &get() const { return MV; }
-#define SET(IV,TV,MV) template <size_t i, typename std::enable_if<i==IV,bool>::type = true> \
+#define SET(IV,TV,MV) template <size_t i, typename std::enable_if_t<i==IV,bool> = true> \
     inline void set(const TV &val) { MV = val; }
 
 template <typename T1, typename T2 = T1>
 struct tuple2
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple2>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple2>,bool> = true> \
     inline tuple2 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple2>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple2>,bool> = true> \
     inline tuple2 &operator OP(const U &rhs) { a OP rhs; b OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple2 &lhs, const tuple2 &rhs) \
     { return make_tuple2(lhs.a OP rhs.a, lhs.b OP rhs.b); }
@@ -69,9 +69,9 @@ inline constexpr tuple2<T1,T2> make_tuple2(const T1 &a, const T2 &b) { return tu
 template <typename T1, typename T2 = T1, typename T3 = T2>
 struct tuple3
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple3>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple3>,bool> = true> \
     inline tuple3 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple3>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple3>,bool> = true> \
     inline tuple3 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple3 &lhs, const tuple3 &rhs) \
     { return make_tuple3(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c); }
@@ -107,9 +107,9 @@ inline constexpr tuple3<T1,T2,T3> make_tuple3(const T1 &a, const T2 &b, const T3
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3>
 struct tuple4
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple4>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple4>,bool> = true> \
     inline tuple4 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple4>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple4>,bool> = true> \
     inline tuple4 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple4 &lhs, const tuple4 &rhs) \
     { return make_tuple4(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d); }
@@ -145,9 +145,9 @@ inline constexpr tuple4<T1,T2,T3,T4> make_tuple4(const T1 &a, const T2 &b, const
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4>
 struct tuple5
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple5>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple5>,bool> = true> \
     inline tuple5 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; e OP rhs.e; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple5>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple5>,bool> = true> \
     inline tuple5 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; e OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple5 &lhs, const tuple5 &rhs) \
     { return make_tuple5(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d, lhs.e OP rhs.e); }
@@ -183,9 +183,9 @@ inline constexpr tuple5<T1,T2,T3,T4,T5> make_tuple5(const T1 &a, const T2 &b, co
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5>
 struct tuple6
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple6>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple6>,bool> = true> \
     inline tuple6 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; e OP rhs.e; f OP rhs.f; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple6>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple6>,bool> = true> \
     inline tuple6 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; e OP rhs; f OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple6 &lhs, const tuple6 &rhs) \
     { return make_tuple6(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d, lhs.e OP rhs.e, lhs.f OP rhs.f); }
@@ -221,9 +221,9 @@ inline constexpr tuple6<T1,T2,T3,T4,T5,T6> make_tuple6(const T1 &a, const T2 &b,
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6>
 struct tuple7
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple7>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple7>,bool> = true> \
     inline tuple7 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; e OP rhs.e; f OP rhs.f; g OP rhs.g; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple7>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple7>,bool> = true> \
     inline tuple7 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; e OP rhs; f OP rhs; g OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple7 &lhs, const tuple7 &rhs) \
     { return make_tuple7(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d, lhs.e OP rhs.e, lhs.f OP rhs.f, lhs.g OP rhs.g); }
@@ -259,9 +259,9 @@ inline constexpr tuple7<T1,T2,T3,T4,T5,T6,T7> make_tuple7(const T1 &a, const T2 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7>
 struct tuple8
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple8>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple8>,bool> = true> \
     inline tuple8 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; e OP rhs.e; f OP rhs.f; g OP rhs.g; h OP rhs.h; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple8>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple8>,bool> = true> \
     inline tuple8 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; e OP rhs; f OP rhs; g OP rhs; h OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple8 &lhs, const tuple8 &rhs) \
     { return make_tuple8(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d, lhs.e OP rhs.e, lhs.f OP rhs.f, lhs.g OP rhs.g, lhs.h OP rhs.h); }
@@ -297,9 +297,9 @@ inline constexpr tuple8<T1,T2,T3,T4,T5,T6,T7,T8> make_tuple8(const T1 &a, const 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8>
 struct tuple9
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple9>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple9>,bool> = true> \
     inline tuple9 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; e OP rhs.e; f OP rhs.f; g OP rhs.g; h OP rhs.h; i OP rhs.i; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple9>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple9>,bool> = true> \
     inline tuple9 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; e OP rhs; f OP rhs; g OP rhs; h OP rhs; i OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple9 &lhs, const tuple9 &rhs) \
     { return make_tuple9(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d, lhs.e OP rhs.e, lhs.f OP rhs.f, lhs.g OP rhs.g, lhs.h OP rhs.h, lhs.i OP rhs.i); }
@@ -335,9 +335,9 @@ inline constexpr tuple9<T1,T2,T3,T4,T5,T6,T7,T8,T9> make_tuple9(const T1 &a, con
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9>
 struct tuple10
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple10>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple10>,bool> = true> \
     inline tuple10 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; e OP rhs.e; f OP rhs.f; g OP rhs.g; h OP rhs.h; i OP rhs.i; j OP rhs.j; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple10>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple10>,bool> = true> \
     inline tuple10 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; e OP rhs; f OP rhs; g OP rhs; h OP rhs; i OP rhs; j OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple10 &lhs, const tuple10 &rhs) \
     { return make_tuple10(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d, lhs.e OP rhs.e, lhs.f OP rhs.f, lhs.g OP rhs.g, lhs.h OP rhs.h, lhs.i OP rhs.i, lhs.j OP rhs.j); }
@@ -373,9 +373,9 @@ inline constexpr tuple10<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10> make_tuple10(const T1 &
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10>
 struct tuple11
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple11>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple11>,bool> = true> \
     inline tuple11 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; e OP rhs.e; f OP rhs.f; g OP rhs.g; h OP rhs.h; i OP rhs.i; j OP rhs.j; k OP rhs.k; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple11>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple11>,bool> = true> \
     inline tuple11 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; e OP rhs; f OP rhs; g OP rhs; h OP rhs; i OP rhs; j OP rhs; k OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple11 &lhs, const tuple11 &rhs) \
     { return make_tuple11(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d, lhs.e OP rhs.e, lhs.f OP rhs.f, lhs.g OP rhs.g, lhs.h OP rhs.h, lhs.i OP rhs.i, lhs.j OP rhs.j, lhs.k OP rhs.k); }
@@ -411,9 +411,9 @@ inline constexpr tuple11<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11> make_tuple11(const 
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11>
 struct tuple12
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple12>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple12>,bool> = true> \
     inline tuple12 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; e OP rhs.e; f OP rhs.f; g OP rhs.g; h OP rhs.h; i OP rhs.i; j OP rhs.j; k OP rhs.k; l OP rhs.l; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple12>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple12>,bool> = true> \
     inline tuple12 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; e OP rhs; f OP rhs; g OP rhs; h OP rhs; i OP rhs; j OP rhs; k OP rhs; l OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple12 &lhs, const tuple12 &rhs) \
     { return make_tuple12(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d, lhs.e OP rhs.e, lhs.f OP rhs.f, lhs.g OP rhs.g, lhs.h OP rhs.h, lhs.i OP rhs.i, lhs.j OP rhs.j, lhs.k OP rhs.k, lhs.l OP rhs.l); }
@@ -449,9 +449,9 @@ inline constexpr tuple12<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12> make_tuple12(co
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12>
 struct tuple13
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple13>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple13>,bool> = true> \
     inline tuple13 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; e OP rhs.e; f OP rhs.f; g OP rhs.g; h OP rhs.h; i OP rhs.i; j OP rhs.j; k OP rhs.k; l OP rhs.l; m OP rhs.m; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple13>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple13>,bool> = true> \
     inline tuple13 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; e OP rhs; f OP rhs; g OP rhs; h OP rhs; i OP rhs; j OP rhs; k OP rhs; l OP rhs; m OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple13 &lhs, const tuple13 &rhs) \
     { return make_tuple13(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d, lhs.e OP rhs.e, lhs.f OP rhs.f, lhs.g OP rhs.g, lhs.h OP rhs.h, lhs.i OP rhs.i, lhs.j OP rhs.j, lhs.k OP rhs.k, lhs.l OP rhs.l, lhs.m OP rhs.m); }
@@ -487,9 +487,9 @@ inline constexpr tuple13<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13> make_tuple1
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13>
 struct tuple14
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple14>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple14>,bool> = true> \
     inline tuple14 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; e OP rhs.e; f OP rhs.f; g OP rhs.g; h OP rhs.h; i OP rhs.i; j OP rhs.j; k OP rhs.k; l OP rhs.l; m OP rhs.m; n OP rhs.n; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple14>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple14>,bool> = true> \
     inline tuple14 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; e OP rhs; f OP rhs; g OP rhs; h OP rhs; i OP rhs; j OP rhs; k OP rhs; l OP rhs; m OP rhs; n OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple14 &lhs, const tuple14 &rhs) \
     { return make_tuple14(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d, lhs.e OP rhs.e, lhs.f OP rhs.f, lhs.g OP rhs.g, lhs.h OP rhs.h, lhs.i OP rhs.i, lhs.j OP rhs.j, lhs.k OP rhs.k, lhs.l OP rhs.l, lhs.m OP rhs.m, lhs.n OP rhs.n); }
@@ -525,9 +525,9 @@ inline constexpr tuple14<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14> make_tu
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14>
 struct tuple15
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple15>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple15>,bool> = true> \
     inline tuple15 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; e OP rhs.e; f OP rhs.f; g OP rhs.g; h OP rhs.h; i OP rhs.i; j OP rhs.j; k OP rhs.k; l OP rhs.l; m OP rhs.m; n OP rhs.n; o OP rhs.o; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple15>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple15>,bool> = true> \
     inline tuple15 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; e OP rhs; f OP rhs; g OP rhs; h OP rhs; i OP rhs; j OP rhs; k OP rhs; l OP rhs; m OP rhs; n OP rhs; o OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple15 &lhs, const tuple15 &rhs) \
     { return make_tuple15(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d, lhs.e OP rhs.e, lhs.f OP rhs.f, lhs.g OP rhs.g, lhs.h OP rhs.h, lhs.i OP rhs.i, lhs.j OP rhs.j, lhs.k OP rhs.k, lhs.l OP rhs.l, lhs.m OP rhs.m, lhs.n OP rhs.n, lhs.o OP rhs.o); }
@@ -563,9 +563,9 @@ inline constexpr tuple15<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15> mak
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14, typename T16 = T15>
 struct tuple16
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple16>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple16>,bool> = true> \
     inline tuple16 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; e OP rhs.e; f OP rhs.f; g OP rhs.g; h OP rhs.h; i OP rhs.i; j OP rhs.j; k OP rhs.k; l OP rhs.l; m OP rhs.m; n OP rhs.n; o OP rhs.o; p OP rhs.p; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple16>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple16>,bool> = true> \
     inline tuple16 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; e OP rhs; f OP rhs; g OP rhs; h OP rhs; i OP rhs; j OP rhs; k OP rhs; l OP rhs; m OP rhs; n OP rhs; o OP rhs; p OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple16 &lhs, const tuple16 &rhs) \
     { return make_tuple16(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d, lhs.e OP rhs.e, lhs.f OP rhs.f, lhs.g OP rhs.g, lhs.h OP rhs.h, lhs.i OP rhs.i, lhs.j OP rhs.j, lhs.k OP rhs.k, lhs.l OP rhs.l, lhs.m OP rhs.m, lhs.n OP rhs.n, lhs.o OP rhs.o, lhs.p OP rhs.p); }
@@ -601,9 +601,9 @@ inline constexpr tuple16<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16>
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14, typename T16 = T15, typename T17 = T16>
 struct tuple17
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple17>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple17>,bool> = true> \
     inline tuple17 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; e OP rhs.e; f OP rhs.f; g OP rhs.g; h OP rhs.h; i OP rhs.i; j OP rhs.j; k OP rhs.k; l OP rhs.l; m OP rhs.m; n OP rhs.n; o OP rhs.o; p OP rhs.p; q OP rhs.q; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple17>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple17>,bool> = true> \
     inline tuple17 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; e OP rhs; f OP rhs; g OP rhs; h OP rhs; i OP rhs; j OP rhs; k OP rhs; l OP rhs; m OP rhs; n OP rhs; o OP rhs; p OP rhs; q OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple17 &lhs, const tuple17 &rhs) \
     { return make_tuple17(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d, lhs.e OP rhs.e, lhs.f OP rhs.f, lhs.g OP rhs.g, lhs.h OP rhs.h, lhs.i OP rhs.i, lhs.j OP rhs.j, lhs.k OP rhs.k, lhs.l OP rhs.l, lhs.m OP rhs.m, lhs.n OP rhs.n, lhs.o OP rhs.o, lhs.p OP rhs.p, lhs.q OP rhs.q); }
@@ -639,9 +639,9 @@ inline constexpr tuple17<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14, typename T16 = T15, typename T17 = T16, typename T18 = T17>
 struct tuple18
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple18>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple18>,bool> = true> \
     inline tuple18 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; e OP rhs.e; f OP rhs.f; g OP rhs.g; h OP rhs.h; i OP rhs.i; j OP rhs.j; k OP rhs.k; l OP rhs.l; m OP rhs.m; n OP rhs.n; o OP rhs.o; p OP rhs.p; q OP rhs.q; r OP rhs.r; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple18>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple18>,bool> = true> \
     inline tuple18 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; e OP rhs; f OP rhs; g OP rhs; h OP rhs; i OP rhs; j OP rhs; k OP rhs; l OP rhs; m OP rhs; n OP rhs; o OP rhs; p OP rhs; q OP rhs; r OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple18 &lhs, const tuple18 &rhs) \
     { return make_tuple18(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d, lhs.e OP rhs.e, lhs.f OP rhs.f, lhs.g OP rhs.g, lhs.h OP rhs.h, lhs.i OP rhs.i, lhs.j OP rhs.j, lhs.k OP rhs.k, lhs.l OP rhs.l, lhs.m OP rhs.m, lhs.n OP rhs.n, lhs.o OP rhs.o, lhs.p OP rhs.p, lhs.q OP rhs.q, lhs.r OP rhs.r); }
@@ -677,9 +677,9 @@ inline constexpr tuple18<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14, typename T16 = T15, typename T17 = T16, typename T18 = T17, typename T19 = T18>
 struct tuple19
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple19>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple19>,bool> = true> \
     inline tuple19 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; e OP rhs.e; f OP rhs.f; g OP rhs.g; h OP rhs.h; i OP rhs.i; j OP rhs.j; k OP rhs.k; l OP rhs.l; m OP rhs.m; n OP rhs.n; o OP rhs.o; p OP rhs.p; q OP rhs.q; r OP rhs.r; s OP rhs.s; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple19>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple19>,bool> = true> \
     inline tuple19 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; e OP rhs; f OP rhs; g OP rhs; h OP rhs; i OP rhs; j OP rhs; k OP rhs; l OP rhs; m OP rhs; n OP rhs; o OP rhs; p OP rhs; q OP rhs; r OP rhs; s OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple19 &lhs, const tuple19 &rhs) \
     { return make_tuple19(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d, lhs.e OP rhs.e, lhs.f OP rhs.f, lhs.g OP rhs.g, lhs.h OP rhs.h, lhs.i OP rhs.i, lhs.j OP rhs.j, lhs.k OP rhs.k, lhs.l OP rhs.l, lhs.m OP rhs.m, lhs.n OP rhs.n, lhs.o OP rhs.o, lhs.p OP rhs.p, lhs.q OP rhs.q, lhs.r OP rhs.r, lhs.s OP rhs.s); }
@@ -715,9 +715,9 @@ inline constexpr tuple19<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14, typename T16 = T15, typename T17 = T16, typename T18 = T17, typename T19 = T18, typename T20 = T19>
 struct tuple20
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple20>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple20>,bool> = true> \
     inline tuple20 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; e OP rhs.e; f OP rhs.f; g OP rhs.g; h OP rhs.h; i OP rhs.i; j OP rhs.j; k OP rhs.k; l OP rhs.l; m OP rhs.m; n OP rhs.n; o OP rhs.o; p OP rhs.p; q OP rhs.q; r OP rhs.r; s OP rhs.s; t OP rhs.t; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple20>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple20>,bool> = true> \
     inline tuple20 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; e OP rhs; f OP rhs; g OP rhs; h OP rhs; i OP rhs; j OP rhs; k OP rhs; l OP rhs; m OP rhs; n OP rhs; o OP rhs; p OP rhs; q OP rhs; r OP rhs; s OP rhs; t OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple20 &lhs, const tuple20 &rhs) \
     { return make_tuple20(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d, lhs.e OP rhs.e, lhs.f OP rhs.f, lhs.g OP rhs.g, lhs.h OP rhs.h, lhs.i OP rhs.i, lhs.j OP rhs.j, lhs.k OP rhs.k, lhs.l OP rhs.l, lhs.m OP rhs.m, lhs.n OP rhs.n, lhs.o OP rhs.o, lhs.p OP rhs.p, lhs.q OP rhs.q, lhs.r OP rhs.r, lhs.s OP rhs.s, lhs.t OP rhs.t); }
@@ -753,9 +753,9 @@ inline constexpr tuple20<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14, typename T16 = T15, typename T17 = T16, typename T18 = T17, typename T19 = T18, typename T20 = T19, typename T21 = T20>
 struct tuple21
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple21>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple21>,bool> = true> \
     inline tuple21 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; e OP rhs.e; f OP rhs.f; g OP rhs.g; h OP rhs.h; i OP rhs.i; j OP rhs.j; k OP rhs.k; l OP rhs.l; m OP rhs.m; n OP rhs.n; o OP rhs.o; p OP rhs.p; q OP rhs.q; r OP rhs.r; s OP rhs.s; t OP rhs.t; u OP rhs.u; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple21>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple21>,bool> = true> \
     inline tuple21 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; e OP rhs; f OP rhs; g OP rhs; h OP rhs; i OP rhs; j OP rhs; k OP rhs; l OP rhs; m OP rhs; n OP rhs; o OP rhs; p OP rhs; q OP rhs; r OP rhs; s OP rhs; t OP rhs; u OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple21 &lhs, const tuple21 &rhs) \
     { return make_tuple21(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d, lhs.e OP rhs.e, lhs.f OP rhs.f, lhs.g OP rhs.g, lhs.h OP rhs.h, lhs.i OP rhs.i, lhs.j OP rhs.j, lhs.k OP rhs.k, lhs.l OP rhs.l, lhs.m OP rhs.m, lhs.n OP rhs.n, lhs.o OP rhs.o, lhs.p OP rhs.p, lhs.q OP rhs.q, lhs.r OP rhs.r, lhs.s OP rhs.s, lhs.t OP rhs.t, lhs.u OP rhs.u); }
@@ -791,9 +791,9 @@ inline constexpr tuple21<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14, typename T16 = T15, typename T17 = T16, typename T18 = T17, typename T19 = T18, typename T20 = T19, typename T21 = T20, typename T22 = T21>
 struct tuple22
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple22>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple22>,bool> = true> \
     inline tuple22 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; e OP rhs.e; f OP rhs.f; g OP rhs.g; h OP rhs.h; i OP rhs.i; j OP rhs.j; k OP rhs.k; l OP rhs.l; m OP rhs.m; n OP rhs.n; o OP rhs.o; p OP rhs.p; q OP rhs.q; r OP rhs.r; s OP rhs.s; t OP rhs.t; u OP rhs.u; v OP rhs.v; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple22>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple22>,bool> = true> \
     inline tuple22 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; e OP rhs; f OP rhs; g OP rhs; h OP rhs; i OP rhs; j OP rhs; k OP rhs; l OP rhs; m OP rhs; n OP rhs; o OP rhs; p OP rhs; q OP rhs; r OP rhs; s OP rhs; t OP rhs; u OP rhs; v OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple22 &lhs, const tuple22 &rhs) \
     { return make_tuple22(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d, lhs.e OP rhs.e, lhs.f OP rhs.f, lhs.g OP rhs.g, lhs.h OP rhs.h, lhs.i OP rhs.i, lhs.j OP rhs.j, lhs.k OP rhs.k, lhs.l OP rhs.l, lhs.m OP rhs.m, lhs.n OP rhs.n, lhs.o OP rhs.o, lhs.p OP rhs.p, lhs.q OP rhs.q, lhs.r OP rhs.r, lhs.s OP rhs.s, lhs.t OP rhs.t, lhs.u OP rhs.u, lhs.v OP rhs.v); }
@@ -829,9 +829,9 @@ inline constexpr tuple22<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14, typename T16 = T15, typename T17 = T16, typename T18 = T17, typename T19 = T18, typename T20 = T19, typename T21 = T20, typename T22 = T21, typename T23 = T22>
 struct tuple23
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple23>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple23>,bool> = true> \
     inline tuple23 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; e OP rhs.e; f OP rhs.f; g OP rhs.g; h OP rhs.h; i OP rhs.i; j OP rhs.j; k OP rhs.k; l OP rhs.l; m OP rhs.m; n OP rhs.n; o OP rhs.o; p OP rhs.p; q OP rhs.q; r OP rhs.r; s OP rhs.s; t OP rhs.t; u OP rhs.u; v OP rhs.v; w OP rhs.w; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple23>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple23>,bool> = true> \
     inline tuple23 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; e OP rhs; f OP rhs; g OP rhs; h OP rhs; i OP rhs; j OP rhs; k OP rhs; l OP rhs; m OP rhs; n OP rhs; o OP rhs; p OP rhs; q OP rhs; r OP rhs; s OP rhs; t OP rhs; u OP rhs; v OP rhs; w OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple23 &lhs, const tuple23 &rhs) \
     { return make_tuple23(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d, lhs.e OP rhs.e, lhs.f OP rhs.f, lhs.g OP rhs.g, lhs.h OP rhs.h, lhs.i OP rhs.i, lhs.j OP rhs.j, lhs.k OP rhs.k, lhs.l OP rhs.l, lhs.m OP rhs.m, lhs.n OP rhs.n, lhs.o OP rhs.o, lhs.p OP rhs.p, lhs.q OP rhs.q, lhs.r OP rhs.r, lhs.s OP rhs.s, lhs.t OP rhs.t, lhs.u OP rhs.u, lhs.v OP rhs.v, lhs.w OP rhs.w); }
@@ -867,9 +867,9 @@ inline constexpr tuple23<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14, typename T16 = T15, typename T17 = T16, typename T18 = T17, typename T19 = T18, typename T20 = T19, typename T21 = T20, typename T22 = T21, typename T23 = T22, typename T24 = T23>
 struct tuple24
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple24>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple24>,bool> = true> \
     inline tuple24 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; e OP rhs.e; f OP rhs.f; g OP rhs.g; h OP rhs.h; i OP rhs.i; j OP rhs.j; k OP rhs.k; l OP rhs.l; m OP rhs.m; n OP rhs.n; o OP rhs.o; p OP rhs.p; q OP rhs.q; r OP rhs.r; s OP rhs.s; t OP rhs.t; u OP rhs.u; v OP rhs.v; w OP rhs.w; x OP rhs.x; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple24>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple24>,bool> = true> \
     inline tuple24 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; e OP rhs; f OP rhs; g OP rhs; h OP rhs; i OP rhs; j OP rhs; k OP rhs; l OP rhs; m OP rhs; n OP rhs; o OP rhs; p OP rhs; q OP rhs; r OP rhs; s OP rhs; t OP rhs; u OP rhs; v OP rhs; w OP rhs; x OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple24 &lhs, const tuple24 &rhs) \
     { return make_tuple24(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d, lhs.e OP rhs.e, lhs.f OP rhs.f, lhs.g OP rhs.g, lhs.h OP rhs.h, lhs.i OP rhs.i, lhs.j OP rhs.j, lhs.k OP rhs.k, lhs.l OP rhs.l, lhs.m OP rhs.m, lhs.n OP rhs.n, lhs.o OP rhs.o, lhs.p OP rhs.p, lhs.q OP rhs.q, lhs.r OP rhs.r, lhs.s OP rhs.s, lhs.t OP rhs.t, lhs.u OP rhs.u, lhs.v OP rhs.v, lhs.w OP rhs.w, lhs.x OP rhs.x); }
@@ -905,9 +905,9 @@ inline constexpr tuple24<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14, typename T16 = T15, typename T17 = T16, typename T18 = T17, typename T19 = T18, typename T20 = T19, typename T21 = T20, typename T22 = T21, typename T23 = T22, typename T24 = T23, typename T25 = T24>
 struct tuple25
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple25>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple25>,bool> = true> \
     inline tuple25 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; e OP rhs.e; f OP rhs.f; g OP rhs.g; h OP rhs.h; i OP rhs.i; j OP rhs.j; k OP rhs.k; l OP rhs.l; m OP rhs.m; n OP rhs.n; o OP rhs.o; p OP rhs.p; q OP rhs.q; r OP rhs.r; s OP rhs.s; t OP rhs.t; u OP rhs.u; v OP rhs.v; w OP rhs.w; x OP rhs.x; y OP rhs.y; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple25>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple25>,bool> = true> \
     inline tuple25 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; e OP rhs; f OP rhs; g OP rhs; h OP rhs; i OP rhs; j OP rhs; k OP rhs; l OP rhs; m OP rhs; n OP rhs; o OP rhs; p OP rhs; q OP rhs; r OP rhs; s OP rhs; t OP rhs; u OP rhs; v OP rhs; w OP rhs; x OP rhs; y OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple25 &lhs, const tuple25 &rhs) \
     { return make_tuple25(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d, lhs.e OP rhs.e, lhs.f OP rhs.f, lhs.g OP rhs.g, lhs.h OP rhs.h, lhs.i OP rhs.i, lhs.j OP rhs.j, lhs.k OP rhs.k, lhs.l OP rhs.l, lhs.m OP rhs.m, lhs.n OP rhs.n, lhs.o OP rhs.o, lhs.p OP rhs.p, lhs.q OP rhs.q, lhs.r OP rhs.r, lhs.s OP rhs.s, lhs.t OP rhs.t, lhs.u OP rhs.u, lhs.v OP rhs.v, lhs.w OP rhs.w, lhs.x OP rhs.x, lhs.y OP rhs.y); }
@@ -943,9 +943,9 @@ inline constexpr tuple25<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,
 template <typename T1, typename T2 = T1, typename T3 = T2, typename T4 = T3, typename T5 = T4, typename T6 = T5, typename T7 = T6, typename T8 = T7, typename T9 = T8, typename T10 = T9, typename T11 = T10, typename T12 = T11, typename T13 = T12, typename T14 = T13, typename T15 = T14, typename T16 = T15, typename T17 = T16, typename T18 = T17, typename T19 = T18, typename T20 = T19, typename T21 = T20, typename T22 = T21, typename T23 = T22, typename T24 = T23, typename T25 = T24, typename T26 = T25>
 struct tuple26
 {
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if<std::is_same<U,tuple26>::value,bool>::type = true> \
+#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple26>,bool> = true> \
     inline tuple26 &operator OP(const U &rhs) { a OP rhs.a; b OP rhs.b; c OP rhs.c; d OP rhs.d; e OP rhs.e; f OP rhs.f; g OP rhs.g; h OP rhs.h; i OP rhs.i; j OP rhs.j; k OP rhs.k; l OP rhs.l; m OP rhs.m; n OP rhs.n; o OP rhs.o; p OP rhs.p; q OP rhs.q; r OP rhs.r; s OP rhs.s; t OP rhs.t; u OP rhs.u; v OP rhs.v; w OP rhs.w; x OP rhs.x; y OP rhs.y; z OP rhs.z; return *this; }
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if<!std::is_same<U,tuple26>::value,bool>::type = true> \
+#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple26>,bool> = true> \
     inline tuple26 &operator OP(const U &rhs) { a OP rhs; b OP rhs; c OP rhs; d OP rhs; e OP rhs; f OP rhs; g OP rhs; h OP rhs; i OP rhs; j OP rhs; k OP rhs; l OP rhs; m OP rhs; n OP rhs; o OP rhs; p OP rhs; q OP rhs; r OP rhs; s OP rhs; t OP rhs; u OP rhs; v OP rhs; w OP rhs; x OP rhs; y OP rhs; z OP rhs; return *this; }
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple26 &lhs, const tuple26 &rhs) \
     { return make_tuple26(lhs.a OP rhs.a, lhs.b OP rhs.b, lhs.c OP rhs.c, lhs.d OP rhs.d, lhs.e OP rhs.e, lhs.f OP rhs.f, lhs.g OP rhs.g, lhs.h OP rhs.h, lhs.i OP rhs.i, lhs.j OP rhs.j, lhs.k OP rhs.k, lhs.l OP rhs.l, lhs.m OP rhs.m, lhs.n OP rhs.n, lhs.o OP rhs.o, lhs.p OP rhs.p, lhs.q OP rhs.q, lhs.r OP rhs.r, lhs.s OP rhs.s, lhs.t OP rhs.t, lhs.u OP rhs.u, lhs.v OP rhs.v, lhs.w OP rhs.w, lhs.x OP rhs.x, lhs.y OP rhs.y, lhs.z OP rhs.z); }
