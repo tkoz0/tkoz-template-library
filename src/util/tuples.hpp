@@ -21,11 +21,11 @@ Convenient tuples for more sizes than just std::pair
 namespace tkoz
 {
 
-#define GET(IV,TV,MV) template <size_t i, typename std::enable_if_t<i==IV,bool> = true> \
+#define GET(IV,TV,MV) template <size_t ind, typename std::enable_if_t<ind==IV,bool> = true> \
     inline constexpr TV &get() { return MV; }
-#define GETC(IV,TV,MV) template <size_t i, typename std::enable_if_t<i==IV,bool> = true> \
+#define GETC(IV,TV,MV) template <size_t ind, typename std::enable_if_t<ind==IV,bool> = true> \
     inline constexpr const TV &get() const { return MV; }
-#define SET(IV,TV,MV) template <size_t i, typename std::enable_if_t<i==IV,bool> = true> \
+#define SET(IV,TV,MV) template <size_t ind, typename std::enable_if_t<ind==IV,bool> = true> \
     inline void set(const TV &val) { MV = val; }
 
 template <typename T1, typename T2 = T1>
@@ -48,7 +48,8 @@ struct tuple2
 #define OP_PRE(OP) inline tuple2 &operator OP() { OP a; OP b; return *this; }
 #define OP_POST(OP) inline tuple2 operator OP(int) { tuple2 ret = *this; OP(*this); return ret; }
     T1 a; T2 b;
-    inline constexpr tuple2(const T1 &a = T1(), const T2 &b = T2()): a(a), b(b) {}
+    inline constexpr tuple2(): a(), b() {}
+    inline constexpr tuple2(const T1 &a, const T2 &b): a(a), b(b) {}
     GET(0,T1,a) GET(1,T2,b)
     GETC(0,T1,a) GETC(1,T2,b)
     SET(0,T1,a) SET(1,T2,b)
@@ -57,7 +58,7 @@ struct tuple2
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b); }
     inline constexpr bool operator==(const tuple2 &tup) const = default;
     inline constexpr auto operator<=>(const tuple2 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -92,7 +93,8 @@ struct tuple3
 #define OP_PRE(OP) inline tuple3 &operator OP() { OP a; OP b; OP c; return *this; }
 #define OP_POST(OP) inline tuple3 operator OP(int) { tuple3 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c;
-    inline constexpr tuple3(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3()): a(a), b(b), c(c) {}
+    inline constexpr tuple3(): a(), b(), c() {}
+    inline constexpr tuple3(const T1 &a, const T2 &b, const T3 &c): a(a), b(b), c(c) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c)
@@ -101,7 +103,7 @@ struct tuple3
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c); }
     inline constexpr bool operator==(const tuple3 &tup) const = default;
     inline constexpr auto operator<=>(const tuple3 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -136,7 +138,8 @@ struct tuple4
 #define OP_PRE(OP) inline tuple4 &operator OP() { OP a; OP b; OP c; OP d; return *this; }
 #define OP_POST(OP) inline tuple4 operator OP(int) { tuple4 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d;
-    inline constexpr tuple4(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4()): a(a), b(b), c(c), d(d) {}
+    inline constexpr tuple4(): a(), b(), c(), d() {}
+    inline constexpr tuple4(const T1 &a, const T2 &b, const T3 &c, const T4 &d): a(a), b(b), c(c), d(d) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d)
@@ -145,7 +148,7 @@ struct tuple4
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d); }
     inline constexpr bool operator==(const tuple4 &tup) const = default;
     inline constexpr auto operator<=>(const tuple4 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -180,7 +183,8 @@ struct tuple5
 #define OP_PRE(OP) inline tuple5 &operator OP() { OP a; OP b; OP c; OP d; OP e; return *this; }
 #define OP_POST(OP) inline tuple5 operator OP(int) { tuple5 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d; T5 e;
-    inline constexpr tuple5(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4(), const T5 &e = T5()): a(a), b(b), c(c), d(d), e(e) {}
+    inline constexpr tuple5(): a(), b(), c(), d(), e() {}
+    inline constexpr tuple5(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e): a(a), b(b), c(c), d(d), e(e) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d) GET(4,T5,e)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d) GETC(4,T5,e)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d) SET(4,T5,e)
@@ -189,7 +193,7 @@ struct tuple5
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e); }
     inline constexpr bool operator==(const tuple5 &tup) const = default;
     inline constexpr auto operator<=>(const tuple5 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -224,7 +228,8 @@ struct tuple6
 #define OP_PRE(OP) inline tuple6 &operator OP() { OP a; OP b; OP c; OP d; OP e; OP f; return *this; }
 #define OP_POST(OP) inline tuple6 operator OP(int) { tuple6 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d; T5 e; T6 f;
-    inline constexpr tuple6(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4(), const T5 &e = T5(), const T6 &f = T6()): a(a), b(b), c(c), d(d), e(e), f(f) {}
+    inline constexpr tuple6(): a(), b(), c(), d(), e(), f() {}
+    inline constexpr tuple6(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f): a(a), b(b), c(c), d(d), e(e), f(f) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d) GET(4,T5,e) GET(5,T6,f)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d) GETC(4,T5,e) GETC(5,T6,f)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d) SET(4,T5,e) SET(5,T6,f)
@@ -233,7 +238,7 @@ struct tuple6
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f); }
     inline constexpr bool operator==(const tuple6 &tup) const = default;
     inline constexpr auto operator<=>(const tuple6 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -268,7 +273,8 @@ struct tuple7
 #define OP_PRE(OP) inline tuple7 &operator OP() { OP a; OP b; OP c; OP d; OP e; OP f; OP g; return *this; }
 #define OP_POST(OP) inline tuple7 operator OP(int) { tuple7 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d; T5 e; T6 f; T7 g;
-    inline constexpr tuple7(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4(), const T5 &e = T5(), const T6 &f = T6(), const T7 &g = T7()): a(a), b(b), c(c), d(d), e(e), f(f), g(g) {}
+    inline constexpr tuple7(): a(), b(), c(), d(), e(), f(), g() {}
+    inline constexpr tuple7(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g): a(a), b(b), c(c), d(d), e(e), f(f), g(g) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d) GET(4,T5,e) GET(5,T6,f) GET(6,T7,g)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d) GETC(4,T5,e) GETC(5,T6,f) GETC(6,T7,g)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d) SET(4,T5,e) SET(5,T6,f) SET(6,T7,g)
@@ -277,7 +283,7 @@ struct tuple7
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g); }
     inline constexpr bool operator==(const tuple7 &tup) const = default;
     inline constexpr auto operator<=>(const tuple7 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -312,7 +318,8 @@ struct tuple8
 #define OP_PRE(OP) inline tuple8 &operator OP() { OP a; OP b; OP c; OP d; OP e; OP f; OP g; OP h; return *this; }
 #define OP_POST(OP) inline tuple8 operator OP(int) { tuple8 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d; T5 e; T6 f; T7 g; T8 h;
-    inline constexpr tuple8(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4(), const T5 &e = T5(), const T6 &f = T6(), const T7 &g = T7(), const T8 &h = T8()): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h) {}
+    inline constexpr tuple8(): a(), b(), c(), d(), e(), f(), g(), h() {}
+    inline constexpr tuple8(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d) GET(4,T5,e) GET(5,T6,f) GET(6,T7,g) GET(7,T8,h)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d) GETC(4,T5,e) GETC(5,T6,f) GETC(6,T7,g) GETC(7,T8,h)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d) SET(4,T5,e) SET(5,T6,f) SET(6,T7,g) SET(7,T8,h)
@@ -321,7 +328,7 @@ struct tuple8
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h); }
     inline constexpr bool operator==(const tuple8 &tup) const = default;
     inline constexpr auto operator<=>(const tuple8 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -356,7 +363,8 @@ struct tuple9
 #define OP_PRE(OP) inline tuple9 &operator OP() { OP a; OP b; OP c; OP d; OP e; OP f; OP g; OP h; OP i; return *this; }
 #define OP_POST(OP) inline tuple9 operator OP(int) { tuple9 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d; T5 e; T6 f; T7 g; T8 h; T9 i;
-    inline constexpr tuple9(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4(), const T5 &e = T5(), const T6 &f = T6(), const T7 &g = T7(), const T8 &h = T8(), const T9 &i = T9()): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i) {}
+    inline constexpr tuple9(): a(), b(), c(), d(), e(), f(), g(), h(), i() {}
+    inline constexpr tuple9(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d) GET(4,T5,e) GET(5,T6,f) GET(6,T7,g) GET(7,T8,h) GET(8,T9,i)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d) GETC(4,T5,e) GETC(5,T6,f) GETC(6,T7,g) GETC(7,T8,h) GETC(8,T9,i)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d) SET(4,T5,e) SET(5,T6,f) SET(6,T7,g) SET(7,T8,h) SET(8,T9,i)
@@ -365,7 +373,7 @@ struct tuple9
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i); }
     inline constexpr bool operator==(const tuple9 &tup) const = default;
     inline constexpr auto operator<=>(const tuple9 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -400,7 +408,8 @@ struct tuple10
 #define OP_PRE(OP) inline tuple10 &operator OP() { OP a; OP b; OP c; OP d; OP e; OP f; OP g; OP h; OP i; OP j; return *this; }
 #define OP_POST(OP) inline tuple10 operator OP(int) { tuple10 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d; T5 e; T6 f; T7 g; T8 h; T9 i; T10 j;
-    inline constexpr tuple10(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4(), const T5 &e = T5(), const T6 &f = T6(), const T7 &g = T7(), const T8 &h = T8(), const T9 &i = T9(), const T10 &j = T10()): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j) {}
+    inline constexpr tuple10(): a(), b(), c(), d(), e(), f(), g(), h(), i(), j() {}
+    inline constexpr tuple10(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d) GET(4,T5,e) GET(5,T6,f) GET(6,T7,g) GET(7,T8,h) GET(8,T9,i) GET(9,T10,j)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d) GETC(4,T5,e) GETC(5,T6,f) GETC(6,T7,g) GETC(7,T8,h) GETC(8,T9,i) GETC(9,T10,j)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d) SET(4,T5,e) SET(5,T6,f) SET(6,T7,g) SET(7,T8,h) SET(8,T9,i) SET(9,T10,j)
@@ -409,7 +418,7 @@ struct tuple10
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j); }
     inline constexpr bool operator==(const tuple10 &tup) const = default;
     inline constexpr auto operator<=>(const tuple10 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -444,7 +453,8 @@ struct tuple11
 #define OP_PRE(OP) inline tuple11 &operator OP() { OP a; OP b; OP c; OP d; OP e; OP f; OP g; OP h; OP i; OP j; OP k; return *this; }
 #define OP_POST(OP) inline tuple11 operator OP(int) { tuple11 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d; T5 e; T6 f; T7 g; T8 h; T9 i; T10 j; T11 k;
-    inline constexpr tuple11(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4(), const T5 &e = T5(), const T6 &f = T6(), const T7 &g = T7(), const T8 &h = T8(), const T9 &i = T9(), const T10 &j = T10(), const T11 &k = T11()): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k) {}
+    inline constexpr tuple11(): a(), b(), c(), d(), e(), f(), g(), h(), i(), j(), k() {}
+    inline constexpr tuple11(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d) GET(4,T5,e) GET(5,T6,f) GET(6,T7,g) GET(7,T8,h) GET(8,T9,i) GET(9,T10,j) GET(10,T11,k)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d) GETC(4,T5,e) GETC(5,T6,f) GETC(6,T7,g) GETC(7,T8,h) GETC(8,T9,i) GETC(9,T10,j) GETC(10,T11,k)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d) SET(4,T5,e) SET(5,T6,f) SET(6,T7,g) SET(7,T8,h) SET(8,T9,i) SET(9,T10,j) SET(10,T11,k)
@@ -453,7 +463,7 @@ struct tuple11
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k); }
     inline constexpr bool operator==(const tuple11 &tup) const = default;
     inline constexpr auto operator<=>(const tuple11 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -488,7 +498,8 @@ struct tuple12
 #define OP_PRE(OP) inline tuple12 &operator OP() { OP a; OP b; OP c; OP d; OP e; OP f; OP g; OP h; OP i; OP j; OP k; OP l; return *this; }
 #define OP_POST(OP) inline tuple12 operator OP(int) { tuple12 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d; T5 e; T6 f; T7 g; T8 h; T9 i; T10 j; T11 k; T12 l;
-    inline constexpr tuple12(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4(), const T5 &e = T5(), const T6 &f = T6(), const T7 &g = T7(), const T8 &h = T8(), const T9 &i = T9(), const T10 &j = T10(), const T11 &k = T11(), const T12 &l = T12()): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l) {}
+    inline constexpr tuple12(): a(), b(), c(), d(), e(), f(), g(), h(), i(), j(), k(), l() {}
+    inline constexpr tuple12(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d) GET(4,T5,e) GET(5,T6,f) GET(6,T7,g) GET(7,T8,h) GET(8,T9,i) GET(9,T10,j) GET(10,T11,k) GET(11,T12,l)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d) GETC(4,T5,e) GETC(5,T6,f) GETC(6,T7,g) GETC(7,T8,h) GETC(8,T9,i) GETC(9,T10,j) GETC(10,T11,k) GETC(11,T12,l)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d) SET(4,T5,e) SET(5,T6,f) SET(6,T7,g) SET(7,T8,h) SET(8,T9,i) SET(9,T10,j) SET(10,T11,k) SET(11,T12,l)
@@ -497,7 +508,7 @@ struct tuple12
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l); }
     inline constexpr bool operator==(const tuple12 &tup) const = default;
     inline constexpr auto operator<=>(const tuple12 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -532,7 +543,8 @@ struct tuple13
 #define OP_PRE(OP) inline tuple13 &operator OP() { OP a; OP b; OP c; OP d; OP e; OP f; OP g; OP h; OP i; OP j; OP k; OP l; OP m; return *this; }
 #define OP_POST(OP) inline tuple13 operator OP(int) { tuple13 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d; T5 e; T6 f; T7 g; T8 h; T9 i; T10 j; T11 k; T12 l; T13 m;
-    inline constexpr tuple13(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4(), const T5 &e = T5(), const T6 &f = T6(), const T7 &g = T7(), const T8 &h = T8(), const T9 &i = T9(), const T10 &j = T10(), const T11 &k = T11(), const T12 &l = T12(), const T13 &m = T13()): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m) {}
+    inline constexpr tuple13(): a(), b(), c(), d(), e(), f(), g(), h(), i(), j(), k(), l(), m() {}
+    inline constexpr tuple13(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d) GET(4,T5,e) GET(5,T6,f) GET(6,T7,g) GET(7,T8,h) GET(8,T9,i) GET(9,T10,j) GET(10,T11,k) GET(11,T12,l) GET(12,T13,m)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d) GETC(4,T5,e) GETC(5,T6,f) GETC(6,T7,g) GETC(7,T8,h) GETC(8,T9,i) GETC(9,T10,j) GETC(10,T11,k) GETC(11,T12,l) GETC(12,T13,m)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d) SET(4,T5,e) SET(5,T6,f) SET(6,T7,g) SET(7,T8,h) SET(8,T9,i) SET(9,T10,j) SET(10,T11,k) SET(11,T12,l) SET(12,T13,m)
@@ -541,7 +553,7 @@ struct tuple13
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m); }
     inline constexpr bool operator==(const tuple13 &tup) const = default;
     inline constexpr auto operator<=>(const tuple13 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -576,7 +588,8 @@ struct tuple14
 #define OP_PRE(OP) inline tuple14 &operator OP() { OP a; OP b; OP c; OP d; OP e; OP f; OP g; OP h; OP i; OP j; OP k; OP l; OP m; OP n; return *this; }
 #define OP_POST(OP) inline tuple14 operator OP(int) { tuple14 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d; T5 e; T6 f; T7 g; T8 h; T9 i; T10 j; T11 k; T12 l; T13 m; T14 n;
-    inline constexpr tuple14(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4(), const T5 &e = T5(), const T6 &f = T6(), const T7 &g = T7(), const T8 &h = T8(), const T9 &i = T9(), const T10 &j = T10(), const T11 &k = T11(), const T12 &l = T12(), const T13 &m = T13(), const T14 &n = T14()): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n) {}
+    inline constexpr tuple14(): a(), b(), c(), d(), e(), f(), g(), h(), i(), j(), k(), l(), m(), n() {}
+    inline constexpr tuple14(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d) GET(4,T5,e) GET(5,T6,f) GET(6,T7,g) GET(7,T8,h) GET(8,T9,i) GET(9,T10,j) GET(10,T11,k) GET(11,T12,l) GET(12,T13,m) GET(13,T14,n)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d) GETC(4,T5,e) GETC(5,T6,f) GETC(6,T7,g) GETC(7,T8,h) GETC(8,T9,i) GETC(9,T10,j) GETC(10,T11,k) GETC(11,T12,l) GETC(12,T13,m) GETC(13,T14,n)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d) SET(4,T5,e) SET(5,T6,f) SET(6,T7,g) SET(7,T8,h) SET(8,T9,i) SET(9,T10,j) SET(10,T11,k) SET(11,T12,l) SET(12,T13,m) SET(13,T14,n)
@@ -585,7 +598,7 @@ struct tuple14
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n); }
     inline constexpr bool operator==(const tuple14 &tup) const = default;
     inline constexpr auto operator<=>(const tuple14 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -620,7 +633,8 @@ struct tuple15
 #define OP_PRE(OP) inline tuple15 &operator OP() { OP a; OP b; OP c; OP d; OP e; OP f; OP g; OP h; OP i; OP j; OP k; OP l; OP m; OP n; OP o; return *this; }
 #define OP_POST(OP) inline tuple15 operator OP(int) { tuple15 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d; T5 e; T6 f; T7 g; T8 h; T9 i; T10 j; T11 k; T12 l; T13 m; T14 n; T15 o;
-    inline constexpr tuple15(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4(), const T5 &e = T5(), const T6 &f = T6(), const T7 &g = T7(), const T8 &h = T8(), const T9 &i = T9(), const T10 &j = T10(), const T11 &k = T11(), const T12 &l = T12(), const T13 &m = T13(), const T14 &n = T14(), const T15 &o = T15()): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o) {}
+    inline constexpr tuple15(): a(), b(), c(), d(), e(), f(), g(), h(), i(), j(), k(), l(), m(), n(), o() {}
+    inline constexpr tuple15(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d) GET(4,T5,e) GET(5,T6,f) GET(6,T7,g) GET(7,T8,h) GET(8,T9,i) GET(9,T10,j) GET(10,T11,k) GET(11,T12,l) GET(12,T13,m) GET(13,T14,n) GET(14,T15,o)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d) GETC(4,T5,e) GETC(5,T6,f) GETC(6,T7,g) GETC(7,T8,h) GETC(8,T9,i) GETC(9,T10,j) GETC(10,T11,k) GETC(11,T12,l) GETC(12,T13,m) GETC(13,T14,n) GETC(14,T15,o)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d) SET(4,T5,e) SET(5,T6,f) SET(6,T7,g) SET(7,T8,h) SET(8,T9,i) SET(9,T10,j) SET(10,T11,k) SET(11,T12,l) SET(12,T13,m) SET(13,T14,n) SET(14,T15,o)
@@ -629,7 +643,7 @@ struct tuple15
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o); }
     inline constexpr bool operator==(const tuple15 &tup) const = default;
     inline constexpr auto operator<=>(const tuple15 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -664,7 +678,8 @@ struct tuple16
 #define OP_PRE(OP) inline tuple16 &operator OP() { OP a; OP b; OP c; OP d; OP e; OP f; OP g; OP h; OP i; OP j; OP k; OP l; OP m; OP n; OP o; OP p; return *this; }
 #define OP_POST(OP) inline tuple16 operator OP(int) { tuple16 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d; T5 e; T6 f; T7 g; T8 h; T9 i; T10 j; T11 k; T12 l; T13 m; T14 n; T15 o; T16 p;
-    inline constexpr tuple16(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4(), const T5 &e = T5(), const T6 &f = T6(), const T7 &g = T7(), const T8 &h = T8(), const T9 &i = T9(), const T10 &j = T10(), const T11 &k = T11(), const T12 &l = T12(), const T13 &m = T13(), const T14 &n = T14(), const T15 &o = T15(), const T16 &p = T16()): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o), p(p) {}
+    inline constexpr tuple16(): a(), b(), c(), d(), e(), f(), g(), h(), i(), j(), k(), l(), m(), n(), o(), p() {}
+    inline constexpr tuple16(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o), p(p) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d) GET(4,T5,e) GET(5,T6,f) GET(6,T7,g) GET(7,T8,h) GET(8,T9,i) GET(9,T10,j) GET(10,T11,k) GET(11,T12,l) GET(12,T13,m) GET(13,T14,n) GET(14,T15,o) GET(15,T16,p)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d) GETC(4,T5,e) GETC(5,T6,f) GETC(6,T7,g) GETC(7,T8,h) GETC(8,T9,i) GETC(9,T10,j) GETC(10,T11,k) GETC(11,T12,l) GETC(12,T13,m) GETC(13,T14,n) GETC(14,T15,o) GETC(15,T16,p)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d) SET(4,T5,e) SET(5,T6,f) SET(6,T7,g) SET(7,T8,h) SET(8,T9,i) SET(9,T10,j) SET(10,T11,k) SET(11,T12,l) SET(12,T13,m) SET(13,T14,n) SET(14,T15,o) SET(15,T16,p)
@@ -673,7 +688,7 @@ struct tuple16
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o) || bool(p); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o) || bool(p); }
     inline constexpr bool operator==(const tuple16 &tup) const = default;
     inline constexpr auto operator<=>(const tuple16 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -708,7 +723,8 @@ struct tuple17
 #define OP_PRE(OP) inline tuple17 &operator OP() { OP a; OP b; OP c; OP d; OP e; OP f; OP g; OP h; OP i; OP j; OP k; OP l; OP m; OP n; OP o; OP p; OP q; return *this; }
 #define OP_POST(OP) inline tuple17 operator OP(int) { tuple17 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d; T5 e; T6 f; T7 g; T8 h; T9 i; T10 j; T11 k; T12 l; T13 m; T14 n; T15 o; T16 p; T17 q;
-    inline constexpr tuple17(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4(), const T5 &e = T5(), const T6 &f = T6(), const T7 &g = T7(), const T8 &h = T8(), const T9 &i = T9(), const T10 &j = T10(), const T11 &k = T11(), const T12 &l = T12(), const T13 &m = T13(), const T14 &n = T14(), const T15 &o = T15(), const T16 &p = T16(), const T17 &q = T17()): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o), p(p), q(q) {}
+    inline constexpr tuple17(): a(), b(), c(), d(), e(), f(), g(), h(), i(), j(), k(), l(), m(), n(), o(), p(), q() {}
+    inline constexpr tuple17(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o), p(p), q(q) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d) GET(4,T5,e) GET(5,T6,f) GET(6,T7,g) GET(7,T8,h) GET(8,T9,i) GET(9,T10,j) GET(10,T11,k) GET(11,T12,l) GET(12,T13,m) GET(13,T14,n) GET(14,T15,o) GET(15,T16,p) GET(16,T17,q)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d) GETC(4,T5,e) GETC(5,T6,f) GETC(6,T7,g) GETC(7,T8,h) GETC(8,T9,i) GETC(9,T10,j) GETC(10,T11,k) GETC(11,T12,l) GETC(12,T13,m) GETC(13,T14,n) GETC(14,T15,o) GETC(15,T16,p) GETC(16,T17,q)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d) SET(4,T5,e) SET(5,T6,f) SET(6,T7,g) SET(7,T8,h) SET(8,T9,i) SET(9,T10,j) SET(10,T11,k) SET(11,T12,l) SET(12,T13,m) SET(13,T14,n) SET(14,T15,o) SET(15,T16,p) SET(16,T17,q)
@@ -717,7 +733,7 @@ struct tuple17
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o) || bool(p) || bool(q); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o) || bool(p) || bool(q); }
     inline constexpr bool operator==(const tuple17 &tup) const = default;
     inline constexpr auto operator<=>(const tuple17 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -752,7 +768,8 @@ struct tuple18
 #define OP_PRE(OP) inline tuple18 &operator OP() { OP a; OP b; OP c; OP d; OP e; OP f; OP g; OP h; OP i; OP j; OP k; OP l; OP m; OP n; OP o; OP p; OP q; OP r; return *this; }
 #define OP_POST(OP) inline tuple18 operator OP(int) { tuple18 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d; T5 e; T6 f; T7 g; T8 h; T9 i; T10 j; T11 k; T12 l; T13 m; T14 n; T15 o; T16 p; T17 q; T18 r;
-    inline constexpr tuple18(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4(), const T5 &e = T5(), const T6 &f = T6(), const T7 &g = T7(), const T8 &h = T8(), const T9 &i = T9(), const T10 &j = T10(), const T11 &k = T11(), const T12 &l = T12(), const T13 &m = T13(), const T14 &n = T14(), const T15 &o = T15(), const T16 &p = T16(), const T17 &q = T17(), const T18 &r = T18()): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o), p(p), q(q), r(r) {}
+    inline constexpr tuple18(): a(), b(), c(), d(), e(), f(), g(), h(), i(), j(), k(), l(), m(), n(), o(), p(), q(), r() {}
+    inline constexpr tuple18(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o), p(p), q(q), r(r) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d) GET(4,T5,e) GET(5,T6,f) GET(6,T7,g) GET(7,T8,h) GET(8,T9,i) GET(9,T10,j) GET(10,T11,k) GET(11,T12,l) GET(12,T13,m) GET(13,T14,n) GET(14,T15,o) GET(15,T16,p) GET(16,T17,q) GET(17,T18,r)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d) GETC(4,T5,e) GETC(5,T6,f) GETC(6,T7,g) GETC(7,T8,h) GETC(8,T9,i) GETC(9,T10,j) GETC(10,T11,k) GETC(11,T12,l) GETC(12,T13,m) GETC(13,T14,n) GETC(14,T15,o) GETC(15,T16,p) GETC(16,T17,q) GETC(17,T18,r)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d) SET(4,T5,e) SET(5,T6,f) SET(6,T7,g) SET(7,T8,h) SET(8,T9,i) SET(9,T10,j) SET(10,T11,k) SET(11,T12,l) SET(12,T13,m) SET(13,T14,n) SET(14,T15,o) SET(15,T16,p) SET(16,T17,q) SET(17,T18,r)
@@ -761,7 +778,7 @@ struct tuple18
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o) || bool(p) || bool(q) || bool(r); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o) || bool(p) || bool(q) || bool(r); }
     inline constexpr bool operator==(const tuple18 &tup) const = default;
     inline constexpr auto operator<=>(const tuple18 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -796,7 +813,8 @@ struct tuple19
 #define OP_PRE(OP) inline tuple19 &operator OP() { OP a; OP b; OP c; OP d; OP e; OP f; OP g; OP h; OP i; OP j; OP k; OP l; OP m; OP n; OP o; OP p; OP q; OP r; OP s; return *this; }
 #define OP_POST(OP) inline tuple19 operator OP(int) { tuple19 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d; T5 e; T6 f; T7 g; T8 h; T9 i; T10 j; T11 k; T12 l; T13 m; T14 n; T15 o; T16 p; T17 q; T18 r; T19 s;
-    inline constexpr tuple19(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4(), const T5 &e = T5(), const T6 &f = T6(), const T7 &g = T7(), const T8 &h = T8(), const T9 &i = T9(), const T10 &j = T10(), const T11 &k = T11(), const T12 &l = T12(), const T13 &m = T13(), const T14 &n = T14(), const T15 &o = T15(), const T16 &p = T16(), const T17 &q = T17(), const T18 &r = T18(), const T19 &s = T19()): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o), p(p), q(q), r(r), s(s) {}
+    inline constexpr tuple19(): a(), b(), c(), d(), e(), f(), g(), h(), i(), j(), k(), l(), m(), n(), o(), p(), q(), r(), s() {}
+    inline constexpr tuple19(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o), p(p), q(q), r(r), s(s) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d) GET(4,T5,e) GET(5,T6,f) GET(6,T7,g) GET(7,T8,h) GET(8,T9,i) GET(9,T10,j) GET(10,T11,k) GET(11,T12,l) GET(12,T13,m) GET(13,T14,n) GET(14,T15,o) GET(15,T16,p) GET(16,T17,q) GET(17,T18,r) GET(18,T19,s)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d) GETC(4,T5,e) GETC(5,T6,f) GETC(6,T7,g) GETC(7,T8,h) GETC(8,T9,i) GETC(9,T10,j) GETC(10,T11,k) GETC(11,T12,l) GETC(12,T13,m) GETC(13,T14,n) GETC(14,T15,o) GETC(15,T16,p) GETC(16,T17,q) GETC(17,T18,r) GETC(18,T19,s)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d) SET(4,T5,e) SET(5,T6,f) SET(6,T7,g) SET(7,T8,h) SET(8,T9,i) SET(9,T10,j) SET(10,T11,k) SET(11,T12,l) SET(12,T13,m) SET(13,T14,n) SET(14,T15,o) SET(15,T16,p) SET(16,T17,q) SET(17,T18,r) SET(18,T19,s)
@@ -805,7 +823,7 @@ struct tuple19
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o) || bool(p) || bool(q) || bool(r) || bool(s); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o) || bool(p) || bool(q) || bool(r) || bool(s); }
     inline constexpr bool operator==(const tuple19 &tup) const = default;
     inline constexpr auto operator<=>(const tuple19 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -840,7 +858,8 @@ struct tuple20
 #define OP_PRE(OP) inline tuple20 &operator OP() { OP a; OP b; OP c; OP d; OP e; OP f; OP g; OP h; OP i; OP j; OP k; OP l; OP m; OP n; OP o; OP p; OP q; OP r; OP s; OP t; return *this; }
 #define OP_POST(OP) inline tuple20 operator OP(int) { tuple20 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d; T5 e; T6 f; T7 g; T8 h; T9 i; T10 j; T11 k; T12 l; T13 m; T14 n; T15 o; T16 p; T17 q; T18 r; T19 s; T20 t;
-    inline constexpr tuple20(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4(), const T5 &e = T5(), const T6 &f = T6(), const T7 &g = T7(), const T8 &h = T8(), const T9 &i = T9(), const T10 &j = T10(), const T11 &k = T11(), const T12 &l = T12(), const T13 &m = T13(), const T14 &n = T14(), const T15 &o = T15(), const T16 &p = T16(), const T17 &q = T17(), const T18 &r = T18(), const T19 &s = T19(), const T20 &t = T20()): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o), p(p), q(q), r(r), s(s), t(t) {}
+    inline constexpr tuple20(): a(), b(), c(), d(), e(), f(), g(), h(), i(), j(), k(), l(), m(), n(), o(), p(), q(), r(), s(), t() {}
+    inline constexpr tuple20(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s, const T20 &t): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o), p(p), q(q), r(r), s(s), t(t) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d) GET(4,T5,e) GET(5,T6,f) GET(6,T7,g) GET(7,T8,h) GET(8,T9,i) GET(9,T10,j) GET(10,T11,k) GET(11,T12,l) GET(12,T13,m) GET(13,T14,n) GET(14,T15,o) GET(15,T16,p) GET(16,T17,q) GET(17,T18,r) GET(18,T19,s) GET(19,T20,t)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d) GETC(4,T5,e) GETC(5,T6,f) GETC(6,T7,g) GETC(7,T8,h) GETC(8,T9,i) GETC(9,T10,j) GETC(10,T11,k) GETC(11,T12,l) GETC(12,T13,m) GETC(13,T14,n) GETC(14,T15,o) GETC(15,T16,p) GETC(16,T17,q) GETC(17,T18,r) GETC(18,T19,s) GETC(19,T20,t)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d) SET(4,T5,e) SET(5,T6,f) SET(6,T7,g) SET(7,T8,h) SET(8,T9,i) SET(9,T10,j) SET(10,T11,k) SET(11,T12,l) SET(12,T13,m) SET(13,T14,n) SET(14,T15,o) SET(15,T16,p) SET(16,T17,q) SET(17,T18,r) SET(18,T19,s) SET(19,T20,t)
@@ -849,7 +868,7 @@ struct tuple20
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o) || bool(p) || bool(q) || bool(r) || bool(s) || bool(t); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o) || bool(p) || bool(q) || bool(r) || bool(s) || bool(t); }
     inline constexpr bool operator==(const tuple20 &tup) const = default;
     inline constexpr auto operator<=>(const tuple20 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -884,7 +903,8 @@ struct tuple21
 #define OP_PRE(OP) inline tuple21 &operator OP() { OP a; OP b; OP c; OP d; OP e; OP f; OP g; OP h; OP i; OP j; OP k; OP l; OP m; OP n; OP o; OP p; OP q; OP r; OP s; OP t; OP u; return *this; }
 #define OP_POST(OP) inline tuple21 operator OP(int) { tuple21 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d; T5 e; T6 f; T7 g; T8 h; T9 i; T10 j; T11 k; T12 l; T13 m; T14 n; T15 o; T16 p; T17 q; T18 r; T19 s; T20 t; T21 u;
-    inline constexpr tuple21(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4(), const T5 &e = T5(), const T6 &f = T6(), const T7 &g = T7(), const T8 &h = T8(), const T9 &i = T9(), const T10 &j = T10(), const T11 &k = T11(), const T12 &l = T12(), const T13 &m = T13(), const T14 &n = T14(), const T15 &o = T15(), const T16 &p = T16(), const T17 &q = T17(), const T18 &r = T18(), const T19 &s = T19(), const T20 &t = T20(), const T21 &u = T21()): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o), p(p), q(q), r(r), s(s), t(t), u(u) {}
+    inline constexpr tuple21(): a(), b(), c(), d(), e(), f(), g(), h(), i(), j(), k(), l(), m(), n(), o(), p(), q(), r(), s(), t(), u() {}
+    inline constexpr tuple21(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s, const T20 &t, const T21 &u): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o), p(p), q(q), r(r), s(s), t(t), u(u) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d) GET(4,T5,e) GET(5,T6,f) GET(6,T7,g) GET(7,T8,h) GET(8,T9,i) GET(9,T10,j) GET(10,T11,k) GET(11,T12,l) GET(12,T13,m) GET(13,T14,n) GET(14,T15,o) GET(15,T16,p) GET(16,T17,q) GET(17,T18,r) GET(18,T19,s) GET(19,T20,t) GET(20,T21,u)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d) GETC(4,T5,e) GETC(5,T6,f) GETC(6,T7,g) GETC(7,T8,h) GETC(8,T9,i) GETC(9,T10,j) GETC(10,T11,k) GETC(11,T12,l) GETC(12,T13,m) GETC(13,T14,n) GETC(14,T15,o) GETC(15,T16,p) GETC(16,T17,q) GETC(17,T18,r) GETC(18,T19,s) GETC(19,T20,t) GETC(20,T21,u)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d) SET(4,T5,e) SET(5,T6,f) SET(6,T7,g) SET(7,T8,h) SET(8,T9,i) SET(9,T10,j) SET(10,T11,k) SET(11,T12,l) SET(12,T13,m) SET(13,T14,n) SET(14,T15,o) SET(15,T16,p) SET(16,T17,q) SET(17,T18,r) SET(18,T19,s) SET(19,T20,t) SET(20,T21,u)
@@ -893,7 +913,7 @@ struct tuple21
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o) || bool(p) || bool(q) || bool(r) || bool(s) || bool(t) || bool(u); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o) || bool(p) || bool(q) || bool(r) || bool(s) || bool(t) || bool(u); }
     inline constexpr bool operator==(const tuple21 &tup) const = default;
     inline constexpr auto operator<=>(const tuple21 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -928,7 +948,8 @@ struct tuple22
 #define OP_PRE(OP) inline tuple22 &operator OP() { OP a; OP b; OP c; OP d; OP e; OP f; OP g; OP h; OP i; OP j; OP k; OP l; OP m; OP n; OP o; OP p; OP q; OP r; OP s; OP t; OP u; OP v; return *this; }
 #define OP_POST(OP) inline tuple22 operator OP(int) { tuple22 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d; T5 e; T6 f; T7 g; T8 h; T9 i; T10 j; T11 k; T12 l; T13 m; T14 n; T15 o; T16 p; T17 q; T18 r; T19 s; T20 t; T21 u; T22 v;
-    inline constexpr tuple22(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4(), const T5 &e = T5(), const T6 &f = T6(), const T7 &g = T7(), const T8 &h = T8(), const T9 &i = T9(), const T10 &j = T10(), const T11 &k = T11(), const T12 &l = T12(), const T13 &m = T13(), const T14 &n = T14(), const T15 &o = T15(), const T16 &p = T16(), const T17 &q = T17(), const T18 &r = T18(), const T19 &s = T19(), const T20 &t = T20(), const T21 &u = T21(), const T22 &v = T22()): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o), p(p), q(q), r(r), s(s), t(t), u(u), v(v) {}
+    inline constexpr tuple22(): a(), b(), c(), d(), e(), f(), g(), h(), i(), j(), k(), l(), m(), n(), o(), p(), q(), r(), s(), t(), u(), v() {}
+    inline constexpr tuple22(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s, const T20 &t, const T21 &u, const T22 &v): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o), p(p), q(q), r(r), s(s), t(t), u(u), v(v) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d) GET(4,T5,e) GET(5,T6,f) GET(6,T7,g) GET(7,T8,h) GET(8,T9,i) GET(9,T10,j) GET(10,T11,k) GET(11,T12,l) GET(12,T13,m) GET(13,T14,n) GET(14,T15,o) GET(15,T16,p) GET(16,T17,q) GET(17,T18,r) GET(18,T19,s) GET(19,T20,t) GET(20,T21,u) GET(21,T22,v)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d) GETC(4,T5,e) GETC(5,T6,f) GETC(6,T7,g) GETC(7,T8,h) GETC(8,T9,i) GETC(9,T10,j) GETC(10,T11,k) GETC(11,T12,l) GETC(12,T13,m) GETC(13,T14,n) GETC(14,T15,o) GETC(15,T16,p) GETC(16,T17,q) GETC(17,T18,r) GETC(18,T19,s) GETC(19,T20,t) GETC(20,T21,u) GETC(21,T22,v)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d) SET(4,T5,e) SET(5,T6,f) SET(6,T7,g) SET(7,T8,h) SET(8,T9,i) SET(9,T10,j) SET(10,T11,k) SET(11,T12,l) SET(12,T13,m) SET(13,T14,n) SET(14,T15,o) SET(15,T16,p) SET(16,T17,q) SET(17,T18,r) SET(18,T19,s) SET(19,T20,t) SET(20,T21,u) SET(21,T22,v)
@@ -937,7 +958,7 @@ struct tuple22
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o) || bool(p) || bool(q) || bool(r) || bool(s) || bool(t) || bool(u) || bool(v); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o) || bool(p) || bool(q) || bool(r) || bool(s) || bool(t) || bool(u) || bool(v); }
     inline constexpr bool operator==(const tuple22 &tup) const = default;
     inline constexpr auto operator<=>(const tuple22 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -972,7 +993,8 @@ struct tuple23
 #define OP_PRE(OP) inline tuple23 &operator OP() { OP a; OP b; OP c; OP d; OP e; OP f; OP g; OP h; OP i; OP j; OP k; OP l; OP m; OP n; OP o; OP p; OP q; OP r; OP s; OP t; OP u; OP v; OP w; return *this; }
 #define OP_POST(OP) inline tuple23 operator OP(int) { tuple23 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d; T5 e; T6 f; T7 g; T8 h; T9 i; T10 j; T11 k; T12 l; T13 m; T14 n; T15 o; T16 p; T17 q; T18 r; T19 s; T20 t; T21 u; T22 v; T23 w;
-    inline constexpr tuple23(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4(), const T5 &e = T5(), const T6 &f = T6(), const T7 &g = T7(), const T8 &h = T8(), const T9 &i = T9(), const T10 &j = T10(), const T11 &k = T11(), const T12 &l = T12(), const T13 &m = T13(), const T14 &n = T14(), const T15 &o = T15(), const T16 &p = T16(), const T17 &q = T17(), const T18 &r = T18(), const T19 &s = T19(), const T20 &t = T20(), const T21 &u = T21(), const T22 &v = T22(), const T23 &w = T23()): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o), p(p), q(q), r(r), s(s), t(t), u(u), v(v), w(w) {}
+    inline constexpr tuple23(): a(), b(), c(), d(), e(), f(), g(), h(), i(), j(), k(), l(), m(), n(), o(), p(), q(), r(), s(), t(), u(), v(), w() {}
+    inline constexpr tuple23(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s, const T20 &t, const T21 &u, const T22 &v, const T23 &w): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o), p(p), q(q), r(r), s(s), t(t), u(u), v(v), w(w) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d) GET(4,T5,e) GET(5,T6,f) GET(6,T7,g) GET(7,T8,h) GET(8,T9,i) GET(9,T10,j) GET(10,T11,k) GET(11,T12,l) GET(12,T13,m) GET(13,T14,n) GET(14,T15,o) GET(15,T16,p) GET(16,T17,q) GET(17,T18,r) GET(18,T19,s) GET(19,T20,t) GET(20,T21,u) GET(21,T22,v) GET(22,T23,w)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d) GETC(4,T5,e) GETC(5,T6,f) GETC(6,T7,g) GETC(7,T8,h) GETC(8,T9,i) GETC(9,T10,j) GETC(10,T11,k) GETC(11,T12,l) GETC(12,T13,m) GETC(13,T14,n) GETC(14,T15,o) GETC(15,T16,p) GETC(16,T17,q) GETC(17,T18,r) GETC(18,T19,s) GETC(19,T20,t) GETC(20,T21,u) GETC(21,T22,v) GETC(22,T23,w)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d) SET(4,T5,e) SET(5,T6,f) SET(6,T7,g) SET(7,T8,h) SET(8,T9,i) SET(9,T10,j) SET(10,T11,k) SET(11,T12,l) SET(12,T13,m) SET(13,T14,n) SET(14,T15,o) SET(15,T16,p) SET(16,T17,q) SET(17,T18,r) SET(18,T19,s) SET(19,T20,t) SET(20,T21,u) SET(21,T22,v) SET(22,T23,w)
@@ -981,7 +1003,7 @@ struct tuple23
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o) || bool(p) || bool(q) || bool(r) || bool(s) || bool(t) || bool(u) || bool(v) || bool(w); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o) || bool(p) || bool(q) || bool(r) || bool(s) || bool(t) || bool(u) || bool(v) || bool(w); }
     inline constexpr bool operator==(const tuple23 &tup) const = default;
     inline constexpr auto operator<=>(const tuple23 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -1016,7 +1038,8 @@ struct tuple24
 #define OP_PRE(OP) inline tuple24 &operator OP() { OP a; OP b; OP c; OP d; OP e; OP f; OP g; OP h; OP i; OP j; OP k; OP l; OP m; OP n; OP o; OP p; OP q; OP r; OP s; OP t; OP u; OP v; OP w; OP x; return *this; }
 #define OP_POST(OP) inline tuple24 operator OP(int) { tuple24 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d; T5 e; T6 f; T7 g; T8 h; T9 i; T10 j; T11 k; T12 l; T13 m; T14 n; T15 o; T16 p; T17 q; T18 r; T19 s; T20 t; T21 u; T22 v; T23 w; T24 x;
-    inline constexpr tuple24(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4(), const T5 &e = T5(), const T6 &f = T6(), const T7 &g = T7(), const T8 &h = T8(), const T9 &i = T9(), const T10 &j = T10(), const T11 &k = T11(), const T12 &l = T12(), const T13 &m = T13(), const T14 &n = T14(), const T15 &o = T15(), const T16 &p = T16(), const T17 &q = T17(), const T18 &r = T18(), const T19 &s = T19(), const T20 &t = T20(), const T21 &u = T21(), const T22 &v = T22(), const T23 &w = T23(), const T24 &x = T24()): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o), p(p), q(q), r(r), s(s), t(t), u(u), v(v), w(w), x(x) {}
+    inline constexpr tuple24(): a(), b(), c(), d(), e(), f(), g(), h(), i(), j(), k(), l(), m(), n(), o(), p(), q(), r(), s(), t(), u(), v(), w(), x() {}
+    inline constexpr tuple24(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s, const T20 &t, const T21 &u, const T22 &v, const T23 &w, const T24 &x): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o), p(p), q(q), r(r), s(s), t(t), u(u), v(v), w(w), x(x) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d) GET(4,T5,e) GET(5,T6,f) GET(6,T7,g) GET(7,T8,h) GET(8,T9,i) GET(9,T10,j) GET(10,T11,k) GET(11,T12,l) GET(12,T13,m) GET(13,T14,n) GET(14,T15,o) GET(15,T16,p) GET(16,T17,q) GET(17,T18,r) GET(18,T19,s) GET(19,T20,t) GET(20,T21,u) GET(21,T22,v) GET(22,T23,w) GET(23,T24,x)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d) GETC(4,T5,e) GETC(5,T6,f) GETC(6,T7,g) GETC(7,T8,h) GETC(8,T9,i) GETC(9,T10,j) GETC(10,T11,k) GETC(11,T12,l) GETC(12,T13,m) GETC(13,T14,n) GETC(14,T15,o) GETC(15,T16,p) GETC(16,T17,q) GETC(17,T18,r) GETC(18,T19,s) GETC(19,T20,t) GETC(20,T21,u) GETC(21,T22,v) GETC(22,T23,w) GETC(23,T24,x)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d) SET(4,T5,e) SET(5,T6,f) SET(6,T7,g) SET(7,T8,h) SET(8,T9,i) SET(9,T10,j) SET(10,T11,k) SET(11,T12,l) SET(12,T13,m) SET(13,T14,n) SET(14,T15,o) SET(15,T16,p) SET(16,T17,q) SET(17,T18,r) SET(18,T19,s) SET(19,T20,t) SET(20,T21,u) SET(21,T22,v) SET(22,T23,w) SET(23,T24,x)
@@ -1025,7 +1048,7 @@ struct tuple24
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o) || bool(p) || bool(q) || bool(r) || bool(s) || bool(t) || bool(u) || bool(v) || bool(w) || bool(x); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o) || bool(p) || bool(q) || bool(r) || bool(s) || bool(t) || bool(u) || bool(v) || bool(w) || bool(x); }
     inline constexpr bool operator==(const tuple24 &tup) const = default;
     inline constexpr auto operator<=>(const tuple24 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -1060,7 +1083,8 @@ struct tuple25
 #define OP_PRE(OP) inline tuple25 &operator OP() { OP a; OP b; OP c; OP d; OP e; OP f; OP g; OP h; OP i; OP j; OP k; OP l; OP m; OP n; OP o; OP p; OP q; OP r; OP s; OP t; OP u; OP v; OP w; OP x; OP y; return *this; }
 #define OP_POST(OP) inline tuple25 operator OP(int) { tuple25 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d; T5 e; T6 f; T7 g; T8 h; T9 i; T10 j; T11 k; T12 l; T13 m; T14 n; T15 o; T16 p; T17 q; T18 r; T19 s; T20 t; T21 u; T22 v; T23 w; T24 x; T25 y;
-    inline constexpr tuple25(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4(), const T5 &e = T5(), const T6 &f = T6(), const T7 &g = T7(), const T8 &h = T8(), const T9 &i = T9(), const T10 &j = T10(), const T11 &k = T11(), const T12 &l = T12(), const T13 &m = T13(), const T14 &n = T14(), const T15 &o = T15(), const T16 &p = T16(), const T17 &q = T17(), const T18 &r = T18(), const T19 &s = T19(), const T20 &t = T20(), const T21 &u = T21(), const T22 &v = T22(), const T23 &w = T23(), const T24 &x = T24(), const T25 &y = T25()): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o), p(p), q(q), r(r), s(s), t(t), u(u), v(v), w(w), x(x), y(y) {}
+    inline constexpr tuple25(): a(), b(), c(), d(), e(), f(), g(), h(), i(), j(), k(), l(), m(), n(), o(), p(), q(), r(), s(), t(), u(), v(), w(), x(), y() {}
+    inline constexpr tuple25(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s, const T20 &t, const T21 &u, const T22 &v, const T23 &w, const T24 &x, const T25 &y): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o), p(p), q(q), r(r), s(s), t(t), u(u), v(v), w(w), x(x), y(y) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d) GET(4,T5,e) GET(5,T6,f) GET(6,T7,g) GET(7,T8,h) GET(8,T9,i) GET(9,T10,j) GET(10,T11,k) GET(11,T12,l) GET(12,T13,m) GET(13,T14,n) GET(14,T15,o) GET(15,T16,p) GET(16,T17,q) GET(17,T18,r) GET(18,T19,s) GET(19,T20,t) GET(20,T21,u) GET(21,T22,v) GET(22,T23,w) GET(23,T24,x) GET(24,T25,y)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d) GETC(4,T5,e) GETC(5,T6,f) GETC(6,T7,g) GETC(7,T8,h) GETC(8,T9,i) GETC(9,T10,j) GETC(10,T11,k) GETC(11,T12,l) GETC(12,T13,m) GETC(13,T14,n) GETC(14,T15,o) GETC(15,T16,p) GETC(16,T17,q) GETC(17,T18,r) GETC(18,T19,s) GETC(19,T20,t) GETC(20,T21,u) GETC(21,T22,v) GETC(22,T23,w) GETC(23,T24,x) GETC(24,T25,y)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d) SET(4,T5,e) SET(5,T6,f) SET(6,T7,g) SET(7,T8,h) SET(8,T9,i) SET(9,T10,j) SET(10,T11,k) SET(11,T12,l) SET(12,T13,m) SET(13,T14,n) SET(14,T15,o) SET(15,T16,p) SET(16,T17,q) SET(17,T18,r) SET(18,T19,s) SET(19,T20,t) SET(20,T21,u) SET(21,T22,v) SET(22,T23,w) SET(23,T24,x) SET(24,T25,y)
@@ -1069,7 +1093,7 @@ struct tuple25
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o) || bool(p) || bool(q) || bool(r) || bool(s) || bool(t) || bool(u) || bool(v) || bool(w) || bool(x) || bool(y); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o) || bool(p) || bool(q) || bool(r) || bool(s) || bool(t) || bool(u) || bool(v) || bool(w) || bool(x) || bool(y); }
     inline constexpr bool operator==(const tuple25 &tup) const = default;
     inline constexpr auto operator<=>(const tuple25 &tup) const = default;
 #undef OPEQ_TUPLE
@@ -1104,7 +1128,8 @@ struct tuple26
 #define OP_PRE(OP) inline tuple26 &operator OP() { OP a; OP b; OP c; OP d; OP e; OP f; OP g; OP h; OP i; OP j; OP k; OP l; OP m; OP n; OP o; OP p; OP q; OP r; OP s; OP t; OP u; OP v; OP w; OP x; OP y; OP z; return *this; }
 #define OP_POST(OP) inline tuple26 operator OP(int) { tuple26 ret = *this; OP(*this); return ret; }
     T1 a; T2 b; T3 c; T4 d; T5 e; T6 f; T7 g; T8 h; T9 i; T10 j; T11 k; T12 l; T13 m; T14 n; T15 o; T16 p; T17 q; T18 r; T19 s; T20 t; T21 u; T22 v; T23 w; T24 x; T25 y; T26 z;
-    inline constexpr tuple26(const T1 &a = T1(), const T2 &b = T2(), const T3 &c = T3(), const T4 &d = T4(), const T5 &e = T5(), const T6 &f = T6(), const T7 &g = T7(), const T8 &h = T8(), const T9 &i = T9(), const T10 &j = T10(), const T11 &k = T11(), const T12 &l = T12(), const T13 &m = T13(), const T14 &n = T14(), const T15 &o = T15(), const T16 &p = T16(), const T17 &q = T17(), const T18 &r = T18(), const T19 &s = T19(), const T20 &t = T20(), const T21 &u = T21(), const T22 &v = T22(), const T23 &w = T23(), const T24 &x = T24(), const T25 &y = T25(), const T26 &z = T26()): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o), p(p), q(q), r(r), s(s), t(t), u(u), v(v), w(w), x(x), y(y), z(z) {}
+    inline constexpr tuple26(): a(), b(), c(), d(), e(), f(), g(), h(), i(), j(), k(), l(), m(), n(), o(), p(), q(), r(), s(), t(), u(), v(), w(), x(), y(), z() {}
+    inline constexpr tuple26(const T1 &a, const T2 &b, const T3 &c, const T4 &d, const T5 &e, const T6 &f, const T7 &g, const T8 &h, const T9 &i, const T10 &j, const T11 &k, const T12 &l, const T13 &m, const T14 &n, const T15 &o, const T16 &p, const T17 &q, const T18 &r, const T19 &s, const T20 &t, const T21 &u, const T22 &v, const T23 &w, const T24 &x, const T25 &y, const T26 &z): a(a), b(b), c(c), d(d), e(e), f(f), g(g), h(h), i(i), j(j), k(k), l(l), m(m), n(n), o(o), p(p), q(q), r(r), s(s), t(t), u(u), v(v), w(w), x(x), y(y), z(z) {}
     GET(0,T1,a) GET(1,T2,b) GET(2,T3,c) GET(3,T4,d) GET(4,T5,e) GET(5,T6,f) GET(6,T7,g) GET(7,T8,h) GET(8,T9,i) GET(9,T10,j) GET(10,T11,k) GET(11,T12,l) GET(12,T13,m) GET(13,T14,n) GET(14,T15,o) GET(15,T16,p) GET(16,T17,q) GET(17,T18,r) GET(18,T19,s) GET(19,T20,t) GET(20,T21,u) GET(21,T22,v) GET(22,T23,w) GET(23,T24,x) GET(24,T25,y) GET(25,T26,z)
     GETC(0,T1,a) GETC(1,T2,b) GETC(2,T3,c) GETC(3,T4,d) GETC(4,T5,e) GETC(5,T6,f) GETC(6,T7,g) GETC(7,T8,h) GETC(8,T9,i) GETC(9,T10,j) GETC(10,T11,k) GETC(11,T12,l) GETC(12,T13,m) GETC(13,T14,n) GETC(14,T15,o) GETC(15,T16,p) GETC(16,T17,q) GETC(17,T18,r) GETC(18,T19,s) GETC(19,T20,t) GETC(20,T21,u) GETC(21,T22,v) GETC(22,T23,w) GETC(23,T24,x) GETC(24,T25,y) GETC(25,T26,z)
     SET(0,T1,a) SET(1,T2,b) SET(2,T3,c) SET(3,T4,d) SET(4,T5,e) SET(5,T6,f) SET(6,T7,g) SET(7,T8,h) SET(8,T9,i) SET(9,T10,j) SET(10,T11,k) SET(11,T12,l) SET(12,T13,m) SET(13,T14,n) SET(14,T15,o) SET(15,T16,p) SET(16,T17,q) SET(17,T18,r) SET(18,T19,s) SET(19,T20,t) SET(20,T21,u) SET(21,T22,v) SET(22,T23,w) SET(23,T24,x) SET(24,T25,y) SET(25,T26,z)
@@ -1113,7 +1138,7 @@ struct tuple26
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const { return !bool(*this); }
-    inline constexpr operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o) || bool(p) || bool(q) || bool(r) || bool(s) || bool(t) || bool(u) || bool(v) || bool(w) || bool(x) || bool(y) || bool(z); }
+    inline constexpr explicit operator bool() const { return bool(a) || bool(b) || bool(c) || bool(d) || bool(e) || bool(f) || bool(g) || bool(h) || bool(i) || bool(j) || bool(k) || bool(l) || bool(m) || bool(n) || bool(o) || bool(p) || bool(q) || bool(r) || bool(s) || bool(t) || bool(u) || bool(v) || bool(w) || bool(x) || bool(y) || bool(z); }
     inline constexpr bool operator==(const tuple26 &tup) const = default;
     inline constexpr auto operator<=>(const tuple26 &tup) const = default;
 #undef OPEQ_TUPLE

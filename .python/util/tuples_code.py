@@ -25,7 +25,8 @@ struct tuple{n}
 #define OP_PRE(OP) inline tuple{n} &operator OP() {{ {' '.join(f'OP {L[i]};' for i in range(1,n+1))} return *this; }}
 #define OP_POST(OP) inline tuple{n} operator OP(int) {{ tuple{n} ret = *this; OP(*this); return ret; }}
     {' '.join(f'T{i} {L[i]};' for i in range(1,n+1))}
-    inline constexpr tuple{n}({', '.join(f'const T{i} &{L[i]} = T{i}()' for i in range(1,n+1))}): {', '.join(f'{L[i]}({L[i]})' for i in range(1,n+1))} {{}}
+    inline constexpr tuple{n}(): {', '.join(f'{L[i]}()' for i in range(1,n+1))} {{}}
+    inline constexpr tuple{n}({', '.join(f'const T{i} &{L[i]}' for i in range(1,n+1))}): {', '.join(f'{L[i]}({L[i]})' for i in range(1,n+1))} {{}}
     {' '.join(f'GET({i-1},T{i},{L[i]})' for i in range(1,n+1))}
     {' '.join(f'GETC({i-1},T{i},{L[i]})' for i in range(1,n+1))}
     {' '.join(f'SET({i-1},T{i},{L[i]})' for i in range(1,n+1))}
@@ -34,7 +35,7 @@ struct tuple{n}
     OP_UNARY(-) OP_UNARY(+) OP_UNARY(~) OP_UNARY(*) OP_UNARY(&)
     OP_PRE(++) OP_POST(++) OP_PRE(--) OP_POST(--) OP_BINARY(&&) OP_BINARY(||)
     inline constexpr bool operator!() const {{ return !bool(*this); }}
-    inline constexpr operator bool() const {{ return {' || '.join(f'bool({L[i]})' for i in range(1,n+1))}; }}
+    inline constexpr explicit operator bool() const {{ return {' || '.join(f'bool({L[i]})' for i in range(1,n+1))}; }}
     inline constexpr bool operator==(const tuple{n} &tup) const = default;
     inline constexpr auto operator<=>(const tuple{n} &tup) const = default;
 #undef OPEQ_TUPLE
@@ -60,11 +61,11 @@ print(f'''\
 namespace tkoz
 {{
 
-#define GET(IV,TV,MV) template <size_t i, typename std::enable_if_t<i==IV,bool> = true> \\
+#define GET(IV,TV,MV) template <size_t ind, typename std::enable_if_t<ind==IV,bool> = true> \\
     inline constexpr TV &get() {{ return MV; }}
-#define GETC(IV,TV,MV) template <size_t i, typename std::enable_if_t<i==IV,bool> = true> \\
+#define GETC(IV,TV,MV) template <size_t ind, typename std::enable_if_t<ind==IV,bool> = true> \\
     inline constexpr const TV &get() const {{ return MV; }}
-#define SET(IV,TV,MV) template <size_t i, typename std::enable_if_t<i==IV,bool> = true> \\
+#define SET(IV,TV,MV) template <size_t ind, typename std::enable_if_t<ind==IV,bool> = true> \\
     inline void set(const TV &val) {{ MV = val; }}
 ''')
 
