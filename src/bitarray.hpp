@@ -19,10 +19,10 @@ private:
     typedef uint64_t _word_t; // array word type
 
     // any unsigned integer type should be acceptable
-    static_assert(std::is_same<_word_t,uint8_t>::value
-            || std::is_same<_word_t,uint16_t>::value
-            || std::is_same<_word_t,uint32_t>::value
-            || std::is_same<_word_t,uint64_t>::value);
+    static_assert(std::is_same_v<_word_t,uint8_t>
+            || std::is_same_v<_word_t,uint16_t>
+            || std::is_same_v<_word_t,uint32_t>
+            || std::is_same_v<_word_t,uint64_t>);
 
     _word_t *_arr; // array storing the bits, may have unused bits at end
     size_t _len; // length of _arr in bits
