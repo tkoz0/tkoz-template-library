@@ -12,6 +12,8 @@ TODO https://en.cppreference.com/w/cpp/language/user_literal
 #include <array>
 #include <cstdint>
 #include <iostream>
+#include <limits>
+#include <string>
 
 #include "util.hpp"
 #include "../util/cpp.hpp"
@@ -434,5 +436,52 @@ public:
 };
 
 static_assert(sizeof(uint128_t) == 16);
+
+}
+
+namespace std
+{
+
+template <>
+struct numeric_limits<tkoz::uint128_t>
+{
+    static constexpr bool is_specialized = true;
+    static constexpr bool is_signed = false;
+    static constexpr bool is_integer = true;
+    static constexpr bool is_exact = true;
+    static constexpr bool has_infinity = false;
+    static constexpr bool has_quiet_NaN = false;
+    static constexpr bool has_signaling_NaN = false;
+    static constexpr std::float_denorm_style has_denorm = std::denorm_absent;
+    static constexpr bool has_denorm_loss = false;
+    static constexpr std::float_round_style round_style = std::round_toward_zero;
+    static constexpr bool is_iec559 = false;
+    static constexpr bool is_bounded = true;
+    static constexpr bool is_modulo = true;
+    static constexpr int digits = 8 * sizeof(tkoz::uint128_t);
+    static constexpr int digits10 = 38; // digits * std::log10(2)
+    static constexpr int max_digits10 = 0;
+    static constexpr int radix = 2;
+    static constexpr int min_exponent = 0;
+    static constexpr int min_exponent10 = 0;
+    static constexpr int max_exponent = 0;
+    static constexpr int max_exponent10 = 0;
+    static constexpr bool traps = true; // div by 0
+    static constexpr bool tinyness_before = false;
+    static constexpr tkoz::uint128_t min() noexcept { return tkoz::uint128_t(); }
+    static constexpr tkoz::uint128_t lowest() noexcept { return tkoz::uint128_t(); }
+    static constexpr tkoz::uint128_t max() noexcept { return tkoz::uint128_t(-1ull,-1ull); }
+    static constexpr tkoz::uint128_t epsilon() noexcept { return tkoz::uint128_t(); }
+    static constexpr tkoz::uint128_t round_error() noexcept { return tkoz::uint128_t(); }
+    static constexpr tkoz::uint128_t infinity() noexcept { return tkoz::uint128_t(); }
+    static constexpr tkoz::uint128_t quiet_NaN() noexcept { return tkoz::uint128_t(); }
+    static constexpr tkoz::uint128_t signaling_NaN() noexcept { return tkoz::uint128_t(); }
+    static constexpr tkoz::uint128_t denorm_min() noexcept { return tkoz::uint128_t(); }
+};
+
+string to_string(const tkoz::uint128_t &n)
+{
+    ;
+}
 
 }
