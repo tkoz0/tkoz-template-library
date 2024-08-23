@@ -14,13 +14,10 @@ inline constexpr tuple{n}<{','.join(f'T{i}' for i in range(1,n+1))}> make_tuple{
 template <{', '.join(f'typename T{i}' for i in range(1,n+1))}>
 struct tuple{n}
 {{
-#define OPEQ_TUPLE(OP) template <typename U, typename std::enable_if_t<std::is_same_v<U,tuple{n}>,bool> = true> \\
-    inline tuple{n} &operator OP(const U &rhs) {{ {' '.join(f'{L[i]} OP rhs.{L[i]};' for i in range(1,n+1))} return *this; }}
-#define OPEQ_OTHER(OP) template <typename U, typename std::enable_if_t<!std::is_same_v<U,tuple{n}>,bool> = true> \\
-    inline tuple{n} &operator OP(const U &rhs) {{ {' '.join(f'{L[i]} OP rhs;' for i in range(1,n+1))} return *this; }}
+#define OPEQ_TUPLE(OP) inline tuple{n} &operator OP(const tuple{n} &rhs) {{ {' '.join(f'{L[i]} OP rhs.{L[i]};' for i in range(1,n+1))} return *this; }}
 #define OP_BINARY(OP) friend inline auto operator OP(const tuple{n} &lhs, const tuple{n} &rhs) \\
     {{ return make_tuple{n}({', '.join(f'lhs.{L[i]} OP rhs.{L[i]}' for i in range(1,n+1))}); }}
-#define OP_EQ_BIN(OP) OPEQ_TUPLE(OP##=) OPEQ_OTHER(OP##=) OP_BINARY(OP)
+#define OP_EQ_BIN(OP) OPEQ_TUPLE(OP##=) OP_BINARY(OP)
 #define OP_UNARY(OP) friend inline auto operator OP(const tuple{n} &tup) {{ return make_tuple{n}({', '.join(f'OP tup.{L[i]}' for i in range(1,n+1))}); }}
 #define OP_PRE(OP) inline tuple{n} &operator OP() {{ {' '.join(f'OP {L[i]};' for i in range(1,n+1))} return *this; }}
 #define OP_POST(OP) inline tuple{n} operator OP(int) {{ tuple{n} ret = *this; OP(*this); return ret; }}
