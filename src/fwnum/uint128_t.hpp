@@ -26,6 +26,10 @@ class uint128_t
 private:
     std::array<uint64_t,2> _v;
     static_assert(sizeof(_v) == 16);
+    static constexpr char _digit_min = '0';
+    static constexpr char _digit_max = '9';
+    template <bool uppercase> static constexpr char _letter_min = uppercase ? 'A' : 'a';
+    template <bool uppercase> static constexpr char _letter_max = uppercase ? 'Z' : 'z';
 public:
     inline constexpr uint128_t() noexcept: _v{0,0} {}
     inline constexpr uint128_t(uint64_t w0, uint64_t w1) noexcept: _v{w0,w1} {}
@@ -432,6 +436,38 @@ public:
         else
             is.setstate(std::ios::failbit);
         return is;
+    }
+
+    // conversion to/from string
+
+    // convert value to a string
+    // base can be 2-36, using digits 0-9 then letters a-z or A-Z
+    std::string to_string(int base = 10, bool uppercase = false)
+    {
+        ;
+    }
+
+    // convert value to a string (compile time optimized)
+    template <int base = 10, bool uppercase = false>
+    std::string to_string_c()
+    {
+        static_assert(base >= 2 && base <= 36);
+        ;
+    }
+
+    // parse value from a string
+    // base can be 2-36, using digits 0-9 then letters a-z or A-Z
+    static constexpr uint128_t parse(const std::string &s, int base = 10, bool uppercase = false)
+    {
+        ;
+    }
+
+    // parse value from a string (compile time optimized)
+    template <int base = 10, bool uppercase = false>
+    static constexpr uint128_t parse_c(const std::string &s)
+    {
+        static_assert(base >= 2 && base <= 36);
+        ;
     }
 };
 
