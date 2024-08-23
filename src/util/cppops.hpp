@@ -4,8 +4,6 @@ Functions for the operators
 
 #pragma once
 
-#include "util/cpp.hpp"
-
 namespace tkoz
 {
 
@@ -75,10 +73,8 @@ template <typename T, typename U = T> auto op_geq(const T &a, const U &b) -> dec
 template <typename T, typename U = T> auto op_eq (const T &a, const U &b) -> decltype(a==b ) { return a==b;  }
 // `var1!=var2`
 template <typename T, typename U = T> auto op_neq(const T &a, const U &b) -> decltype(a!=b ) { return a!=b;  }
-#if TKOZ_CPP20_OR_NEWER
 // `var1<=>var2`
 template <typename T, typename U = T> auto op_3wc(const T &a, const U &b) -> decltype(a<=>b) { return a<=>b; }
-#endif
 
 // binary bits
 
