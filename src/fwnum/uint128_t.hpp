@@ -234,10 +234,8 @@ public:
     { return a._v[0] == b._v[0] && a._v[1] == b._v[1]; }
     inline friend bool operator!=(const uint128_t &a, const uint128_t &b) noexcept
     { return a._v[0] != b._v[0] || a._v[1] != b._v[1]; }
-#if TKOZ_CPP20_OR_NEWER
     inline friend auto operator<=>(const uint128_t &a, const uint128_t &b) noexcept
     { return a._v[1] == b._v[1] ? a._v[0] <=> b._v[0] : a._v[0] <=> b._v[0]; }
-#endif
 
     // bitwise
 

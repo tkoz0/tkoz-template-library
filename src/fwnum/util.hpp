@@ -20,16 +20,6 @@ static_assert(sizeof(int16_t) == 2);
 static_assert(sizeof(int32_t) == 4);
 static_assert(sizeof(int64_t) == 8);
 
-static_assert(std::is_same<uint8_t, unsigned char>::value);
-static_assert(std::is_same<uint16_t, unsigned short>::value);
-static_assert(std::is_same<uint32_t, unsigned int>::value);
-static_assert(std::is_same<uint64_t, unsigned long>::value);
-static_assert(std::is_same<int8_t, signed char>::value);
-static_assert(std::is_same<int16_t, signed short>::value);
-static_assert(std::is_same<int32_t, signed int>::value);
-static_assert(std::is_same<int64_t, signed long>::value);
-
-#if TKOZ_CPP17_OR_NEWER
 static_assert(std::is_same_v<uint8_t, unsigned char>);
 static_assert(std::is_same_v<uint16_t, unsigned short>);
 static_assert(std::is_same_v<uint32_t, unsigned int>);
@@ -38,7 +28,6 @@ static_assert(std::is_same_v<int8_t, signed char>);
 static_assert(std::is_same_v<int16_t, signed short>);
 static_assert(std::is_same_v<int32_t, signed int>);
 static_assert(std::is_same_v<int64_t, signed long>);
-#endif
 
 static_assert(sizeof(void*) == 8);
 static_assert(sizeof(bool*) == 8);
@@ -85,30 +74,20 @@ static_assert(sizeof(ull_t) == 8);
 template <typename T> struct fp_exp_size {};
 template <> struct fp_exp_size<float> { static constexpr size_t value = 8; };
 template <> struct fp_exp_size<double> { static constexpr size_t value = 11; };
-#if TKOZ_CPP14_OR_NEWER
 template <typename T> constexpr size_t fp_exp_size_v = fp_exp_size<T>::value;
-#endif
 
-#if TKOZ_CPP14_OR_NEWER
 template <typename T> struct fp_exp_bias { static constexpr size_t value = (1ull << (fp_exp_size_v<T> - 1)) - 1; };
 template <typename T> constexpr size_t fp_exp_bias_v = fp_exp_bias<T>::value;
-#else
-template <typename T> struct fp_exp_bias { static constexpr size_t value = (1ull << (fp_exp_size<T>::value - 1)) - 1; };
-#endif
 
 template <typename T> struct fp_mant_size {};
 template <> struct fp_mant_size<float> { static constexpr size_t value = 23; };
 template <> struct fp_mant_size<double> { static constexpr size_t value = 52; };
-#if TKOZ_CPP14_OR_NEWER
 template <typename T> constexpr size_t fp_mant_size_v = fp_mant_size<T>::value;
-#endif
 
-#if TKOZ_CPP14_OR_NEWER
 static_assert(1 + fp_exp_size_v<float> + fp_mant_size_v<float> == 32);
 static_assert(1 + fp_exp_size_v<double> + fp_mant_size_v<double> == 64);
 static_assert(fp_exp_bias_v<float> == 127);
 static_assert(fp_exp_bias_v<double> == 1023);
-#endif
 
 static_assert(1 + fp_exp_size<float>::value + fp_mant_size<float>::value == 32);
 static_assert(1 + fp_exp_size<double>::value + fp_mant_size<double>::value == 64);
@@ -145,7 +124,7 @@ inline void _udiv64_1(uint64_t x0, uint64_t x1, uint64_t d, uint64_t &q, uint64_
         : [d]"r"(d), "a"(x0), "d"(x1) // rdx:rax is 128 bit input
     );
 #else
-#error "only implemented for x86_64"
+#error "only implemented for x86_64/amd64"
 #endif
 }
 

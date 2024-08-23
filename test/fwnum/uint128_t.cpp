@@ -18,9 +18,7 @@ using std::array;
 using std::pair;
 using std::tuple;
 using std::string;
-#if TKOZ_CPP20_OR_NEWER
 using std::strong_ordering;
-#endif
 
 bool check_u128(uint128_t n, uint64_t w0, uint64_t w1)
 {
@@ -811,9 +809,7 @@ vector<triple<uint128_t,uint128_t,bool>> tests_eq = {};
 
 vector<triple<uint128_t,uint128_t,bool>> tests_ne = {};
 
-#if TKOZ_CPP20_OR_NEWER
 vector<triple<uint128_t,uint128_t,strong_ordering>> tests_3w = {};
-#endif
 
 void run_tests_cmp()
 {
@@ -824,9 +820,7 @@ void run_tests_cmp()
     static_assert(std::is_same<bool,decltype(a>=b)>::value);
     static_assert(std::is_same<bool,decltype(a==b)>::value);
     static_assert(std::is_same<bool,decltype(a!=b)>::value);
-#if TKOZ_CPP20_OR_NEWER
     static_assert(std::is_same<strong_ordering,decltype(a<=>b)>::value);
-#endif
     for (auto &test : tests_lt)
         if ((test.a < test.b) != test.c || (test.a >= test.b) == test.c)
         {
@@ -863,14 +857,12 @@ void run_tests_cmp()
             printf("ne fail: %20lu %20lu != %20lu %20lu\n",test.a.get<0>(),test.a.get<1>(),test.b.get<0>(),test.b.get<1>());
             assert(0);
         }
-#if TKOZ_CPP20_OR_NEWER
     for (auto &test : tests_3w)
         if ((test.a <=> test.b) != test.c)
         {
             printf("3w fail: %20lu %20lu <=> %20lu %20lu\n",test.a.get<0>(),test.a.get<1>(),test.b.get<0>(),test.b.get<1>());
             assert(0);
         }
-#endif
 }
 
 vector<triple<uint128_t,uint128_t,uint128_t>> tests_and = {};
@@ -902,6 +894,11 @@ void run_tests_io()
     ;
 }
 
+void run_tests_other()
+{
+    ;
+}
+
 int main()
 {
     run_tests_ctor();
@@ -914,10 +911,7 @@ int main()
     run_tests_cmp();
     run_tests_bit();
     run_tests_io();
-    //assert(factorial(64).array()[0] == (1ul << 63));
-    //assert(factorial(64).array()[0] == (1ull << 63));
-    //assert(factorial(128) == uint128_t(1) << 127);
-    //assert(factorial(130) == 0);
+    run_tests_other();
     return 0;
 }
 
