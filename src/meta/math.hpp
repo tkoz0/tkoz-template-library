@@ -128,26 +128,25 @@ namespace _internal
 template <size_t i, size_t j>
 struct _permutations_mulseq
 {
-    static_assert(i > j);
-    static constexpr size_t _value = i * _permutations_mulseq<i-1,j>::_value;
+    static constexpr size_t value = i * _permutations_mulseq<i-1,j>::value;
 };
 
 template <size_t i>
 struct _permutations_mulseq<i,i>
 {
-    static constexpr size_t _value = 1;
-};
-
-template <size_t n, size_t k, size_t i = k>
-struct _combinations_mulseq
-{
-    static constexpr size_t _value = _combinations_mulseq<n,k,k-1>::_value * (n-k+1) / k;
+    static constexpr size_t value = 1;
 };
 
 template <size_t n, size_t k>
-struct _combinations_mulseq<n,k,0>
+struct _combinations_mulseq
 {
-    static constexpr size_t _value = 1;
+    static constexpr size_t value = _combinations_mulseq<n,k-1>::value * (n-k+1) / k;
+};
+
+template <size_t n>
+struct _combinations_mulseq<n,0>
+{
+    static constexpr size_t value = 1;
 };
 
 }
@@ -157,7 +156,7 @@ struct _combinations_mulseq<n,k,0>
 template <size_t N, size_t K>
 struct permutations_s
 {
-    static constexpr size_t value = K > N ? 0 : _internal::_permutations_mulseq<N,N-K>::_value;
+    static constexpr size_t value = K > N ? 0 : _internal::_permutations_mulseq<N,N-K>::value;
 };
 
 template <size_t N, size_t K>
@@ -168,7 +167,7 @@ constexpr size_t permutations_v = permutations_s<N,K>::value;
 template <size_t N, size_t K>
 struct combinations_s
 {
-    static constexpr size_t value = K <= N/2 ? _internal::_combinations_mulseq<N,K>::_value : combinations_s<N,N-K>::value;
+    static constexpr size_t value = std::conditional_t<(K>N),std::integral_constant<size_t,0>,std::conditional_t<(K<=N/2),_internal::_combinations_mulseq<N,K>,_internal::_combinations_mulseq<N,N-K>>>::value;
 };
 
 template <size_t N, size_t K>

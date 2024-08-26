@@ -1,8 +1,7 @@
 #include "../../src/meta/math.hpp"
 #include <array>
 namespace meta = tkoz::meta;
-int main() {}
-#define ARRLEN(arr) (sizeof(arr)/sizeof(arr[0]))
+#define ARRAY_LEN(arr) (sizeof(arr)/sizeof(arr[0]))
 
 // min
 
@@ -65,7 +64,7 @@ template <size_t N = 0>
 constexpr bool run_factorial() { return meta::factorial_v<N> == tests_factorial[N] && run_factorial<N+1>(); }
 
 template <>
-constexpr bool run_factorial<ARRLEN(tests_factorial)>() { return true; }
+constexpr bool run_factorial<ARRAY_LEN(tests_factorial)>() { return true; }
 
 static_assert(run_factorial());
 
@@ -93,7 +92,7 @@ template <size_t N = 0>
 constexpr bool run_fibonacci() { return meta::fibonacci_v<N> == tests_fibonacci[N] && run_fibonacci<N+1>(); }
 
 template <>
-constexpr bool run_fibonacci<ARRLEN(tests_fibonacci)>() { return true; }
+constexpr bool run_fibonacci<ARRAY_LEN(tests_fibonacci)>() { return true; }
 
 static_assert(run_fibonacci());
 
@@ -117,8 +116,80 @@ static_assert(meta::gcd_v<3648,516> == 12);
 
 // permutations
 
+#define TEST_PERMUTATIONS_ROW_SIZE 10
 
+constexpr size_t tests_permutations[][TEST_PERMUTATIONS_ROW_SIZE] =
+{
+    {1,0,0,0,0,0,0,0,0,0},
+    {1,1,0,0,0,0,0,0,0,0},
+    {1,2,2,0,0,0,0,0,0,0},
+    {1,3,6,6,0,0,0,0,0,0},
+    {1,4,12,24,24,0,0,0,0,0},
+    {1,5,20,60,120,120,0,0,0,0},
+    {1,6,30,120,360,720,720,0,0,0},
+    {1,7,42,210,840,2520,5040,5040,0,0},
+    {1,8,56,336,1680,6720,20160,40320,40320,0},
+    {1,9,72,504,3024,15120,60480,181440,362880,362880}
+};
+
+template <size_t N>
+struct run_permutations_n
+{
+    static_assert(TEST_PERMUTATIONS_ROW_SIZE > 0);
+    template <size_t K>
+    static constexpr bool run(std::integral_constant<size_t,K>) { return meta::permutations_v<N,K> == tests_permutations[N][K] && run(std::integral_constant<size_t,K+1>()); }
+    static constexpr bool run(std::integral_constant<size_t,TEST_PERMUTATIONS_ROW_SIZE>) { return true; }
+};
+
+template <size_t N = 0>
+constexpr bool run_permutations() { return run_permutations_n<N>::run(std::integral_constant<size_t,0>()) && run_permutations<N+1>(); }
+
+template <>
+constexpr bool run_permutations<ARRAY_LEN(tests_permutations)>() { return true; }
+
+static_assert(run_permutations());
 
 // combinations
 
+#define TEST_COMBINATIONS_ROW_SIZE 10
+
+constexpr size_t tests_combinations[][TEST_COMBINATIONS_ROW_SIZE] =
+{
+    {1,0,0,0,0,0,0,0,0,0},
+    {1,1,0,0,0,0,0,0,0,0},
+    {1,2,1,0,0,0,0,0,0,0},
+    {1,3,3,1,0,0,0,0,0,0},
+    {1,4,6,4,1,0,0,0,0,0},
+    {1,5,10,10,5,1,0,0,0,0},
+    {1,6,15,20,15,6,1,0,0,0},
+    {1,7,21,35,35,21,7,1,0,0},
+    {1,8,28,56,70,56,28,8,1,0},
+    {1,9,36,84,126,126,84,36,9,1}
+};
+
+template <size_t N>
+struct run_combinations_n
+{
+    static_assert(TEST_COMBINATIONS_ROW_SIZE > 0);
+    template <size_t K>
+    static constexpr bool run(std::integral_constant<size_t,K>) { return meta::combinations_v<N,K> == tests_combinations[N][K] && run(std::integral_constant<size_t,K+1>()); }
+    static constexpr bool run(std::integral_constant<size_t,TEST_COMBINATIONS_ROW_SIZE>) { return true; }
+};
+
+template <size_t N = 0>
+constexpr bool run_combinations() { return run_combinations_n<N>::run(std::integral_constant<size_t,0>()) && run_combinations<N+1>(); }
+
+template <>
+constexpr bool run_combinations<ARRAY_LEN(tests_combinations)>() { return true; }
+
+static_assert(run_combinations());
+
+// main function for output or run time tests
+
+#include <iostream>
+int main()
+{
+    using std::cout, std::endl;
+    return 0;
+}
 
