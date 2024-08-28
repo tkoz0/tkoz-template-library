@@ -184,6 +184,24 @@ constexpr bool run_combinations<ARRAY_LEN(tests_combinations)>() { return true; 
 
 static_assert(run_combinations());
 
+// pow
+
+static_assert(meta::pow_v<1,0> == 1);
+static_assert(meta::pow_v<1,1> == 1);
+static_assert(meta::pow_v<1,2> == 1);
+static_assert(meta::pow_v<1,100> == 1);
+static_assert(meta::pow_v<1,10000> == 1);
+static_assert(meta::pow_v<2,0> == 1);
+static_assert(meta::pow_v<2,1> == 2);
+static_assert(meta::pow_v<2,2> == 4);
+static_assert(meta::pow_v<2,20> == 1048576);
+static_assert(meta::pow_v<5,0> == 1);
+static_assert(meta::pow_v<5,1> == 5);
+static_assert(meta::pow_v<5,2> == 25);
+static_assert(meta::pow_v<5,3> == 125);
+static_assert(meta::pow_v<257,1> == 257);
+static_assert(meta::pow_v<257,5> == 1121154893057ull);
+
 // main function for output or run time tests
 
 #include <iostream>

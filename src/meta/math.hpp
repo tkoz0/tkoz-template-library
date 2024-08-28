@@ -1,6 +1,8 @@
 #include <cstddef>
 #include <type_traits>
 
+// TODO include "typename T" so it is not always size_t
+
 namespace tkoz::meta
 {
 
@@ -105,46 +107,46 @@ constexpr size_t fibonacci_v = fibonacci_s<N>::value;
 // gcd
 
 template <size_t A, size_t B>
-struct gcd
+struct gcd_s
 {
-    static constexpr size_t value = gcd<B,A%B>::value;
+    static constexpr size_t value = gcd_s<B,A%B>::value;
 };
 
 template <>
-struct gcd<0,0> {};
+struct gcd_s<0,0> {};
 
 template <size_t A>
-struct gcd<A,0>
+struct gcd_s<A,0>
 {
     static constexpr size_t value = A;
 };
 
 template <size_t A, size_t B>
-constexpr size_t gcd_v = gcd<A,B>::value;
+constexpr size_t gcd_v = gcd_s<A,B>::value;
 
 namespace _internal
 {
 
 template <size_t i, size_t j>
-struct _permutations_mulseq
+struct _perm_mulseq
 {
-    static constexpr size_t value = i * _permutations_mulseq<i-1,j>::value;
+    static constexpr size_t value = i * _perm_mulseq<i-1,j>::value;
 };
 
 template <size_t i>
-struct _permutations_mulseq<i,i>
+struct _perm_mulseq<i,i>
 {
     static constexpr size_t value = 1;
 };
 
 template <size_t n, size_t k>
-struct _combinations_mulseq
+struct _comb_mulseq
 {
-    static constexpr size_t value = _combinations_mulseq<n,k-1>::value * (n-k+1) / k;
+    static constexpr size_t value = _comb_mulseq<n,k-1>::value * (n-k+1) / k;
 };
 
 template <size_t n>
-struct _combinations_mulseq<n,0>
+struct _comb_mulseq<n,0>
 {
     static constexpr size_t value = 1;
 };
@@ -156,7 +158,7 @@ struct _combinations_mulseq<n,0>
 template <size_t N, size_t K>
 struct permutations_s
 {
-    static constexpr size_t value = K > N ? 0 : _internal::_permutations_mulseq<N,N-K>::value;
+    static constexpr size_t value = K > N ? 0 : _internal::_perm_mulseq<N,N-K>::value;
 };
 
 template <size_t N, size_t K>
@@ -167,10 +169,46 @@ constexpr size_t permutations_v = permutations_s<N,K>::value;
 template <size_t N, size_t K>
 struct combinations_s
 {
-    static constexpr size_t value = std::conditional_t<(K>N),std::integral_constant<size_t,0>,std::conditional_t<(K<=N/2),_internal::_combinations_mulseq<N,K>,_internal::_combinations_mulseq<N,N-K>>>::value;
+    static constexpr size_t value = std::conditional_t<(K>N),std::integral_constant<size_t,0>,
+        std::conditional_t<(K<=N/2),_internal::_comb_mulseq<N,K>,_internal::_comb_mulseq<N,N-K>>>::value;
 };
 
 template <size_t N, size_t K>
 constexpr size_t combinations_v = combinations_s<N,K>::value;
+
+// pow
+
+// TODO with squaring
+
+template <size_t B, size_t P>
+struct pow_s
+{
+    static constexpr size_t value = B * pow_s<B,P-1>::value;
+};
+
+template <>
+struct pow_s<1,0>
+{
+    static constexpr size_t value = 1;
+};
+
+template <size_t P>
+struct pow_s<1,P>
+{
+    static constexpr size_t value = 1;
+};
+
+template <size_t B>
+struct pow_s<B,0>
+{
+    static constexpr size_t value = 1;
+};
+
+template <size_t B, size_t P>
+constexpr size_t pow_v = pow_s<B,P>::value;
+
+// modpow
+
+// TODO binary right to left
 
 }
