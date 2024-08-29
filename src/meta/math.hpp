@@ -158,7 +158,7 @@ struct _comb_mulseq<n,0>
 template <size_t N, size_t K>
 struct permutations_s
 {
-    static constexpr size_t value = K > N ? 0 : _internal::_perm_mulseq<N,N-K>::value;
+    static constexpr size_t value = std::conditional_t<(K>N),std::integral_constant<size_t,0>,_internal::_perm_mulseq<N,N-K>>::value;
 };
 
 template <size_t N, size_t K>
