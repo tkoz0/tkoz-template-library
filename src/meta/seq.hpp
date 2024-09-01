@@ -149,7 +149,7 @@ constexpr std::array<T,sizeof...(vs)> _seq_to_arr(seq<T,vs...>) { return {vs...}
 }
 
 // static array from sequence type
-template <typename T> struct seq_array_s {};
+template <typename SEQ> struct seq_array_s {};
 
 // static array from sequence type
 template <typename T, T ...vs>
@@ -159,12 +159,8 @@ struct seq_array_s<seq<T,vs...>>
 };
 
 // static array from sequence type
-template <typename T, T ...vs>
-static constexpr std::array<T,sizeof...(vs)> seq_array_v = seq_array_s<seq<T,vs...>>::value;
-
-// static array from sequence type
-template <typename T, T ...vs>
-static constexpr std::array<T,sizeof...(vs)> seq_array_v<seq<T,vs...>> = seq_array_v<T,vs...>;
+template <typename SEQ>
+static constexpr auto seq_array_v = seq_array_s<SEQ>::value;
 
 // static array from sequence type with mapping function
 template <typename F, typename T, T ...vs>
@@ -210,5 +206,110 @@ struct take_seq_end_s<seq<T,vs...>,len>
 // take part of ending of a sequence
 template <typename SEQ, size_t len>
 using take_seq_end_t = take_seq_end_s<SEQ,len>::type;
+
+namespace _internal
+{
+
+template <typename T, T v>
+static constexpr T _seq_min_helper(seq<T,v>) { return v; }
+
+template <typename T, T ...vs>
+static constexpr T _seq_min_helper(seq<T,vs...>)
+{
+    constexpr size_t _half = sizeof...(vs)/2;
+    constexpr T _left = _seq_min_helper(take_seq_beg_t<seq<T,vs...>,_half>());
+    constexpr T _right = _seq_min_helper(take_seq_end_t<seq<T,vs...>,sizeof...(vs)-_half>());
+    return std::min(_left,_right);
+}
+
+template <typename T, T v>
+static constexpr T _seq_max_helper(seq<T,v>) { return v; }
+
+template <typename T, T ...vs>
+static constexpr T _seq_max_helper(seq<T,vs...>)
+{
+    constexpr size_t _half = sizeof...(vs)/2;
+    constexpr T _left = _seq_max_helper(take_seq_beg_t<seq<T,vs...>,_half>());
+    constexpr T _right = _seq_max_helper(take_seq_end_t<seq<T,vs...>,sizeof...(vs)-_half>());
+    return std::max(_left,_right);
+}
+
+template <typename T>
+static constexpr T _seq_sum_helper(seq<T>) { return 0; }
+
+template <typename T, T v>
+static constexpr T _seq_sum_helper(seq<T,v>) { return v; }
+
+template <typename T, T ...vs>
+static constexpr T _seq_sum_helper(seq<T,vs...>)
+{
+    constexpr size_t _half = sizeof...(vs)/2;
+    constexpr T _left = _seq_sum_helper(take_seq_beg_t<seq<T,vs...>,_half>());
+    constexpr T _right = _seq_sum_helper(take_seq_end_t<seq<T,vs...>,sizeof...(vs)-_half>());
+    return _left + _right;
+}
+
+template <typename T>
+static constexpr T _seq_prod_helper(seq<T>) { return 1; }
+
+template <typename T, T v>
+static constexpr T _seq_prod_helper(seq<T,v>) { return v; }
+
+template <typename T, T ...vs>
+static constexpr T _seq_prod_helper(seq<T,vs...>)
+{
+    constexpr size_t _half = sizeof...(vs)/2;
+    constexpr T _left = _seq_prod_helper(take_seq_beg_t<seq<T,vs...>,_half>());
+    constexpr T _right = _seq_prod_helper(take_seq_end_t<seq<T,vs...>,sizeof...(vs)-_half>());
+    return _left * _right;
+}
+
+}
+
+template <typename SEQ> struct seq_min_s {};
+
+template <typename T, T ...vs>
+struct seq_min_s<seq<T,vs...>>
+{
+    static_assert(sizeof...(vs),"minimum requires at least 1 value");
+    static constexpr T value = _internal::_seq_min_helper(seq<T,vs...>());
+};
+
+template <typename SEQ>
+static constexpr auto seq_min_v = seq_min_s<SEQ>::value;
+
+template <typename SEQ> struct seq_max_s {};
+
+template <typename T, T ...vs>
+struct seq_max_s<seq<T,vs...>>
+{
+    static_assert(sizeof...(vs),"maximum requires at least 1 value");
+    static constexpr T value = _internal::_seq_max_helper(seq<T,vs...>());
+};
+
+template <typename SEQ>
+static constexpr auto seq_max_v = seq_max_s<SEQ>::value;
+
+template <typename SEQ> struct seq_sum_s {};
+
+template <typename T, T ...vs>
+struct seq_sum_s<seq<T,vs...>>
+{
+    static constexpr T value = _internal::_seq_sum_helper(seq<T,vs...>());
+};
+
+template <typename SEQ>
+static constexpr auto seq_sum_v = seq_sum_s<SEQ>::value;
+
+template <typename SEQ> struct seq_prod_s {};
+
+template <typename T, T ...vs>
+struct seq_prod_s<seq<T,vs...>>
+{
+    static constexpr T value = _internal::_seq_prod_helper(seq<T,vs...>());
+};
+
+template <typename SEQ>
+static constexpr auto seq_prod_v = seq_prod_s<SEQ>::value;
 
 }

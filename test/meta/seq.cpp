@@ -38,7 +38,7 @@ static constexpr std::array<int,5> ints1 = {10,20,30,40,50};
 static_assert(ints1 == meta::array_v<int,10,20,30,40,50>);
 static_assert(ints1 == meta::map_array_f([](int i){return 10*i;},1,2,3,4,5));
 static constexpr std::array<size_t,6> ints2 = {1,2,3,4,5,6};
-static_assert(ints2 == meta::seq_array_v<size_t,1,2,3,4,5,6>);
+static_assert(ints2 == meta::seq_array_v<meta::iseq<1,2,3,4,5,6>>);
 static_assert(ints2 == meta::seq_array_v<meta::iseq_range_t<1,7>>);
 static_assert(ints1 == meta::array_f(10,20,30,40,50));
 static_assert(ints2 == meta::array_f((size_t)1,(size_t)2,(size_t)3,(size_t)4,(size_t)5,(size_t)6));
@@ -46,4 +46,13 @@ static constexpr std::array<int,10> ints3 = {0,1,4,9,16,25,36,49,64,81};
 static_assert(ints3 == meta::seqmap_array_f([](int i){return i*i;},meta::seq_range_t<int,0,10>()));
 // depth testing
 static constexpr std::array<size_t,1500> ints4 = meta::seq_array_v<meta::iseq_range_t<10,1510>>;
+
+static_assert(meta::seq_min_v<meta::iseq<8,7,6,5,10,11>> == 5);
+static_assert(meta::seq_min_v<meta::iseq<1>> == 1);
+static_assert(meta::seq_max_v<meta::iseq<8,7,6,12,5,10,11>> == 12);
+static_assert(meta::seq_max_v<meta::iseq<1>> == 1);
+static_assert(meta::seq_sum_v<meta::iseq<6,10,14,18,3,2,1>> == 54);
+static_assert(meta::seq_sum_v<meta::iseq<>> == 0);
+static_assert(meta::seq_prod_v<meta::iseq<3,5,7>> == 105);
+static_assert(meta::seq_prod_v<meta::iseq<>> == 1);
 
