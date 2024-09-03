@@ -12,6 +12,9 @@ Range similar to in python3
 namespace tkoz
 {
 
+namespace _internal
+{
+
 // range for increment or decrement to share code
 template <bool _inc, typename T>
 class _step1range
@@ -52,13 +55,15 @@ public:
     inline constexpr _iter end() const noexcept { return _iter(_stop); }
 };
 
+}
+
 // increment range (allows overflow)
 template <typename T = std::size_t>
-using IncRange = _step1range<true,T>;
+using IncRange = _internal::_step1range<true,T>;
 
 // decrement range (allows underflow)
 template <typename T = std::size_t>
-using DecRange = _step1range<false,T>;
+using DecRange = _internal::_step1range<false,T>;
 
 // general range
 // if step size is 1 (or -1), should use IncRange (or DecRange) instead

@@ -64,11 +64,16 @@ inline constexpr vtuple<Ts...> make_vtuple(const Ts&... vs);
 template <typename T, typename ...Ts>
 inline constexpr vtuple<T,Ts...> make_vtuple(const T &v, const vtuple<Ts...> &vs);
 
+namespace _internal
+{
+
 template <size_t i, typename T, typename ...Ts>
 struct _vtuple_type { static_assert(i <= sizeof...(Ts)); typedef _vtuple_type<i-1,Ts...>::type type; };
 
 template <typename T, typename ...Ts>
 struct _vtuple_type<0,T,Ts...> { typedef T type; };
+
+}
 
 template <typename T, typename ...Ts>
 struct vtuple<T,Ts...>
@@ -77,7 +82,7 @@ public:
     T v;
     vtuple<Ts...> vs;
     // type info
-    template <size_t ind> using type = typename _vtuple_type<ind,T,Ts...>::type;
+    template <size_t ind> using type = typename _internal::_vtuple_type<ind,T,Ts...>::type;
     // default ctor
     inline constexpr vtuple(): v(), vs() {}
     // initialize with sequence of values
