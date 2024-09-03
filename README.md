@@ -32,6 +32,7 @@ Everything is written with a minimum requirement of C++20.
 - quad/oct trees
 - priority queue (with random access to any element)
 - data structures that remember insertion order
+- custom memory allocators
 - file system level RAID
 - tools for multithreading
 - filesystem library
