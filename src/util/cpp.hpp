@@ -2,6 +2,8 @@
 Macros for handling C++ standards
 */
 
+#pragma once
+
 #define TKOZ_CPP98_VALUE 199711L
 #define TKOZ_CPP03_VALUE 199711L
 #define TKOZ_CPP11_VALUE 201103L
