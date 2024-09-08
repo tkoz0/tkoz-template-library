@@ -241,7 +241,7 @@ public:
     inline friend bool operator!=(const uint128_t &a, const uint128_t &b) noexcept
     { return a._v[0] != b._v[0] || a._v[1] != b._v[1]; }
     inline friend auto operator<=>(const uint128_t &a, const uint128_t &b) noexcept
-    { return a._v[1] == b._v[1] ? a._v[0] <=> b._v[0] : a._v[0] <=> b._v[0]; }
+    { return a._v[1] == b._v[1] ? a._v[0] <=> b._v[0] : a._v[1] <=> b._v[1]; }
 
     // bitwise
 
@@ -442,24 +442,29 @@ public:
 
     // convert value to a string
     // base can be 2-36, using digits 0-9 then letters a-z or A-Z
-    std::string to_string(int base = 10, bool uppercase = false)
+    std::string to_string(int base = 10, bool uppercase = false) const
     {
-        ;
+        (void)base;
+        (void)uppercase;
+        return "";
     }
 
     // convert value to a string (compile time optimized)
     template <int base = 10, bool uppercase = false>
-    std::string to_string_c()
+    std::string to_string_c() const
     {
         static_assert(base >= 2 && base <= 36);
-        ;
+        return "";
     }
 
     // parse value from a string
     // base can be 2-36, using digits 0-9 then letters a-z or A-Z
     static constexpr uint128_t parse(const std::string &s, int base = 10, bool uppercase = false)
     {
-        ;
+        (void)s;
+        (void)base;
+        (void)uppercase;
+        return 0;
     }
 
     // parse value from a string (compile time optimized)
@@ -467,7 +472,8 @@ public:
     static constexpr uint128_t parse_c(const std::string &s)
     {
         static_assert(base >= 2 && base <= 36);
-        ;
+        (void)s;
+        return 0;
     }
 };
 
@@ -517,7 +523,7 @@ struct numeric_limits<tkoz::uint128_t>
 
 string to_string(const tkoz::uint128_t &n)
 {
-    ;
+    return n.to_string_c();
 }
 
 }
