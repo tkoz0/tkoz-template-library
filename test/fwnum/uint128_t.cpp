@@ -538,10 +538,10 @@ vector<pair<uint128_t,bool>> tests_not =
 void run_tests_unary()
 {
     uint128_t n;
-    static_assert(std::is_same<uint128_t,decltype(~n)>::value);
-    static_assert(std::is_same<uint128_t,decltype(+n)>::value);
-    static_assert(std::is_same<uint128_t,decltype(-n)>::value);
-    static_assert(std::is_same<bool,decltype(!n)>::value);
+    static_assert(std::is_same_v<uint128_t,decltype(~n)>);
+    static_assert(std::is_same_v<uint128_t,decltype(+n)>);
+    static_assert(std::is_same_v<uint128_t,decltype(-n)>);
+    static_assert(std::is_same_v<bool,decltype(!n)>);
     for (auto &test : tests_inv)
         assert(check_u128(~test.first,test.second));
     for (auto &test : tests_pos)
@@ -707,21 +707,21 @@ void run_tests_arith()
 {
     uint128_t n1,n2;
     uint64_t m;
-    static_assert(std::is_same<decltype(n1+n2),uint128_t>::value);
-    static_assert(std::is_same<decltype(n1+m),uint128_t>::value);
-    static_assert(std::is_same<decltype(m+n2),uint128_t>::value);
-    static_assert(std::is_same<decltype(n1-n2),uint128_t>::value);
-    static_assert(std::is_same<decltype(n1-m),uint128_t>::value);
-    static_assert(std::is_same<decltype(m-n2),uint128_t>::value);
-    static_assert(std::is_same<decltype(n1*n2),uint128_t>::value);
-    static_assert(std::is_same<decltype(n1*m),uint128_t>::value);
-    static_assert(std::is_same<decltype(m*n2),uint128_t>::value);
-    static_assert(std::is_same<decltype(n1/n2),uint128_t>::value);
-    static_assert(std::is_same<decltype(n1/m),uint128_t>::value);
-    static_assert(std::is_same<decltype(m/n2),uint64_t>::value);
-    static_assert(std::is_same<decltype(n1%n2),uint128_t>::value);
-    static_assert(std::is_same<decltype(n1%m),uint64_t>::value);
-    static_assert(std::is_same<decltype(m%n2),uint64_t>::value);
+    static_assert(std::is_same_v<decltype(n1+n2),uint128_t>);
+    static_assert(std::is_same_v<decltype(n1+m),uint128_t>);
+    static_assert(std::is_same_v<decltype(m+n2),uint128_t>);
+    static_assert(std::is_same_v<decltype(n1-n2),uint128_t>);
+    static_assert(std::is_same_v<decltype(n1-m),uint128_t>);
+    static_assert(std::is_same_v<decltype(m-n2),uint128_t>);
+    static_assert(std::is_same_v<decltype(n1*n2),uint128_t>);
+    static_assert(std::is_same_v<decltype(n1*m),uint128_t>);
+    static_assert(std::is_same_v<decltype(m*n2),uint128_t>);
+    static_assert(std::is_same_v<decltype(n1/n2),uint128_t>);
+    static_assert(std::is_same_v<decltype(n1/m),uint128_t>);
+    static_assert(std::is_same_v<decltype(m/n2),uint64_t>);
+    static_assert(std::is_same_v<decltype(n1%n2),uint128_t>);
+    static_assert(std::is_same_v<decltype(n1%m),uint64_t>);
+    static_assert(std::is_same_v<decltype(m%n2),uint64_t>);
     for (auto &test : tests_add_UU)
         assert(check_u128(test.a+test.b,test.c) && check_u128(test.b+test.a,test.c));
     for (auto &test : tests_add_Uu)
@@ -789,8 +789,8 @@ void run_tests_shift()
 {
     uint128_t n;
     uint32_t s;
-    static_assert(std::is_same<decltype(n<<s),uint128_t>::value);
-    static_assert(std::is_same<decltype(n>>s),uint128_t>::value);
+    static_assert(std::is_same_v<decltype(n<<s),uint128_t>);
+    static_assert(std::is_same_v<decltype(n>>s),uint128_t>);
     for (auto &test : tests_shl)
         assert(check_u128(test.a<<test.b,test.c));
     for (auto &test : tests_shr)
@@ -814,13 +814,13 @@ vector<triple<uint128_t,uint128_t,strong_ordering>> tests_3w = {};
 void run_tests_cmp()
 {
     uint128_t a,b;
-    static_assert(std::is_same<bool,decltype(a<b)>::value);
-    static_assert(std::is_same<bool,decltype(a>b)>::value);
-    static_assert(std::is_same<bool,decltype(a<=b)>::value);
-    static_assert(std::is_same<bool,decltype(a>=b)>::value);
-    static_assert(std::is_same<bool,decltype(a==b)>::value);
-    static_assert(std::is_same<bool,decltype(a!=b)>::value);
-    static_assert(std::is_same<strong_ordering,decltype(a<=>b)>::value);
+    static_assert(std::is_same_v<bool,decltype(a<b)>);
+    static_assert(std::is_same_v<bool,decltype(a>b)>);
+    static_assert(std::is_same_v<bool,decltype(a<=b)>);
+    static_assert(std::is_same_v<bool,decltype(a>=b)>);
+    static_assert(std::is_same_v<bool,decltype(a==b)>);
+    static_assert(std::is_same_v<bool,decltype(a!=b)>);
+    static_assert(std::is_same_v<strong_ordering,decltype(a<=>b)>);
     for (auto &test : tests_lt)
         if ((test.a < test.b) != test.c || (test.a >= test.b) == test.c)
         {
@@ -874,9 +874,9 @@ vector<triple<uint128_t,uint128_t,uint128_t>> tests_xor = {};
 void run_tests_bit()
 {
     uint128_t a,b;
-    static_assert(std::is_same<uint128_t,decltype(a&b)>::value);
-    static_assert(std::is_same<uint128_t,decltype(a|b)>::value);
-    static_assert(std::is_same<uint128_t,decltype(a^b)>::value);
+    static_assert(std::is_same_v<uint128_t,decltype(a&b)>);
+    static_assert(std::is_same_v<uint128_t,decltype(a|b)>);
+    static_assert(std::is_same_v<uint128_t,decltype(a^b)>);
     for (auto &test : tests_and)
         assert(check_u128(test.a&test.b,test.c) && check_u128(test.b&test.a,test.c));
     for (auto &test : tests_or)
