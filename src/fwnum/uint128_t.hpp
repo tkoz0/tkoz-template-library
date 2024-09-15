@@ -4,12 +4,15 @@ TODO specialize std::numeric_limits
 TODO specialize std::hash
 TODO specialize std::to_string
 TODO https://en.cppreference.com/w/cpp/language/user_literal
+TODO make a class that takes a bool for signed
+- class _tkoz_int128<bool signed>
+- using uint128_t = _tkoz_int128<false>
+- using int128_t = _tkoz_int128<true>
 
 */
 
 #pragma once
 
-#include <array>
 #include <cstdint>
 #include <iostream>
 #include <limits>
@@ -24,30 +27,25 @@ namespace tkoz
 class uint128_t
 {
 private:
-    std::array<uint64_t,2> _v;
+    uint64_t _v[2];
     static_assert(sizeof(_v) == 16);
-    static constexpr char _digit_min = '0';
-    static constexpr char _digit_max = '9';
-    template <bool uppercase> static constexpr char _letter_min = uppercase ? 'A' : 'a';
-    template <bool uppercase> static constexpr char _letter_max = uppercase ? 'Z' : 'z';
 public:
     inline constexpr uint128_t() noexcept: _v{0,0} {}
     inline constexpr uint128_t(uint64_t w0, uint64_t w1) noexcept: _v{w0,w1} {}
-    inline constexpr uint128_t(const std::array<uint64_t,2> &v) noexcept: _v(v) {}
-
-    // access the internal std::array representation
-    inline constexpr const std::array<uint64_t,2> &array() const noexcept { return _v; }
-
-    // access the internal std::array representation
-    inline std::array<uint64_t,2> &array() noexcept { return _v; }
 
     // access one of the 2 words (index must be 0 or 1)
     template <size_t i>
     inline constexpr uint64_t get() const noexcept { static_assert(i < 2); return _v[i]; }
 
+    // access a word (index must be 0 or 1)
+    inline constexpr uint64_t get(size_t i) const noexcept { return _v[i]; }
+
     // set one of the 2 words (index must be 0 or 1)
     template <size_t i>
     inline void set(uint64_t v) noexcept { static_assert(i < 2); _v[i] = v; }
+
+    // set a word (index must be 0 or 1)
+    inline void set(size_t i, uint64_t v) noexcept { _v[i] = v; }
 
     // conversion constructors
     // all primitives can be implicitly constructed by having constructors for all of them
@@ -118,17 +116,17 @@ public:
 
     // conversion operators (conversion to primitives must be explicit)
 
-    inline explicit operator bool() const noexcept { return _v[0] || _v[1]; }
-    inline explicit operator uint64_t() const noexcept { return _v[0]; }
-    inline explicit operator uint32_t() const noexcept { return _v[0]; }
-    inline explicit operator uint16_t() const noexcept { return _v[0]; }
-    inline explicit operator uint8_t() const noexcept { return _v[0]; }
-    inline explicit operator int64_t() const noexcept { return _v[0]; }
-    inline explicit operator int32_t() const noexcept { return _v[0]; }
-    inline explicit operator int16_t() const noexcept { return _v[0]; }
-    inline explicit operator int8_t() const noexcept { return _v[0]; }
-    inline explicit operator ull_t() const noexcept { return _v[0]; }
-    inline explicit operator sll_t() const noexcept { return _v[0]; }
+    inline explicit constexpr operator bool() const noexcept { return _v[0] || _v[1]; }
+    inline explicit constexpr operator uint64_t() const noexcept { return _v[0]; }
+    inline explicit constexpr operator uint32_t() const noexcept { return _v[0]; }
+    inline explicit constexpr operator uint16_t() const noexcept { return _v[0]; }
+    inline explicit constexpr operator uint8_t() const noexcept { return _v[0]; }
+    inline explicit constexpr operator int64_t() const noexcept { return _v[0]; }
+    inline explicit constexpr operator int32_t() const noexcept { return _v[0]; }
+    inline explicit constexpr operator int16_t() const noexcept { return _v[0]; }
+    inline explicit constexpr operator int8_t() const noexcept { return _v[0]; }
+    inline explicit constexpr operator ull_t() const noexcept { return _v[0]; }
+    inline explicit constexpr operator sll_t() const noexcept { return _v[0]; }
 
     static_assert(1.8446744e19f == float(1ull<<32)*float(1ll<<32));
     static_assert(1.8446744e19f == float(1.8446744073709552e+19));
@@ -194,71 +192,71 @@ public:
 
     // increment/decrement
 
-    inline uint128_t &operator++() noexcept { _v[1] += (++_v[0] == 0); return *this; }
-    inline uint128_t operator++(int) noexcept { uint128_t ret = *this; ++(*this); return ret; }
-    inline uint128_t &operator--() noexcept { _v[1] -= (_v[0]-- == 0); return *this; }
-    inline uint128_t operator--(int) noexcept { uint128_t ret = *this; --(*this); return ret; }
+    inline constexpr uint128_t &operator++() noexcept { _v[1] += (++_v[0] == 0); return *this; }
+    inline constexpr uint128_t operator++(int) noexcept { uint128_t ret = *this; ++(*this); return ret; }
+    inline constexpr uint128_t &operator--() noexcept { _v[1] -= (_v[0]-- == 0); return *this; }
+    inline constexpr uint128_t operator--(int) noexcept { uint128_t ret = *this; --(*this); return ret; }
 
     // unary operators
 
-    inline uint128_t operator~() const noexcept { return uint128_t(~_v[0],~_v[1]); }
-    inline bool operator!() const noexcept { return _v[0] == 0 && _v[1] == 0; }
-    inline uint128_t operator+() const noexcept { return *this; }
-    inline uint128_t operator-() const noexcept { return ++(~(*this)); }
+    inline constexpr uint128_t operator~() const noexcept { return uint128_t(~_v[0],~_v[1]); }
+    inline constexpr bool operator!() const noexcept { return _v[0] == 0 && _v[1] == 0; }
+    inline constexpr uint128_t operator+() const noexcept { return *this; }
+    inline constexpr uint128_t operator-() const noexcept { return ++(~(*this)); }
 
     // arithmetic
 
-    inline friend uint128_t operator+(uint128_t a, const uint128_t &b) noexcept { a += b; return a; }
-    inline friend uint128_t operator+(uint128_t a, uint64_t b) noexcept { a += b; return a; }
-    inline friend uint128_t operator+(uint64_t a, uint128_t b) noexcept { b += a; return b; }
-    inline friend uint128_t operator-(uint128_t a, const uint128_t &b) noexcept { a -= b; return a; }
-    inline friend uint128_t operator-(uint128_t a, uint64_t b) noexcept { a -= b; return a; }
-    inline friend uint128_t operator-(uint64_t a, uint128_t b) noexcept { b -= a; return -b; }
-    inline friend uint128_t operator*(uint128_t a, const uint128_t &b) noexcept { a *= b; return a; }
-    inline friend uint128_t operator*(uint128_t a, uint64_t b) noexcept { a *= b; return a; }
-    inline friend uint128_t operator*(uint64_t a, uint128_t b) noexcept { b *= a; return b; }
-    inline friend uint128_t operator/(uint128_t a, const uint128_t &b) noexcept { a /= b; return a; }
-    inline friend uint128_t operator/(uint128_t a, uint64_t b) noexcept { a /= b; return a; }
+    inline friend constexpr uint128_t operator+(uint128_t a, const uint128_t &b) noexcept { return a += b; }
+    inline friend constexpr uint128_t operator+(uint128_t a, uint64_t b) noexcept { return a += b; }
+    inline friend constexpr uint128_t operator+(uint64_t a, uint128_t b) noexcept { return b += a; }
+    inline friend constexpr uint128_t operator-(uint128_t a, const uint128_t &b) noexcept { return a -= b; }
+    inline friend constexpr uint128_t operator-(uint128_t a, uint64_t b) noexcept { return a -= b; }
+    inline friend constexpr uint128_t operator-(uint64_t a, uint128_t b) noexcept { return -(b -= a); }
+    inline friend constexpr uint128_t operator*(uint128_t a, const uint128_t &b) noexcept { return a *= b; }
+    inline friend constexpr uint128_t operator*(uint128_t a, uint64_t b) noexcept { return a *= b; }
+    inline friend constexpr uint128_t operator*(uint64_t a, uint128_t b) noexcept { return b *= a; }
+    inline friend uint128_t operator/(uint128_t a, const uint128_t &b) noexcept { return a /= b; }
+    inline friend uint128_t operator/(uint128_t a, uint64_t b) noexcept { return a /= b; }
     inline friend uint64_t operator/(uint64_t a, const uint128_t &b) noexcept { return b._v[1] ? 0 : a / b._v[0]; }
-    inline friend uint128_t operator%(uint128_t a, const uint128_t &b) noexcept { a %= b; return a; }
-    inline friend uint64_t operator%(uint128_t a, uint64_t b) noexcept { a %= b; return a._v[0]; }
+    inline friend uint128_t operator%(uint128_t a, const uint128_t &b) noexcept { return a %= b; }
+    inline friend uint64_t operator%(uint128_t a, uint64_t b) noexcept { return (a %= b)._v[0]; }
     inline friend uint64_t operator%(uint64_t a, const uint128_t &b) { return b._v[1] ? a : a % b._v[0]; }
-    inline friend uint128_t operator<<(uint128_t a, uint32_t s) noexcept { a <<= s; return a; }
-    inline friend uint128_t operator>>(uint128_t a, uint32_t s) noexcept { a >>= s; return a; }
+    inline friend constexpr uint128_t operator<<(uint128_t a, uint32_t s) noexcept { return a <<= s; }
+    inline friend constexpr uint128_t operator>>(uint128_t a, uint32_t s) noexcept { return a >>= s; }
 
     // compare
 
-    inline friend bool operator<(const uint128_t &a, const uint128_t &b) noexcept
+    inline friend constexpr bool operator<(const uint128_t &a, const uint128_t &b) noexcept
     { return a._v[1] == b._v[1] ? a._v[0] < b._v[0] : a._v[1] < b._v[1]; }
-    inline friend bool operator>(const uint128_t &a, const uint128_t &b) noexcept
+    inline friend constexpr bool operator>(const uint128_t &a, const uint128_t &b) noexcept
     { return a._v[1] == b._v[1] ? a._v[0] > b._v[0] : a._v[1] > b._v[1]; }
-    inline friend bool operator<=(const uint128_t &a, const uint128_t &b) noexcept
+    inline friend constexpr bool operator<=(const uint128_t &a, const uint128_t &b) noexcept
     { return a._v[1] == b._v[1] ? a._v[0] <= b._v[0] : a._v[1] < b._v[1]; }
-    inline friend bool operator>=(const uint128_t &a, const uint128_t &b) noexcept
+    inline friend constexpr bool operator>=(const uint128_t &a, const uint128_t &b) noexcept
     { return a._v[1] == b._v[1] ? a._v[0] >= b._v[0] : a._v[1] > b._v[1]; }
-    inline friend bool operator==(const uint128_t &a, const uint128_t &b) noexcept
+    inline friend constexpr bool operator==(const uint128_t &a, const uint128_t &b) noexcept
     { return a._v[0] == b._v[0] && a._v[1] == b._v[1]; }
-    inline friend bool operator!=(const uint128_t &a, const uint128_t &b) noexcept
+    inline friend constexpr bool operator!=(const uint128_t &a, const uint128_t &b) noexcept
     { return a._v[0] != b._v[0] || a._v[1] != b._v[1]; }
-    inline friend auto operator<=>(const uint128_t &a, const uint128_t &b) noexcept
+    inline friend constexpr auto operator<=>(const uint128_t &a, const uint128_t &b) noexcept
     { return a._v[1] == b._v[1] ? a._v[0] <=> b._v[0] : a._v[1] <=> b._v[1]; }
 
     // bitwise
 
-    inline friend uint128_t operator&(uint128_t a, const uint128_t &b) { a &= b; return a; }
-    inline friend uint128_t operator|(uint128_t a, const uint128_t &b) { a |= b; return a; }
-    inline friend uint128_t operator^(uint128_t a, const uint128_t &b) { a ^= b; return a; }
+    inline friend constexpr uint128_t operator&(uint128_t a, const uint128_t &b) { return a &= b; }
+    inline friend constexpr uint128_t operator|(uint128_t a, const uint128_t &b) { return a |= b; }
+    inline friend constexpr uint128_t operator^(uint128_t a, const uint128_t &b) { return a ^= b; }
 
     // compound assignment
 
-    inline uint128_t &operator+=(uint64_t a) noexcept
+    inline constexpr uint128_t &operator+=(uint64_t a) noexcept
     {
         uint64_t t = _v[0];
         _v[0] += a;
         _v[1] += _v[0] < t;
         return *this;
     }
-    inline uint128_t &operator+=(const uint128_t &a) noexcept
+    inline constexpr uint128_t &operator+=(const uint128_t &a) noexcept
     {
         uint64_t t = _v[0];
         _v[0] += a._v[0];
@@ -266,14 +264,14 @@ public:
         _v[1] += _v[0] < t;
         return *this;
     }
-    inline uint128_t &operator-=(uint64_t a) noexcept
+    inline constexpr uint128_t &operator-=(uint64_t a) noexcept
     {
         uint64_t t = _v[0];
         _v[0] -= a;
         _v[1] -= _v[0] > t;
         return *this;
     }
-    inline uint128_t &operator-=(const uint128_t &a) noexcept
+    inline constexpr uint128_t &operator-=(const uint128_t &a) noexcept
     {
         uint64_t t = _v[0];
         _v[0] -= a._v[0];
@@ -281,7 +279,7 @@ public:
         _v[1] -= _v[0] > t;
         return *this;
     }
-    inline uint128_t &operator*=(uint64_t a) noexcept
+    inline constexpr uint128_t &operator*=(uint64_t a) noexcept
     {
         uint64_t c;
         _umul64full(_v[0],a,_v[0],c);
@@ -290,7 +288,7 @@ public:
         return *this;
 
     }
-    inline uint128_t &operator*=(const uint128_t &a) noexcept
+    inline constexpr uint128_t &operator*=(const uint128_t &a) noexcept
     {
         uint64_t hi1,hi2;
         hi1 = _v[0]*a._v[1];
@@ -366,7 +364,7 @@ public:
         return *this;
     }
     // assumes 0 <= s < 128, undefined for s >= 128
-    inline uint128_t &operator<<=(uint32_t s) noexcept
+    inline constexpr uint128_t &operator<<=(uint32_t s) noexcept
     {
         if (s >= 64)
             _v[1] = _v[0], _v[0] = 0, _v[1] <<= s - 64;
@@ -376,7 +374,7 @@ public:
         return *this;
     }
     // assumes 0 <= s < 128, undefined for s >= 128
-    inline uint128_t &operator>>=(uint32_t s) noexcept
+    inline constexpr uint128_t &operator>>=(uint32_t s) noexcept
     {
         if (s >= 64)
             _v[0] = _v[1], _v[1] = 0, _v[0] >>= s - 64;
@@ -385,11 +383,11 @@ public:
             _v[0] >>= s, _v[0] |= _v[1] << (64 - s), _v[1] >>= s;
         return *this;
     }
-    inline uint128_t &operator&=(const uint128_t &a) noexcept
+    inline constexpr uint128_t &operator&=(const uint128_t &a) noexcept
     { return _v[0] &= a._v[0], _v[1] &= a._v[1], *this; }
-    inline uint128_t &operator|=(const uint128_t &a) noexcept
+    inline constexpr uint128_t &operator|=(const uint128_t &a) noexcept
     { return _v[0] |= a._v[0], _v[1] |= a._v[1], *this; }
-    inline uint128_t &operator^=(const uint128_t &a) noexcept
+    inline constexpr uint128_t &operator^=(const uint128_t &a) noexcept
     { return _v[0] ^= a._v[0], _v[1] ^= a._v[1], *this; }
 
     // streams
@@ -406,7 +404,7 @@ public:
         }
         if (i == 39) // for 0
             buf[--i] = '0';
-        return os << buf+i;
+        return os << (buf+i);
     }
 
     inline friend std::istream &operator>>(std::istream &is, uint128_t &a)
