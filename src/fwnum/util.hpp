@@ -96,15 +96,15 @@ static_assert(fp_exp_bias<double>::value == 1023);
 
 // higher 64 bits of 64 bit multiplication
 // (x86_64 computes 128 bit result)
-inline uint64_t _umul64hi(uint64_t a, uint64_t b)
+inline constexpr uint64_t _umul64hi(uint64_t a, uint64_t b)
 { return ((__uint128_t)(a) * (__uint128_t)(b)) >> 64; }
 
 // lower 64 bits of 64 bit multiplication
-inline uint64_t _umul64lo(uint64_t a, uint64_t b)
+inline constexpr uint64_t _umul64lo(uint64_t a, uint64_t b)
 { return a*b; }
 
 // multiplies a*b and stores the 128 bit result in {r0,r1}
-inline void _umul64full(uint64_t a, uint64_t b, uint64_t &r0, uint64_t &r1)
+inline constexpr void _umul64full(uint64_t a, uint64_t b, uint64_t &r0, uint64_t &r1)
 {
     __uint128_t t = (__uint128_t)a * (__uint128_t)b;
     r0 = t;
@@ -164,5 +164,22 @@ inline constexpr float _2pow_fp32(int p, bool neg = false)
 // result undefined when p is outside this range
 inline constexpr double _2pow_fp64(int p, bool neg = false)
 { return _bits_to_fp64((uint64_t(neg) << 63) | (uint64_t(p+1023) << 52)); }
+
+
+static constexpr char _digit_min = '0';
+static constexpr char _digit_max = '9';
+
+template <bool uppercase> static constexpr char _letter_min = uppercase ? 'A' : 'a';
+template <bool uppercase> static constexpr char _letter_max = uppercase ? 'Z' : 'z';
+
+static constexpr bool _is_digit(char c)
+{
+    return _digit_min <= c && c <= _digit_max;
+}
+
+template <bool uppercase> static constexpr bool _is_letter(char c)
+{
+    return _letter_min<uppercase> <= c && c <= _letter_max<uppercase>;
+}
 
 }
