@@ -39,12 +39,12 @@ struct vtuple
 {
     inline constexpr bool operator!() const noexcept { return false; }
     inline constexpr explicit operator bool() const noexcept { return false; }
-    inline vtuple &operator++() noexcept { return *this; }
-    inline vtuple &operator--() noexcept { return *this; }
-    inline vtuple operator++(int) noexcept { return *this; }
-    inline vtuple operator--(int) noexcept { return *this; }
-    inline constexpr bool operator==(const vtuple &) const = default;
-    inline constexpr auto operator<=>(const vtuple &) const = default;
+    inline constexpr vtuple &operator++() noexcept { return *this; }
+    inline constexpr vtuple &operator--() noexcept { return *this; }
+    inline constexpr vtuple operator++(int) noexcept { return *this; }
+    inline constexpr vtuple operator--(int) noexcept { return *this; }
+    inline constexpr bool operator==(const vtuple &) const { return true; }
+    inline constexpr auto operator<=>(const vtuple &) const { return std::strong_ordering::equal; }
 #define OPEQ(OP) inline vtuple &operator OP(const vtuple&) { return *this; }
     OPEQ(+=) OPEQ(-=) OPEQ(*=) OPEQ(/=) OPEQ(%=)
     OPEQ(&=) OPEQ(|=) OPEQ(^=) OPEQ(<<=) OPEQ(>>=)
@@ -127,30 +127,34 @@ public:
 
     // inc/dec
 
-    inline vtuple &operator++() { ++v; ++vs; return *this; }
-    inline vtuple &operator--() { --v; --vs; return *this; }
-    inline vtuple operator++(int) { vtuple ret = *this; ++(*this); return ret; }
-    inline vtuple operator--(int) { vtuple ret = *this; --(*this); return ret; }
+    inline constexpr vtuple &operator++() { ++v; ++vs; return *this; }
+    inline constexpr vtuple &operator--() { --v; --vs; return *this; }
+    inline constexpr vtuple operator++(int) { vtuple ret = *this; ++(*this); return ret; }
+    inline constexpr vtuple operator--(int) { vtuple ret = *this; --(*this); return ret; }
 
     // compare
 
-    inline constexpr bool operator==(const vtuple &tup) const = default;
-    inline constexpr auto operator<=>(const vtuple &tup) const = default;
+    inline constexpr bool operator==(const vtuple &tup) const { return v == tup.v && vs == tup.vs; }
+    inline constexpr auto operator<=>(const vtuple &tup) const
+    {
+        auto cmp = (v <=> tup.v);
+        return cmp == std::strong_ordering::equal ? (vs <=> tup.vs) : cmp;
+    }
 
     // compound assignment
-#define OPEQ(OP) inline vtuple &operator OP(const vtuple &tup) { v OP tup.v; vs OP tup.vs; return *this; }
+#define OPEQ(OP) inline constexpr vtuple &operator OP(const vtuple &tup) { v OP tup.v; vs OP tup.vs; return *this; }
     OPEQ(+=) OPEQ(-=) OPEQ(*=) OPEQ(/=) OPEQ(%=)
     OPEQ(&=) OPEQ(|=) OPEQ(^=) OPEQ(<<=) OPEQ(>>=)
 #undef OPEQ
 
     // binary
-#define OPBIN(OP) friend inline auto operator OP(const vtuple &lhs, const vtuple &rhs) { return make_vtuple(lhs.v OP rhs.v, lhs.vs OP rhs.vs); }
+#define OPBIN(OP) friend inline constexpr auto operator OP(const vtuple &lhs, const vtuple &rhs) { return make_vtuple(lhs.v OP rhs.v, lhs.vs OP rhs.vs); }
     OPBIN(+) OPBIN(-) OPBIN(*) OPBIN(/) OPBIN(%)
     OPBIN(&) OPBIN(|) OPBIN(^) OPBIN(<<) OPBIN(>>)
 #undef OPBIN
 
     // unary
-#define OPUN(OP) friend inline auto operator OP(const vtuple &tup) { return make_vtuple(OP tup.v, OP tup.vs); }
+#define OPUN(OP) friend inline constexpr auto operator OP(const vtuple &tup) { return make_vtuple(OP tup.v, OP tup.vs); }
     OPUN(-) OPUN(+) OPUN(~) OPUN(*) OPUN(&)
 #undef OPUN
 };
