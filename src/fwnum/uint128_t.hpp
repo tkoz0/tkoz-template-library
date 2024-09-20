@@ -399,11 +399,11 @@ public:
         size_t i = 39;
         while (a) // last digit and divide by 10
         {
-            buf[--i] = '0' + (a % 10);
+            buf[--i] = _digit_min + (a % 10);
             a /= 10;
         }
         if (i == 39) // for 0
-            buf[--i] = '0';
+            buf[--i] = _digit_min;
         return os << (buf+i);
     }
 
@@ -424,7 +424,7 @@ public:
         while (std::isdigit(is.peek()))
         {
             result *= 10;
-            result += (is.get() - '0');
+            result += (is.get() - _digit_min);
             success = true;
         }
         if (neg)
@@ -436,8 +436,9 @@ public:
         return is;
     }
 
-    // conversion to/from string
+    // TODO conversion to/from string
 
+/*
     // convert value to a string
     // base can be 2-36, using digits 0-9 then letters a-z or A-Z
     std::string to_string(int base = 10, bool uppercase = false) const
@@ -473,6 +474,7 @@ public:
         (void)s;
         return 0;
     }
+*/
 };
 
 static_assert(sizeof(uint128_t) == 16);
@@ -519,9 +521,11 @@ struct numeric_limits<tkoz::uint128_t>
     static constexpr tkoz::uint128_t denorm_min() noexcept { return tkoz::uint128_t(); }
 };
 
+/*
 string to_string(const tkoz::uint128_t &n)
 {
     return n.to_string_c();
 }
+*/
 
 }
