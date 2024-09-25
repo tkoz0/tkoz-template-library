@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cstdint>
 #include <unordered_set>
 #include "test_common.hpp"
 #include "../src/bitarray.hpp"

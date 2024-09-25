@@ -1,5 +1,6 @@
 #include <vector>
 #include <cassert>
+#include <cstdint>
 
 //#define DEBUG_PRINT
 

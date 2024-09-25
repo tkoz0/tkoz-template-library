@@ -1,7 +1,6 @@
 #pragma once
 #include <cstddef>
 #include <cstdint>
-#include "../util/cpp.hpp"
 #include "../meta/basic.hpp"
 
 namespace tkoz

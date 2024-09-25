@@ -1,14 +1,12 @@
 /*
+128 bit unsigned integer
 
-TODO specialize std::numeric_limits
 TODO specialize std::hash
-TODO specialize std::to_string
 TODO https://en.cppreference.com/w/cpp/language/user_literal
 TODO make a class that takes a bool for signed
 - class _tkoz_int128<bool signed>
 - using uint128_t = _tkoz_int128<false>
 - using int128_t = _tkoz_int128<true>
-
 */
 
 #pragma once
@@ -19,7 +17,6 @@ TODO make a class that takes a bool for signed
 #include <string>
 
 #include "util.hpp"
-#include "../util/cpp.hpp"
 
 namespace tkoz
 {

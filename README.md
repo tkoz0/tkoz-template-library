@@ -7,7 +7,7 @@ features and possibly something that can be useful in other personal projects.
 
 The header files can be copied into other projects for use. Currently, backward
 compatibility is not guaranteed as it is in well established libraries.
-Everything is written with a minimum requirement of C++20.
+Everything is written only to compile with GCC using C++23.
 
 ## Ideas
 
