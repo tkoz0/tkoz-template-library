@@ -1,3 +1,7 @@
 /.vscode
 /.old
 *.out
+/build
+/docs
+/html
+/latex
