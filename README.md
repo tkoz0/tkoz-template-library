@@ -103,3 +103,6 @@ Some of these ideas are better for other libraries
 - base64/85
 - hashing
 - cryptography
+- multidimensional linked lists
+- bidirectional map
+- multiset
