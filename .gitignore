@@ -2,4 +2,8 @@
 /.old
 *.out
 /build
-/docs
+/docs/html
+*.gcda
+*.gcno
+*.gcov
+/tmp
