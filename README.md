@@ -11,6 +11,8 @@ Everything is written only to compile on Linux with GCC using C++23 for now.
 
 ## todo
 
+license (gnu agpl)
+
 ### strings
 
 - `cstr` - extended c string
@@ -51,6 +53,12 @@ Some of these ideas are better for other libraries
 - `tkoz::unit` - scientific measurement units
 
 ### ideas
+
+General programming stuff
+- documentation (doxygen)
+- code coverage
+- performance testing
+- clang format
 
 Some of these ideas are better for other libraries
 
@@ -106,3 +114,16 @@ Some of these ideas are better for other libraries
 - multidimensional linked lists
 - bidirectional map
 - multiset
+- graphics/drawing
+- gui/cli stuff
+- half precision float, quad precision float, ...
+- testing framework
+- bit packing for boolean flags
+- useful small functions for functional programming
+- functions for the operators (see old code for it)
+- tagged pointers (both low and high bits)
+- xor (doubly linked) linked list
+- regex compiler with template metaprogramming
+- various calculationts with template metaprogramming
+- tuples and named tuples (including some with useful names)
+- primitive numbers requiring explicit conversions
