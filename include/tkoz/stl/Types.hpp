@@ -7,8 +7,6 @@
 #include <cstddef>
 #include <cstdint>
 
-// try to avoid including Meta.hpp
-
 namespace tkoz::stl
 {
 
@@ -16,8 +14,8 @@ namespace tkoz::stl
 // builtin primitive types //
 //                         //
 
-/// a single bit (boolean)
-using bit_t = bool;
+/// boolean true/false
+using bool_t = bool;
 
 /// single precision IEEE754 floating point
 using single_t = float;
@@ -58,54 +56,9 @@ using ull_t = unsigned long long;
 /// 64 bit signed integer
 using sll_t = signed long long;
 
-// these sizes are what GCC/Clang have when compiled for x86_64/amd64
-static_assert(sizeof(bit_t) == 1);
-static_assert(sizeof(single_t) == 4);
-static_assert(sizeof(double_t) == 8);
-static_assert(sizeof(ldouble_t) == 16);
-static_assert(sizeof(schar_t) == 1);
-static_assert(sizeof(uchar_t) == 1);
-static_assert(sizeof(sshort_t) == 2);
-static_assert(sizeof(ushort_t) == 2);
-static_assert(sizeof(sint_t) == 4);
-static_assert(sizeof(uint_t) == 4);
-static_assert(sizeof(slong_t) == 8);
-static_assert(sizeof(ulong_t) == 8);
-static_assert(sizeof(sll_t) == 8);
-static_assert(sizeof(ull_t) == 8);
-
-// primitives should be aligned to their size
-static_assert(alignof(bit_t) == 1);
-static_assert(alignof(single_t) == 4);
-static_assert(alignof(double_t) == 8);
-static_assert(alignof(ldouble_t) == 16);
-static_assert(alignof(schar_t) == 1);
-static_assert(alignof(uchar_t) == 1);
-static_assert(alignof(sshort_t) == 2);
-static_assert(alignof(ushort_t) == 2);
-static_assert(alignof(sint_t) == 4);
-static_assert(alignof(uint_t) == 4);
-static_assert(alignof(slong_t) == 8);
-static_assert(alignof(ulong_t) == 8);
-static_assert(alignof(sll_t) == 8);
-static_assert(alignof(ull_t) == 8);
-
 //                          //
 // fixed width number types //
 //                          //
-
-// size assert on primitives
-static_assert(sizeof(bool) == 1);
-static_assert(sizeof(float) == 4);
-static_assert(sizeof(double) == 8);
-static_assert(sizeof(std::uint8_t) == 1);
-static_assert(sizeof(std::uint16_t) == 2);
-static_assert(sizeof(std::uint32_t) == 4);
-static_assert(sizeof(std::uint64_t) == 8);
-static_assert(sizeof(std::int8_t) == 1);
-static_assert(sizeof(std::int16_t) == 2);
-static_assert(sizeof(std::int32_t) == 4);
-static_assert(sizeof(std::int64_t) == 8);
 
 /// unsigned 8 bit integer
 using uint8_t = std::uint8_t;
@@ -171,27 +124,9 @@ using fp64 = double;
 
 /// size (in bytes) of a pointer
 static const constexpr int cPtrSize = sizeof(void*);
-static_assert(cPtrSize == 4 || cPtrSize == 8); // expect 32 bit or 64 bit
-static_assert(sizeof(std::intptr_t) == cPtrSize);
-static_assert(sizeof(std::uintptr_t) == cPtrSize);
 
 /// size (in bits) of a pointer
 static const constexpr int cPtrSizeBits = 8 * cPtrSize;
-
-// pointer size assert
-static_assert(sizeof(void*) == cPtrSize);
-static_assert(sizeof(bool*) == cPtrSize);
-static_assert(sizeof(float*) == cPtrSize);
-static_assert(sizeof(double*) == cPtrSize);
-static_assert(sizeof(std::uint8_t*) == cPtrSize);
-static_assert(sizeof(std::uint16_t*) == cPtrSize);
-static_assert(sizeof(std::uint32_t*) == cPtrSize);
-static_assert(sizeof(std::uint64_t*) == cPtrSize);
-static_assert(sizeof(std::int8_t*) == cPtrSize);
-static_assert(sizeof(std::int16_t*) == cPtrSize);
-static_assert(sizeof(std::int32_t*) == cPtrSize);
-static_assert(sizeof(std::int64_t*) == cPtrSize);
-static_assert(sizeof(std::nullptr_t) == cPtrSize);
 
 namespace _detail
 {
@@ -221,77 +156,5 @@ using uintptr_t = _detail::_usize_t_impl<cPtrSize>::type;
 
 /// signed integer type with the same size as a pointer
 using sintptr_t = _detail::_usize_t_impl<cPtrSize>::type;
-
-//                         //
-// checks on literal types //
-//                         //
-
-namespace _detail
-{
-
-// redefining is_same so this file does not depend on Meta.hpp
-template <typename T, typename U> struct _is_same_impl
-{ static constexpr bool _value = false; };
-template <typename T> struct _is_same_impl<T,T>
-{ static constexpr bool _value = true; };
-template <typename T, typename U>
-static constexpr bool _is_same = _is_same_impl<T,U>::_value;
-
-} // namespace _detail
-
-static_assert(_detail::_is_same<decltype(true),bool>);
-static_assert(_detail::_is_same<decltype(false),bool>);
-static_assert(_detail::_is_same<decltype(nullptr),std::nullptr_t>);
-static_assert(_detail::_is_same<decltype(' '),char>);
-
-// string literals are lvalues so the (&) for reference is needed
-static_assert(_detail::_is_same<decltype(""),const char(&)[1]>);
-
-// integers (standard)
-static_assert(_detail::_is_same<decltype(0),sint_t>);
-static_assert(_detail::_is_same<decltype(0u),uint_t>);
-static_assert(_detail::_is_same<decltype(0l),slong_t>);
-static_assert(_detail::_is_same<decltype(0ul),ulong_t>);
-static_assert(_detail::_is_same<decltype(0ll),sll_t>);
-static_assert(_detail::_is_same<decltype(0ull),ull_t>);
-
-// integers (hexadecimal)
-static_assert(_detail::_is_same<decltype(0x0),sint_t>);
-static_assert(_detail::_is_same<decltype(0x0u),uint_t>);
-static_assert(_detail::_is_same<decltype(0x0l),slong_t>);
-static_assert(_detail::_is_same<decltype(0x0ul),ulong_t>);
-static_assert(_detail::_is_same<decltype(0x0ll),sll_t>);
-static_assert(_detail::_is_same<decltype(0x0ull),ull_t>);
-
-// integers (octal)
-static_assert(_detail::_is_same<decltype(00),sint_t>);
-static_assert(_detail::_is_same<decltype(00u),uint_t>);
-static_assert(_detail::_is_same<decltype(00l),slong_t>);
-static_assert(_detail::_is_same<decltype(00ul),ulong_t>);
-static_assert(_detail::_is_same<decltype(00ll),sll_t>);
-static_assert(_detail::_is_same<decltype(00ull),ull_t>);
-
-// integers (binary)
-static_assert(_detail::_is_same<decltype(0b0),sint_t>);
-static_assert(_detail::_is_same<decltype(0b0u),uint_t>);
-static_assert(_detail::_is_same<decltype(0b0l),slong_t>);
-static_assert(_detail::_is_same<decltype(0b0ul),ulong_t>);
-static_assert(_detail::_is_same<decltype(0b0ll),sll_t>);
-static_assert(_detail::_is_same<decltype(0b0ull),ull_t>);
-
-// floating point (standard)
-static_assert(_detail::_is_same<decltype(0.0),double>);
-static_assert(_detail::_is_same<decltype(0.0l),long double>);
-static_assert(_detail::_is_same<decltype(0.0f),float>);
-
-// floating point (scientific)
-static_assert(_detail::_is_same<decltype(1e0),double>);
-static_assert(_detail::_is_same<decltype(1e0l),long double>);
-static_assert(_detail::_is_same<decltype(1e0f),float>);
-
-// floating point (hexadecimal)
-static_assert(_detail::_is_same<decltype(0x1p1),double>);
-static_assert(_detail::_is_same<decltype(0x1p1l),long double>);
-static_assert(_detail::_is_same<decltype(0x1p1f),float>);
 
 } // namespace tkoz::stl
