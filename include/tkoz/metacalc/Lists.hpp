@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <tkoz/metacalc/Utils.hpp>
+
 #include <tkoz/stl/Meta.hpp>
 #include <tkoz/stl/Types.hpp>
 
@@ -18,9 +20,13 @@ using tkoz::stl::usize_t;
 template <typename ValueType, ValueType ...values>
 struct List
 {
+    /// type of values in the parameter pack
     using tValueType = ValueType;
-    static constexpr ValueType cValues[] = {values...};
+    /// length of the parameter pack
     static constexpr usize_t cLength = sizeof...(values);
+    /// \brief values of the parameter pack
+    /// \note dummy value at end because ISO C++ forbids 0 length arrays
+    static constexpr ValueType cValues[cLength+1] = {values...,ValueType()};
 };
 
 namespace _detail
@@ -31,6 +37,7 @@ template <typename ValueType, ValueType ...values>
 struct _IsListImpl<List<ValueType,values...>>: tkoz::stl::meta::TrueValue {};
 } // namespace _detail
 
+/// is type a List struct with the template parameter pack
 template <typename T>
 concept isList = _detail::_IsListImpl<T>::value;
 
@@ -39,6 +46,7 @@ concept isList = _detail::_IsListImpl<T>::value;
 template <usize_t ...values>
 using IndexList = List<usize_t,values...>;
 
+/// is type a IndexList struct with parameter pack
 template <typename T>
 concept isIndexList = isList<T>
     && tkoz::stl::meta::isSame<typename T::tValueType,tkoz::stl::usize_t>;
@@ -48,7 +56,8 @@ namespace _detail
 
 // use decltype(_ConcatList2(type1(),type2())) to concatenate parameter packs
 template <typename ValueType, ValueType ...values1, ValueType ...values2>
-auto _ConcatList2(List<ValueType,values1...>, List<ValueType,values2...>)
+consteval auto _ConcatList2(
+    List<ValueType,values1...>, List<ValueType,values2...>)
 {
     return List<ValueType,values1...,values2...>();
 }
@@ -59,9 +68,9 @@ struct _MakeIndexRange
     static_assert(beg <= end);
     // construct sequence with binary split to limit recursion depth
     static constexpr const usize_t mid = (beg + end) / 2;
-    using left = _MakeIndexRange<beg,mid>::type;
-    using right = _MakeIndexRange<mid,end>::type;
-    using type = decltype(_ConcatList2(left(),right()));
+    using Left = _MakeIndexRange<beg,mid>::type;
+    using Right = _MakeIndexRange<mid,end>::type;
+    using type = decltype(_ConcatList2(Left(),Right()));
 };
 
 template <usize_t n>
@@ -87,9 +96,8 @@ namespace _detail
 {
 
 template <isList List0, isList ...Lists>
-    requires (true && ...
-        && tkoz::stl::meta::isSame<typename Lists::tValueType,
-                                   typename List0::tValueType>)
+    requires packAnd<tkoz::stl::meta::isSame<typename List0::tValueType,
+                                             typename Lists::tValueType>...>
 struct _ConcatListImpl
 {
     using type = List0;
@@ -99,8 +107,8 @@ template <typename ValueType,
           ValueType ...values0,
           ValueType ...values1,
           isList ...Lists>
-    requires (true && ...
-        && tkoz::stl::meta::isSame<typename Lists::tValueType,ValueType>)
+    requires packAnd<tkoz::stl::meta::isSame<ValueType,
+                                             typename Lists::tValueType>...>
 struct _ConcatListImpl<List<ValueType,values0...>,
                        List<ValueType,values1...>,
                        Lists...>
@@ -116,22 +124,22 @@ struct _ConcatListImpl<List<ValueType,values0...>,
 /// \tparam List0 first List (at least one required)
 /// \tparam Lists other List types, must have same ValueType
 template <isList List0, isList ...Lists>
-    requires (true && ...
-        && tkoz::stl::meta::isSame<typename List0::tValueType,
-                                   typename Lists::tValueType>)
+    requires packAnd<tkoz::stl::meta::isSame<typename List0::tValueType,
+                                             typename Lists::tValueType>...>
 using ConcatLists = _detail::_ConcatListImpl<List0,Lists...>::type;
 
 namespace _detail
 {
 
 template <typename ValueType, ValueType ...values, usize_t ...indexes>
-auto _listSelectImpl(List<ValueType,values...>, IndexList<indexes...>)
+consteval auto _listSelectImpl(
+    List<ValueType,values...>, IndexList<indexes...>)
 {
     return List<ValueType,List<ValueType,values...>::cValues[indexes]...>();
 }
 
 template <typename ValueType, ValueType ...values>
-auto _listSplitImplLo(List<ValueType,values...> list)
+consteval auto _listSplitImplLo(List<ValueType,values...> list)
 {
     static constexpr usize_t half = sizeof...(values) / 2;
     using IS = IndexRange<0,half>;
@@ -139,7 +147,7 @@ auto _listSplitImplLo(List<ValueType,values...> list)
 }
 
 template <typename ValueType, ValueType ...values>
-auto _listSplitImplHi(List<ValueType,values...> list)
+consteval auto _listSplitImplHi(List<ValueType,values...> list)
 {
     static constexpr usize_t half = sizeof...(values) / 2;
     using IS = IndexRange<half,sizeof...(values)>;

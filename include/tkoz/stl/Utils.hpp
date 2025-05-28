@@ -14,9 +14,9 @@ namespace tkoz::stl
 /// \param t the value to get a move reference for
 /// \return a move reference to `t`
 template <typename Type>
-[[nodiscard]] inline meta::removeRef<Type>&& move(Type &&t) noexcept
+[[nodiscard]] inline meta::RemoveRef<Type>&& move(Type &&t) noexcept
 {
-    return static_cast<meta::removeRef<Type>&&>(t);
+    return static_cast<meta::RemoveRef<Type>&&>(t);
 }
 
 /// \brief swap 2 values efficiently
