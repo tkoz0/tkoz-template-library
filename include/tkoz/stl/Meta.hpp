@@ -9,6 +9,12 @@
 namespace tkoz::stl::meta
 {
 
+/// Contains a bool member named value which is false
+struct FalseValue { static constexpr bool value = false; };
+
+/// Contains a bool member named value which is true
+struct TrueValue { static constexpr bool value = true; };
+
 // implementation details to keep within this file only
 namespace _detail
 {
@@ -35,23 +41,8 @@ template <typename T> struct _removeRefImpl<T&&> { using type = T; };
 template <typename T>
 using removeRef = _detail::_removeRefImpl<T>::type;
 
-namespace _detail
-{
-template <typename T, typename ...Us>
-struct _isSameAsAnyImpl
-{
-    static constexpr bool value = false;
-};
-template <typename T, typename U, typename ...Us>
-struct _isSameAsAnyImpl<T,U,Us...>
-{
-    static constexpr bool value = isSame<T,U>
-        || _isSameAsAnyImpl<T,Us...>::value;
-};
-} // namespace _detail
-
 /// is type T the same as any of Us...
 template <typename T, typename ...Us>
-static constexpr bool isSameAsAny = _detail::_isSameAsAnyImpl<T,Us...>::value;
+static constexpr bool isSameAsAny = (false || ... || isSame<T,Us>);
 
 } // namespace tkoz::stl::meta
