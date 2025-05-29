@@ -127,3 +127,5 @@ Some of these ideas are better for other libraries
 - various calculationts with template metaprogramming
 - tuples and named tuples (including some with useful names)
 - primitive numbers requiring explicit conversions
+- tagged floats/doubles (use some exponent/mantissa bits to store data)
+- memory allocators optimized for various sizes or use cases
