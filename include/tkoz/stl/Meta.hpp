@@ -134,19 +134,29 @@ struct _ConditionalImpl: TypeValue<T> {};
 template <typename T, typename F>
 struct _ConditionalImpl<false,T,F>: TypeValue<F> {};
 
+// cv void& substitution failure
+template <typename T>
+_RemoveRefImpl<T>::type& _addLVRefImpl(int) { static_assert(0); }
+// T = cv void
+template <typename T> T _addLVRefImpl(...) { static_assert(0); }
+
+template <typename T>
+_RemoveRefImpl<T>::type&& _addRVRefImpl(int) { static_assert(0); }
+template <typename T> T _addRVRefImpl(...) { static_assert(0); }
+
 } // namespace _detail
 
 /// are 2 types the same (including const and references)
 template <typename T, typename U>
 static constexpr bool isSame = _detail::_IsSameImpl<T,U>::value;
 
-/// is a type an array
-template <typename T>
-static constexpr bool isArray = _detail::_IsArrayImpl<T>::value;
-
 /// is type T the same as any of Us...
 template <typename T, typename ...Us>
 static constexpr bool isSameAsAny = (false || ... || isSame<T,Us>);
+
+/// is a type an array
+template <typename T>
+static constexpr bool isArray = _detail::_IsArrayImpl<T>::value;
 
 /// typename without a (move) reference
 template <typename T>
@@ -223,5 +233,17 @@ using EnableIf = _detail::_EnableIfImpl<B,T>::type;
 /// type T if given true, type F if given false
 template <bool B, typename T, typename F>
 using Conditional = _detail::_ConditionalImpl<B,T,F>::type;
+
+/// type T with l-value reference
+template <typename T>
+using AddLVRef = decltype(_detail::_addLVRefImpl<T>(0));
+
+/// type T with r-value reference
+template <typename T>
+using AddRVRef = decltype(_detail::_addRVRefImpl<T>(0));
+
+/// instance of type T for unevaluated contexts (like std::declval)
+template <typename T>
+T declVal() { static_assert(0,"only allowed in unevaluated contexts"); }
 
 } // namespace tkoz::stl::meta

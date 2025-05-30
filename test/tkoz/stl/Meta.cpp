@@ -164,4 +164,23 @@ int main()
     // tests for Conditional
     static_assert(isSame<Conditional<true,char,bool>,char>);
     static_assert(isSame<Conditional<false,char,bool>,bool>);
+
+    // tests for AddLVRef
+    static_assert(isSame<AddLVRef<char>,char&>);
+    static_assert(isSame<AddLVRef<const bool*>,const bool *&>);
+    static_assert(isSame<AddLVRef<long&>,long&>);
+    static_assert(isSame<AddLVRef<float&&>,float&>);
+    static_assert(isSame<AddLVRef<void>,void>);
+
+    // tests for AddRVRef
+    static_assert(isSame<AddRVRef<char>,char&&>);
+    static_assert(isSame<AddRVRef<volatile float*>,volatile float*&&>);
+    static_assert(isSame<AddRVRef<double&>,double&&>);
+    static_assert(isSame<AddRVRef<bool&&>,bool&&>);
+    static_assert(isSame<AddRVRef<void>,void>);
+
+    // tests for declVal
+    static_assert(isSame<decltype(declVal<long>()),long>);
+    static_assert(isSame<decltype(declVal<const bool&>()),const bool&>);
+    static_assert(isSame<decltype(declVal<volatile long&&>()),volatile long&&>);
 }
