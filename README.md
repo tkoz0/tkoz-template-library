@@ -129,3 +129,9 @@ Some of these ideas are better for other libraries
 - primitive numbers requiring explicit conversions
 - tagged floats/doubles (use some exponent/mantissa bits to store data)
 - memory allocators optimized for various sizes or use cases
+- dependency graph for automatically updating values
+- safe integers that detect overflow and underflow
+- prefix/postfix data structures
+- tree that keeps track of subtree stats/info
+- expression templates
+- macros for custom operators such as if and only if
