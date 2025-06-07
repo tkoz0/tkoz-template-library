@@ -6,6 +6,7 @@
 #include <tkoz/stl/Types.hpp>
 
 #include <cstdint>
+#include <limits>
 
 // do not need to run anything, only compile time stuff
 int main()
@@ -148,4 +149,18 @@ int main()
     static_assert(isSame<decltype(0x1p1),double>);
     static_assert(isSame<decltype(0x1p1l),long double>);
     static_assert(isSame<decltype(0x1p1f),float>);
+
+    // infinity and nan
+    static_assert(std::numeric_limits<float>::has_infinity);
+    static_assert(std::numeric_limits<double>::has_infinity);
+    static_assert(std::numeric_limits<long double>::has_infinity);
+    static_assert(std::numeric_limits<float>::has_quiet_NaN);
+    static_assert(std::numeric_limits<double>::has_quiet_NaN);
+    static_assert(std::numeric_limits<long double>::has_quiet_NaN);
+    static_assert(std::numeric_limits<float>::has_signaling_NaN);
+    static_assert(std::numeric_limits<double>::has_signaling_NaN);
+    static_assert(std::numeric_limits<long double>::has_signaling_NaN);
+    static_assert(std::numeric_limits<float>::has_denorm);
+    static_assert(std::numeric_limits<double>::has_denorm);
+    static_assert(std::numeric_limits<long double>::has_denorm);
 }
