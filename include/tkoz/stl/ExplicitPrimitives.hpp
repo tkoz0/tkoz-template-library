@@ -158,6 +158,7 @@ public:
 
     /// unary post increment (integers only)
     template <typename _Dummy = Type> // needed for SFINAE
+    [[nodiscard("prefer pre-increment when return value is unused")]]
     inline constexpr
     meta::EnableIf<concepts::isPrimitiveInteger<_Dummy>,ExplicitPrimitive>
     operator++(int) noexcept
@@ -179,6 +180,7 @@ public:
 
     /// unary post decrement (integers only)
     template <typename _Dummy = Type> // needed for SFINAE
+    [[nodiscard("prefer pre-decrement when return value is unused")]]
     inline constexpr
     meta::EnableIf<concepts::isPrimitiveInteger<_Dummy>,ExplicitPrimitive>
     operator--(int) noexcept
