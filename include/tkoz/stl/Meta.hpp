@@ -152,7 +152,7 @@ static constexpr bool isSame = _detail::_IsSameImpl<T,U>::value;
 
 /// is type T the same as any of Us...
 template <typename T, typename ...Us>
-static constexpr bool isSameAsAny = (false || ... || isSame<T,Us>);
+static constexpr bool isSameAsAny = (isSame<T,Us> || ...);
 
 /// is a type an array
 template <typename T>
