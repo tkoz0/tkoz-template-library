@@ -150,6 +150,11 @@ template <typename T> T _addRVRefImpl(...) { static_assert(0); }
 template <typename T, typename U>
 static constexpr bool isSame = _detail::_IsSameImpl<T,U>::value;
 
+/// is a type void (possibly cv qualified)
+template <typename T>
+static constexpr bool isVoid = isSame<T,void> || isSame<T,const void>
+    || isSame<T,volatile void> || isSame<T,const volatile void>;
+
 /// is type T the same as any of Us...
 template <typename T, typename ...Us>
 static constexpr bool isSameAsAny = (isSame<T,Us> || ...);
