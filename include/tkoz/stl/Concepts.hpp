@@ -18,7 +18,7 @@ concept isSame = meta::isSame<T,U> && meta::isSame<U,T>;
 
 /// type T is the same as any of Us...
 template <typename T, typename ...Us>
-concept isSameAsAny = (false || ... || isSame<T,Us>);
+concept isSameAsAny = (isSame<T,Us> || ...);
 
 /// type is void
 template <typename T>
@@ -96,6 +96,10 @@ template <typename DstType, typename SrcType>
 concept canConvert = requires (SrcType value)
 { { meta::RemoveRef<DstType>(value) } -> isSame<meta::RemoveRef<DstType>>; };
 
+/// Can all SrcTypes be used to construct a DstType object
+template <typename DstType, typename ...SrcTypes>
+concept canConvertAll = (canConvert<DstType,SrcTypes> && ...);
+
 /// Can a SrcType object be statically casted to a DstType object
 template <typename DstType, typename SrcType>
 concept canStaticCast = requires (SrcType value)
@@ -118,9 +122,14 @@ concept canReinterpretCast = requires (SrcType value)
 
 /// Can a SrcType object be assigned to a DstType object (a = b)
 /// And is the result a DstType reference as usual
+/// \note this may be useful for checking implicit convertibility
 template <typename DstType, typename SrcType>
 concept canAssign = requires (DstType dst, SrcType src)
 { { dst = src } -> isSame<meta::AddLVRef<DstType>>; };
+
+/// Can all SrcTypes be assigned to a DstType object (a = b)
+template <typename DstType, typename ...SrcTypes>
+concept canAssignAll = (canAssign<DstType,SrcTypes> && ...);
 
 /// Can Type be added to same type
 template <typename Type>
@@ -157,22 +166,22 @@ template <typename Type>
 concept canModSame = requires (Type a, Type b)
 { { a % b } -> isSame<meta::RemoveRef<Type>>; };
 
-/// Can a Type object be pre incremented (with a Type& result)
+/// Can a Type object be pre incremented (with usual Type& result)
 template <typename Type>
 concept canPreInc = requires (Type t)
 { { ++t } -> isSame<meta::AddLVRef<Type>>; };
 
-/// Can a Type object be post incremented (with a Type result)
+/// Can a Type object be post incremented (with usual Type result)
 template <typename Type>
 concept canPostInc = requires (Type t)
 { { t++ } -> isSame<meta::RemoveRef<Type>>; };
 
-/// Can a Type object be pre decremented (with a Type& result)
+/// Can a Type object be pre decremented (with usual Type& result)
 template <typename Type>
 concept canPreDec = requires (Type t)
 { { --t } -> isSame<meta::AddLVRef<Type>>; };
 
-/// Can a Type object be post decremented (with a Type result)
+/// Can a Type object be post decremented (with usual Type result)
 template <typename Type>
 concept canPostDec = requires (Type t)
 { { t-- } -> isSame<meta::RemoveRef<Type>>; };
@@ -182,90 +191,187 @@ template <typename LeftType, typename RightType>
 concept canCmpEq = requires (LeftType l, RightType r)
 { { l == r } -> isSame<bool>; };
 
+/// Can a type be compared equal to itself (bool)
+template <typename Type> concept canCmpEqSame = canCmpEq<Type,Type>;
+
 /// Can 2 types be compared not equal (bool)
 template <typename LeftType, typename RightType>
 concept canCmpNe = requires (LeftType l, RightType r)
 { { l != r } -> isSame<bool>; };
+
+/// Can a type be compared not equal to itself (bool)
+template <typename Type> concept canCmpNeSame = canCmpNe<Type,Type>;
 
 /// Can 2 types be compared less than (bool)
 template <typename LeftType, typename RightType>
 concept canCmpLt = requires (LeftType l, RightType r)
 { { l < r } -> isSame<bool>; };
 
+/// Can a type be compared less than itself (bool)
+template <typename Type> concept canCmpLtSame = canCmpLt<Type,Type>;
+
 /// Can 2 types be compared less than or equal to (bool)
 template <typename LeftType, typename RightType>
 concept canCmpLe = requires (LeftType l, RightType r)
 { { l <= r } -> isSame<bool>; };
+
+/// Can a type be compared less than or equal to itself (bool)
+template <typename Type> concept canCmpLeSame = canCmpLe<Type,Type>;
 
 /// Can 2 types be compared greater than (bool)
 template <typename LeftType, typename RightType>
 concept canCmpGt = requires (LeftType l, RightType r)
 { { l > r } -> isSame<bool>; };
 
+/// Can a type be compared greater than itself (bool)
+template <typename Type> concept canCmpGtSame = canCmpGt<Type,Type>;
+
 /// Can 2 types be compared greater than or equal to (bool)
 template <typename LeftType, typename RightType>
 concept canCmpGe = requires (LeftType l, RightType r)
 { { l >= r } -> isSame<bool>; };
 
+/// Can a type be compared greater than or equal to itself (bool)
+template <typename Type> concept canCmpGeSame = canCmpGe<Type,Type>;
+
 /// Can 2 types be compared 3 way (std::strong_ordering)
 template <typename LeftType, typename RightType>
-concept canCmp3way = requires (LeftType l, RightType r)
+concept canCmp3wayStrong = requires (LeftType l, RightType r)
 { { l <=> r } -> isSame<std::strong_ordering>; };
+
+/// Can 2 types be compared 3 way (std::weak_ordering)
+template <typename LeftType, typename RightType>
+concept canCmp3wayWeak = requires (LeftType l, RightType r)
+{ { l <=> r } -> isSame<std::weak_ordering>; };
+
+/// Can 2 types be compared 3 way (std::partial_ordering)
+template <typename LeftType, typename RightType>
+concept canCmp3wayPartial = requires (LeftType l, RightType r)
+{ { l <=> r } -> isSame<std::partial_ordering>; };
+
+/// Can a type be 3 way compared with itself (std::strong_ordering)
+template <typename Type> concept canCmp3waySameStrong =
+    canCmp3wayStrong<Type,Type>;
+
+/// Can a type be 3 way compared with itself (std::weak_ordering)
+template <typename Type> concept canCmp3waySameWeak =
+    canCmp3wayWeak<Type,Type>;
+
+/// Can a type be 3 way compared with itself (std::partial_ordering)
+template <typename Type> concept canCmp3waySamePartial =
+    canCmp3wayPartial<Type,Type>;
 
 /// Is the address of a type the expected pointer type
 template <typename Type>
 concept canAddr = requires (Type t)
 { { &t } -> isSame<meta::RemoveRef<Type>*>; };
 
-/// Can 2 types be compound added
+/// Can 2 types be compound added (usual Type& result)
 template <typename LeftType, typename RightType>
 concept canAddEq = requires (LeftType l, RightType r)
 { { l += r } -> isSame<meta::AddLVRef<LeftType>>; };
 
-/// Can 2 types be compound subtracted
+/// Can a type be compound added to itself (usual Type& result)
+template <typename Type> concept canAddEqSame = canAddEq<Type,Type>;
+
+/// Can 2 types be compound subtracted (usual Type& result)
 template <typename LeftType, typename RightType>
 concept canSubEq = requires (LeftType l, RightType r)
 { { l -= r } -> isSame<meta::AddLVRef<LeftType>>; };
 
-/// Can 2 types be compound multiplied
+/// Can a type be compound subtracted from itself (usual Type& result)
+template <typename Type> concept canSubEqSame = canSubEq<Type,Type>;
+
+/// Can 2 types be compound multiplied (usual Type& result)
 template <typename LeftType, typename RightType>
 concept canMulEq = requires (LeftType l, RightType r)
 { { l *= r } -> isSame<meta::AddLVRef<LeftType>>; };
 
-/// Can 2 types be compound divided
+/// Can a type be compound multiplied by itself (usual Type& result)
+template <typename Type> concept canMulEqSame = canMulEq<Type,Type>;
+
+/// Can 2 types be compound divided (usual Type& result)
 template <typename LeftType, typename RightType>
 concept canDivEq = requires (LeftType l, RightType r)
 { { l /= r } -> isSame<meta::AddLVRef<LeftType>>; };
 
-/// Can 2 types support compound modulo
+/// Can a type be compound divided by itself (usual Type& result)
+template <typename Type> concept canDivEqSame = canDivEq<Type,Type>;
+
+/// Can 2 types support compound modulo (usual Type& result)
 template <typename LeftType, typename RightType>
 concept canModEq = requires (LeftType l, RightType r)
 { { l %= r } -> isSame<meta::AddLVRef<LeftType>>; };
 
-/// Can 2 types support compound and
+/// Can a type support compound modulo by itself (usual Type& result)
+template <typename Type> concept canModEqSame = canModEq<Type,Type>;
+
+/// Can 2 types support compound and (usual Type& result)
 template <typename LeftType, typename RightType>
 concept canAndEq = requires (LeftType l, RightType r)
 { { l &= r } -> isSame<meta::AddLVRef<LeftType>>; };
 
-/// Can 2 types support compound or
+/// Can a type be bit anded with itself (usual Type& result)
+template <typename Type> concept canAndEqSame = canAndEq<Type,Type>;
+
+/// Can 2 types support compound or (usual Type& result)
 template <typename LeftType, typename RightType>
 concept canOrEq = requires (LeftType l, RightType r)
 { { l |= r } -> isSame<meta::AddLVRef<LeftType>>; };
 
-/// Can 2 types support compound xor
+/// Can a type be bit ored with itself (usual Type& result)
+template <typename Type> concept canOrEqSame = canOrEq<Type,Type>;
+
+/// Can 2 types support compound xor (usual Type& result)
 template <typename LeftType, typename RightType>
 concept canXorEq = requires (LeftType l, RightType r)
 { { l ^= r } -> isSame<meta::AddLVRef<LeftType>>; };
 
-/// Can 2 types support compound shift left
+/// Can a type be bit xored with itself (usual Type& result)
+template <typename Type> concept canXorEqSame = canXorEq<Type,Type>;
+
+/// Can 2 types support compound shift left (usual Type& result)
 template <typename LeftType, typename RightType>
 concept canShiftLeftEq = requires (LeftType l, RightType r)
 { { l <<= r } -> isSame<meta::AddLVRef<LeftType>>; };
 
-/// Can 2 types support compound shift right
+/// Can 2 types support compound shift right (usual Type& result)
 template <typename LeftType, typename RightType>
 concept canShiftRightEq = requires (LeftType l, RightType r)
 { { l >>= r } -> isSame<meta::AddLVRef<LeftType>>; };
+
+/// Can Type be tested for logical not (bool result)
+template <typename Type>
+concept canLNot = requires (Type t) { { !t } -> isSame<bool>; };
+
+/// Can 2 types be tested for logical and (bool result)
+template <typename LeftType, typename RightType>
+concept canLAnd = requires (LeftType l, RightType r)
+{ { l && r } -> isSame<bool>; };
+
+/// Can 2 types be tested for logical or (bool result)
+template <typename LeftType, typename RightType>
+concept canLOr = requires (LeftType l, RightType r)
+{ { l || r } -> isSame<bool>; };
+
+/// Can Type be bit not to same type
+template <typename Type>
+concept canBitNotSame = requires (Type t) { { ~t } -> isSame<Type>; };
+
+/// Can Type be bit and to same type
+template <typename Type>
+concept canBitAndSame = requires (Type l, Type r)
+{ { l & r } -> isSame<Type>; };
+
+/// Can Type be bit or to same type
+template <typename Type>
+concept canBitOrSame = requires (Type l, Type r)
+{ { l | r } -> isSame<Type>; };
+
+/// Can Type be bit xor to same type
+template <typename Type>
+concept canBitXorSame = requires (Type l, Type r)
+{ { l ^ r } -> isSame<Type>; };
 
 //
 // Check if an operator is supported with some types
@@ -276,9 +382,15 @@ concept canShiftRightEq = requires (LeftType l, RightType r)
 template <typename LeftType, typename RightType>
 concept hasAdd = requires (LeftType l, RightType r) { l + r; };
 
+/// Does Type have addition with itself
+template <typename Type> concept hasAddSame = hasAdd<Type,Type>;
+
 /// Do 2 types have subtraction (a - b)
 template <typename LeftType, typename RightType>
 concept hasSub = requires (LeftType l, RightType r) { l - r; };
+
+/// Does Type have subtraction with itself
+template <typename Type> concept hasSubSame = hasSub<Type,Type>;
 
 /// Does a type have unary + (+obj)
 template <typename Type>
@@ -292,13 +404,22 @@ concept hasNeg = requires (Type t) { -t; };
 template <typename LeftType, typename RightType>
 concept hasMul = requires (LeftType l, RightType r) { l * r; };
 
+/// Does Type have multiplication with itself
+template <typename Type> concept hasMulSame = hasMul<Type,Type>;
+
 /// Do 2 types have division (a / b)
 template <typename LeftType, typename RightType>
 concept hasDiv = requires (LeftType l, RightType r) { l / r; };
 
+/// Does Type have division with itself
+template <typename Type> concept hasDivSame = hasDiv<Type,Type>;
+
 /// Do 2 types have modulo
 template <typename LeftType, typename RightType>
 concept hasMod = requires (LeftType l, RightType r) { l % r; };
+
+/// Does Type have modulus with itself
+template <typename Type> concept hasModSame = hasMod<Type,Type>;
 
 /// Does a type have prefix increment (++obj)
 template <typename Type>
@@ -320,25 +441,50 @@ concept hasPostDec = requires (Type t) { t--; };
 template <typename LeftType, typename RightType>
 concept hasCmpEq = requires (LeftType l, RightType r) { l == r; };
 
+/// Does Type have compare equal with itself
+template <typename Type> concept hasCmpEqSame = hasCmpEq<Type,Type>;
+
 /// Do 2 types have compare not equal
 template <typename LeftType, typename RightType>
 concept hasCmpNe = requires (LeftType l, RightType r) { l != r; };
+
+/// Does Type have compare not equal with itself
+template <typename Type> concept hasCmpNeSame = hasCmpNe<Type,Type>;
 
 /// Do 2 types have compare less than
 template <typename LeftType, typename RightType>
 concept hasCmpLt = requires (LeftType l, RightType r) { l < r; };
 
+/// Does Type have compare less that with itself
+template <typename Type> concept hasCmpLtSame = hasCmpLt<Type,Type>;
+
 /// Do 2 types have compare less than or equal to
 template <typename LeftType, typename RightType>
 concept hasCmpLe = requires (LeftType l, RightType r) { l <= r; };
+
+/// Does Type have compare less than or equal to with itself
+template <typename Type> concept hasCmpLeSame = hasCmpLe<Type,Type>;
 
 /// Do 2 types have compare greater than
 template <typename LeftType, typename RightType>
 concept hasCmpGt = requires (LeftType l, RightType r) { l > r; };
 
+/// Does Type have compare grater that with itself
+template <typename Type> concept hasCmpGtSame = hasCmpGt<Type,Type>;
+
 /// Do 2 types have compare greater than or equal to
 template <typename LeftType, typename RightType>
 concept hasCmpGe = requires (LeftType l, RightType r) { l >= r; };
+
+/// Does Type have compare greater than or equal to with itself
+template <typename Type> concept hasCmpGeSame = hasCmpGe<Type,Type>;
+
+/// Do 2 types have 3 way compare
+template <typename LeftType, typename RightType>
+concept hasCmp3way = requires (LeftType l, RightType r) { l <=> r; };
+
+/// Does Type have 3 way compare with itself
+template <typename Type> concept hasCmp3waySame = hasCmp3way<Type,Type>;
 
 /// Does a type have logical not
 template <typename Type>
@@ -360,13 +506,22 @@ concept hasBitNot = requires (Type t) { ~t; };
 template <typename LeftType, typename RightType>
 concept hasBitAnd = requires (LeftType l, RightType r) { l & r; };
 
+/// Does Type have bit and with itself
+template <typename Type> concept hasBitAndSame = hasBitAnd<Type,Type>;
+
 /// Do 2 types have bit or
 template <typename LeftType, typename RightType>
 concept hasBitOr = requires (LeftType l, RightType r) { l | r; };
 
+/// Does Type have bit or with itself
+template <typename Type> concept hasBitOrSame = hasBitOr<Type,Type>;
+
 /// Do 2 types have bit xor
 template <typename LeftType, typename RightType>
 concept hasBitXor = requires (LeftType l, RightType r) { l ^ r; };
+
+/// Does Type have bit xor with itself
+template <typename Type> concept hasBitXorSame = hasBitXor<Type,Type>;
 
 /// Do 2 types have shift left
 template <typename LeftType, typename RightType>
@@ -384,33 +539,57 @@ concept hasAssign = requires (LeftType l, RightType r) { l = r; };
 template <typename LeftType, typename RightType>
 concept hasAddEq = requires (LeftType l, RightType r) { l += r; };
 
+/// Does Type have compound add to itself
+template <typename Type> concept hasAddEqSame = hasAddEq<Type,Type>;
+
 /// Do 2 types have compound subtract
 template <typename LeftType, typename RightType>
 concept hasSubEq = requires (LeftType l, RightType r) { l -= r; };
+
+/// Does Type have comound subtract from itself
+template <typename Type> concept hasSubEqSame = hasSubEq<Type,Type>;
 
 /// Do 2 types have compound multiply
 template <typename LeftType, typename RightType>
 concept hasMulEq = requires (LeftType l, RightType r) { l *= r; };
 
+/// Does Type have compound multiply with itself
+template <typename Type> concept hasMulEqSame = hasMulEq<Type,Type>;
+
 /// Do 2 types have compound divide
 template <typename LeftType, typename RightType>
 concept hasDivEq = requires (LeftType l, RightType r) { l /= r; };
+
+/// Does Type have compound divide with itself
+template <typename Type> concept hasDivEqSame = hasDivEq<Type,Type>;
 
 /// Do 2 types have compound modulus
 template <typename LeftType, typename RightType>
 concept hasModEq = requires (LeftType l, RightType r) { l %= r; };
 
+/// Does Type have compound modulus with itself
+template <typename Type> concept hasModEqSame = hasModEq<Type,Type>;
+
 /// Do 2 types have compound and
 template <typename LeftType, typename RightType>
 concept hasAndEq = requires (LeftType l, RightType r) { l &= r; };
+
+/// Does Type have compound bit and with itself
+template <typename Type> concept hasAndEqSame = hasAndEq<Type,Type>;
 
 /// Do 2 types have compound or
 template <typename LeftType, typename RightType>
 concept hasOrEq = requires (LeftType l, RightType r) { l |= r; };
 
+/// Does Type have compound bit or with itself
+template <typename Type> concept hasOrEqSame = hasOrEq<Type,Type>;
+
 /// Do 2 types have compound xor
 template <typename LeftType, typename RightType>
 concept hasXorEq = requires (LeftType l, RightType r) { l ^= r; };
+
+/// Does Type have compound bit xor with itself
+template <typename Type> concept hasXorEqSame = hasXorEq<Type,Type>;
 
 /// Do 2 types have compound shift left
 template <typename LeftType, typename RightType>
