@@ -250,6 +250,8 @@ using AddRVRef = decltype(_detail::_addRVRefImpl<T>(0));
 /// instance of type T for unevaluated contexts (like std::declval)
 template <typename T>
 constexpr T declVal()
-{ static_assert(0,"only allowed in unevaluated contexts"); }
+{
+    static_assert(0, "only allowed in unevaluated contexts");
+}
 
 } // namespace tkoz::stl::meta
