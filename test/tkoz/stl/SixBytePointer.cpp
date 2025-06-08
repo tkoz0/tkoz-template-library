@@ -42,4 +42,35 @@ TEST_CASE_CREATE(test)
     const SixBytePointer<std::string> &csp = sp;
     TEST_ASSERT_EQ(csp->size(),12);
     TEST_ASSERT_EQ(*csp,"stringstring");
+
+    char c[3];
+    SixBytePointer p1(c+0), p2(c+1), p3(c+2);
+    TEST_ASSERT_EQ(p1,p1);
+    TEST_ASSERT_EQ(p2,p2);
+    TEST_ASSERT_EQ(p3,p3);
+    TEST_ASSERT_LE(p1,p1);
+    TEST_ASSERT_GE(p1,p1);
+    TEST_ASSERT_NE(p1,p3);
+    TEST_ASSERT_LT(p1,p2);
+    TEST_ASSERT_GT(p3,p2);
+    TEST_ASSERT_LE(p1,p3);
+    TEST_ASSERT_GE(p3,p1);
+
+    long d[30];
+    SixBytePointer dp(d);
+    TEST_ASSERT_EQ(dp+0,d);
+    TEST_ASSERT_EQ(dp-0,d);
+    TEST_ASSERT_EQ(dp+15,d+15);
+    long *d2 = d + 20;
+    SixBytePointer dp2(d2);
+    TEST_ASSERT_EQ(dp2-10,dp+10);
+
+    TEST_ASSERT_EQ(dp++,d);
+    TEST_ASSERT_EQ(dp,d+1);
+    TEST_ASSERT_EQ(++dp,d+2);
+    TEST_ASSERT_EQ(dp,d+2);
+    TEST_ASSERT_EQ(--dp,d+1);
+    TEST_ASSERT_EQ(dp,d+1);
+    TEST_ASSERT_EQ(dp--,d+1);
+    TEST_ASSERT_EQ(dp,d);
 }
