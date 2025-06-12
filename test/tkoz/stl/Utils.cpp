@@ -17,7 +17,7 @@ T&& testForward(T &&v)
     //using tkoz::stl::forward;
     // T&& can be accepted as lvalue or rvalue reference
     // tkoz::stl::forward (should be equivalent to std::forward) deduces it
-    return tkoz::stl::forward<T>(v);
+    return tkoz::stl::fwdRef<T>(v);
 }
 
 TEST_CASE_CREATE(test)
@@ -26,7 +26,7 @@ TEST_CASE_CREATE(test)
     using meta::declVal;
     using tkoz::stl::move;
     using tkoz::stl::swap;
-    using tkoz::stl::forward;
+    using tkoz::stl::fwdRef;
 
     static_assert(meta::isSame<int&&,decltype(move(declVal<int>()))>);
     static_assert(meta::isSame<int&&,decltype(move(declVal<int&>()))>);
@@ -59,24 +59,24 @@ TEST_CASE_CREATE(test)
     static_assert(meta::isSame<string&&,decltype(testForward(declVal<string>()))>);
     static_assert(meta::isSame<const string&&,decltype(testForward(declVal<const string>()))>);
 
-    static_assert(meta::isSame<int&&,decltype(forward<int&&>(declVal<int&&>()))>);
-    static_assert(meta::isSame<const int&&,decltype(forward<const int&&>(declVal<const int&&>()))>);
-    static_assert(meta::isSame<int&,decltype(forward<int&>(declVal<int&>()))>);
-    static_assert(meta::isSame<const int&,decltype(forward<const int&>(declVal<const int&>()))>);
-    static_assert(meta::isSame<int&&,decltype(forward<int&&>(declVal<int&&>()))>);
-    static_assert(meta::isSame<const int&&,decltype(forward<const int&&>(declVal<const int&&>()))>);
+    static_assert(meta::isSame<int&&,decltype(fwdRef<int&&>(declVal<int&&>()))>);
+    static_assert(meta::isSame<const int&&,decltype(fwdRef<const int&&>(declVal<const int&&>()))>);
+    static_assert(meta::isSame<int&,decltype(fwdRef<int&>(declVal<int&>()))>);
+    static_assert(meta::isSame<const int&,decltype(fwdRef<const int&>(declVal<const int&>()))>);
+    static_assert(meta::isSame<int&&,decltype(fwdRef<int&&>(declVal<int&&>()))>);
+    static_assert(meta::isSame<const int&&,decltype(fwdRef<const int&&>(declVal<const int&&>()))>);
 
     // somehow these conflict with std::forward
-    static_assert(meta::isSame<string&&,decltype(tkoz::stl::forward<string&&>(declVal<string&&>()))>);
-    static_assert(meta::isSame<const string&&,decltype(tkoz::stl::forward<const string&&>(declVal<const string&&>()))>);
-    static_assert(meta::isSame<string&,decltype(tkoz::stl::forward<string&>(declVal<string&>()))>);
-    static_assert(meta::isSame<const string&,decltype(tkoz::stl::forward<const string&>(declVal<const string&>()))>);
-    static_assert(meta::isSame<string&&,decltype(tkoz::stl::forward<string&&>(declVal<string>()))>);
-    static_assert(meta::isSame<const string&&,decltype(tkoz::stl::forward<const string&&>(declVal<const string>()))>);
-    //static_assert(meta::isSame<string&&,decltype(forward<string&&>(declVal<string&&>()))>);
-    //static_assert(meta::isSame<const string&&,decltype(forward<const string&&>(declVal<const string&&>()))>);
-    //static_assert(meta::isSame<string&,decltype(forward<string&>(declVal<string&>()))>);
-    //static_assert(meta::isSame<const string&,decltype(forward<const string&>(declVal<const string&>()))>);
-    //static_assert(meta::isSame<string&&,decltype(forward<string&&>(declVal<string>()))>);
-    //static_assert(meta::isSame<const string&&,decltype(forward<const string&&>(declVal<const string>()))>);
+    static_assert(meta::isSame<string&&,decltype(tkoz::stl::fwdRef<string&&>(declVal<string&&>()))>);
+    static_assert(meta::isSame<const string&&,decltype(tkoz::stl::fwdRef<const string&&>(declVal<const string&&>()))>);
+    static_assert(meta::isSame<string&,decltype(tkoz::stl::fwdRef<string&>(declVal<string&>()))>);
+    static_assert(meta::isSame<const string&,decltype(tkoz::stl::fwdRef<const string&>(declVal<const string&>()))>);
+    static_assert(meta::isSame<string&&,decltype(tkoz::stl::fwdRef<string&&>(declVal<string>()))>);
+    static_assert(meta::isSame<const string&&,decltype(tkoz::stl::fwdRef<const string&&>(declVal<const string>()))>);
+    //static_assert(meta::isSame<string&&,decltype(fwdRef<string&&>(declVal<string&&>()))>);
+    //static_assert(meta::isSame<const string&&,decltype(fwdRef<const string&&>(declVal<const string&&>()))>);
+    //static_assert(meta::isSame<string&,decltype(fwdRef<string&>(declVal<string&>()))>);
+    //static_assert(meta::isSame<const string&,decltype(fwdRef<const string&>(declVal<const string&>()))>);
+    //static_assert(meta::isSame<string&&,decltype(fwdRef<string&&>(declVal<string>()))>);
+    //static_assert(meta::isSame<const string&&,decltype(fwdRef<const string&&>(declVal<const string>()))>);
 }

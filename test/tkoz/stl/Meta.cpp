@@ -4,6 +4,11 @@
 
 #include <tkoz/stl/Meta.hpp>
 
+#include <map>
+#include <string>
+#include <tuple>
+#include <vector>
+
 // only checking compile time stuff, does not need to run anything
 int main()
 {
@@ -40,6 +45,14 @@ int main()
     static_assert(!isSameAsAny<bool,void,void*>);
     static_assert(!isSameAsAny<char,int,int,int>);
 
+    // tests for isTemplated
+    static_assert(!isTemplated<void>);
+    static_assert(!isTemplated<double>);
+    static_assert(isTemplated<std::string>);
+    static_assert(isTemplated<std::vector<int>>);
+    static_assert(isTemplated<std::map<std::string,std::string>>);
+    static_assert(isTemplated<std::tuple<short,int,long>>);
+
     // check of default sign (note char and signed char are different)
     static_assert(!isSame<char,signed char>);
     static_assert(!isSame<char,unsigned char>);
@@ -66,18 +79,26 @@ int main()
     static_assert(isSame<RemoveCV<volatile float>,float>);
     static_assert(isSame<RemoveCV<volatile const float>,float>);
     static_assert(isSame<RemoveCV<bool * const volatile>,bool*>);
+    static_assert(isSame<RemoveCV<const volatile int&>,int&>);
+    static_assert(isSame<RemoveCV<const volatile int&&>,int&&>);
 
     // tests for RemoveConst
     static_assert(isSame<RemoveConst<const double>,double>);
     static_assert(isSame<RemoveConst<char>,char>);
     static_assert(isSame<RemoveConst<void * const>,void*>);
     static_assert(isSame<RemoveConst<volatile const bool>,volatile bool>);
+    static_assert(isSame<RemoveConst<const int&>,int&>);
+    static_assert(isSame<RemoveConst<int&>,int&>);
+    static_assert(isSame<RemoveConst<volatile const float&&>,volatile float&&>);
 
     // tests for RemoveVolatile
     static_assert(isSame<RemoveVolatile<volatile long>,long>);
     static_assert(isSame<RemoveVolatile<long long>,long long>);
     static_assert(isSame<RemoveVolatile<int * volatile>,int*>);
     static_assert(isSame<RemoveVolatile<volatile const float>,const float>);
+    static_assert(isSame<RemoveVolatile<volatile int&>,int&>);
+    static_assert(isSame<RemoveVolatile<int&>,int&>);
+    static_assert(isSame<RemoveVolatile<volatile const double&&>,const double&&>);
 
     // tests for isPointer
     static_assert(isPointer<void*>);
@@ -108,21 +129,33 @@ int main()
     static_assert(!isConst<int>);
     static_assert(isConst<const int>);
     static_assert(!isConst<volatile int>);
+    static_assert(isConst<const int&>);
+    static_assert(isConst<const int&&>);
+    static_assert(!isConst<int&>);
+    static_assert(!isConst<int&&>);
 
     // tests for isVolatile
     static_assert(!isVolatile<int>);
     static_assert(isVolatile<volatile int>);
     static_assert(!isVolatile<const int>);
+    static_assert(!isVolatile<const double&>);
+    static_assert(isVolatile<const volatile double&>);
+    static_assert(isVolatile<volatile bool&&>);
 
     // tests for isSigned
     static_assert(isSigned<char>);
     static_assert(isSigned<signed char>);
     static_assert(!isSigned<unsigned char>);
+    static_assert(isSigned<const int>);
+    static_assert(isSigned<int&>);
+    static_assert(isSigned<int&&>);
 
     // tests for isUnsigned
     static_assert(!isUnsigned<char>);
     static_assert(!isUnsigned<signed char>);
     static_assert(isUnsigned<unsigned char>);
+    static_assert(!isUnsigned<const long long&>);
+    static_assert(isUnsigned<const volatile unsigned long long&&>);
 
     // tests for RemoveExtent
     static_assert(isSame<RemoveExtent<int>,int>);
@@ -183,4 +216,41 @@ int main()
     static_assert(isSame<decltype(declVal<long>()),long>);
     static_assert(isSame<decltype(declVal<const bool&>()),const bool&>);
     static_assert(isSame<decltype(declVal<volatile long&&>()),volatile long&&>);
+
+    // tests for CopyRef
+    static_assert(isSame<CopyRef<int,int&&>,int>);
+    static_assert(isSame<CopyRef<int&&,const double>,const double&&>);
+    // note that vector of reference is not allowed
+    static_assert(isSame<CopyRef<std::vector<const float&>&,volatile std::string*>,volatile std::string*&>);
+    static_assert(isSame<CopyRef<bool&,char&>,char&>);
+    static_assert(isSame<CopyRef<long long&,const volatile double>,const volatile double&>);
+    static_assert(isSame<CopyRef<const bool&&,volatile int>,volatile int&&>);
+
+    // tests for CopyConst
+    static_assert(isSame<CopyConst<int,volatile float>,volatile float>);
+    static_assert(isSame<CopyConst<int,const volatile double>,volatile double>);
+    static_assert(isSame<CopyConst<const int,const bool>,const bool>);
+    static_assert(isSame<CopyConst<const std::string&,int&>,const int&>);
+    static_assert(isSame<CopyConst<std::string&,int&>,int&>);
+    static_assert(isSame<CopyConst<const double&&,const double>,const double>);
+    static_assert(isSame<CopyConst<double&&,const double>,double>);
+
+    // tests for CopyVolatile
+    static_assert(isSame<CopyVolatile<int,float>,float>);
+    static_assert(isSame<CopyVolatile<volatile int,float>,volatile float>);
+    static_assert(isSame<CopyVolatile<const int,float>,float>);
+    static_assert(isSame<CopyVolatile<volatile double&,short&&>,volatile short&&>);
+    static_assert(isSame<CopyVolatile<const volatile long,volatile int>,volatile int>);
+    static_assert(isSame<CopyVolatile<bool,const volatile int>,const int>);
+
+    // tests for CopyCV
+    static_assert(isSame<CopyCV<double,int>,int>);
+    static_assert(isSame<CopyCV<volatile double&,int&&>,volatile int&&>);
+    static_assert(isSame<CopyCV<double,const int&>,int&>);
+    static_assert(isSame<CopyCV<const volatile bool&&,volatile float>,const volatile float>);
+
+    // tests for CopyCVRef
+    static_assert(isSame<CopyCVRef<volatile int&&,const bool>,volatile bool&&>);
+    static_assert(isSame<CopyCVRef<const double&,const char>,const char&>);
+    static_assert(isSame<CopyCVRef<int,const volatile float&&>,float>);
 }

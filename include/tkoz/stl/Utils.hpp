@@ -40,7 +40,7 @@ inline constexpr void swap(Type &a, Type &b)
 /// \note supposedly equivalent to the implementation in libstdc++
 template <typename Type>
 [[nodiscard]] inline constexpr
-Type&& forward(meta::RemoveRef<Type> &t) noexcept
+Type&& fwdRef(meta::RemoveRef<Type> &t) noexcept
 {
     return static_cast<Type&&>(t);
 }
@@ -51,7 +51,7 @@ Type&& forward(meta::RemoveRef<Type> &t) noexcept
 /// \note supposedly equivalent to the implementation in libstdc++
 template <typename Type>
 [[nodiscard]] inline constexpr
-Type&& forward(meta::RemoveRef<Type> &&t) noexcept
+Type&& fwdRef(meta::RemoveRef<Type> &&t) noexcept
 {
     static_assert(!meta::isLVRef<Type>, "cannot forward rvalue as lvalue");
     return static_cast<Type&&>(t);

@@ -259,13 +259,13 @@ TEST_CASE_CREATE(testBool)
     //static_assert(tsc::canAssign<bool,EPB>);
 
     // self arithmetic
-    static_assert(!tsc::hasAddSame<EPB>);
-    static_assert(!tsc::hasSubSame<EPB>);
+    static_assert(!tsc::hasAdd<EPB>);
+    static_assert(!tsc::hasSub<EPB>);
     static_assert(!tsc::hasPos<EPB>);
     static_assert(!tsc::hasNeg<EPB>);
-    static_assert(!tsc::hasMulSame<EPB>);
-    static_assert(!tsc::hasDivSame<EPB>);
-    static_assert(!tsc::hasModSame<EPB>);
+    static_assert(!tsc::hasMul<EPB>);
+    static_assert(!tsc::hasDiv<EPB>);
+    static_assert(!tsc::hasMod<EPB>);
 
     // inc/dec
     static_assert(!tsc::hasPreInc<EPB>);
@@ -274,13 +274,13 @@ TEST_CASE_CREATE(testBool)
     static_assert(!tsc::hasPostDec<EPB>);
 
     // cmp
-    static_assert(tsc::canCmpEqSame<EPB>);
-    static_assert(tsc::canCmpNeSame<EPB>);
-    static_assert(!tsc::hasCmpLtSame<EPB>);
-    static_assert(!tsc::hasCmpLeSame<EPB>);
-    static_assert(!tsc::hasCmpGtSame<EPB>);
-    static_assert(!tsc::hasCmpGeSame<EPB>);
-    static_assert(!tsc::hasCmp3waySame<EPB>);
+    static_assert(tsc::canCmpEq<EPB>);
+    static_assert(tsc::canCmpNe<EPB>);
+    static_assert(!tsc::hasCmpLt<EPB>);
+    static_assert(!tsc::hasCmpLe<EPB>);
+    static_assert(!tsc::hasCmpGt<EPB>);
+    static_assert(!tsc::hasCmpGe<EPB>);
+    static_assert(!tsc::hasCmp3way<EPB>);
 
     // logic/bit
     static_assert(tsc::canLNot<EPB>);
@@ -368,14 +368,14 @@ void testNumber()
     static_assert(iff(tsc::isPrimitiveInteger<T>,tsc::canPostDec<EPT>));
 
     // cmp
-    static_assert(tsc::canCmpEqSame<EPT>);
-    static_assert(tsc::canCmpNeSame<EPT>);
-    static_assert(tsc::canCmpLtSame<EPT>);
-    static_assert(tsc::canCmpLeSame<EPT>);
-    static_assert(tsc::canCmpGtSame<EPT>);
-    static_assert(tsc::canCmpGeSame<EPT>);
-    static_assert(iff(tsc::isPrimitiveInteger<T>,tsc::canCmp3waySameStrong<EPT>));
-    static_assert(iff(tsc::isPrimitiveFloatingPoint<T>,tsc::canCmp3waySamePartial<EPT>));
+    static_assert(tsc::canCmpEq<EPT>);
+    static_assert(tsc::canCmpNe<EPT>);
+    static_assert(tsc::canCmpLt<EPT>);
+    static_assert(tsc::canCmpLe<EPT>);
+    static_assert(tsc::canCmpGt<EPT>);
+    static_assert(tsc::canCmpGe<EPT>);
+    static_assert(iff(tsc::isPrimitiveInteger<T>,tsc::canCmp3wayStrong<EPT>));
+    static_assert(iff(tsc::isPrimitiveFloatingPoint<T>,tsc::canCmp3wayPartial<EPT>));
 
     // logic/bit
     static_assert(tsc::canLNot<EPT>);
@@ -387,14 +387,14 @@ void testNumber()
     static_assert(iff(!tsc::isPrimitiveFloatingPoint<T>,tsc::canBitXorSame<EPT>));
 
     // compound assign
-    static_assert(tsc::canAddEqSame<EPT>);
-    static_assert(tsc::canSubEqSame<EPT>);
-    static_assert(tsc::canMulEqSame<EPT>);
-    static_assert(tsc::canDivEqSame<EPT>);
-    static_assert(iff(!tsc::isPrimitiveFloatingPoint<T>,tsc::canModEqSame<EPT>));
-    static_assert(iff(tsc::isPrimitiveInteger<T>,tsc::canAndEqSame<EPT>));
-    static_assert(iff(tsc::isPrimitiveInteger<T>,tsc::canOrEqSame<EPT>));
-    static_assert(iff(tsc::isPrimitiveInteger<T>,tsc::canXorEqSame<EPT>));
+    static_assert(tsc::canAddEq<EPT>);
+    static_assert(tsc::canSubEq<EPT>);
+    static_assert(tsc::canMulEq<EPT>);
+    static_assert(tsc::canDivEq<EPT>);
+    static_assert(iff(!tsc::isPrimitiveFloatingPoint<T>,tsc::canModEq<EPT>));
+    static_assert(iff(tsc::isPrimitiveInteger<T>,tsc::canAndEq<EPT>));
+    static_assert(iff(tsc::isPrimitiveInteger<T>,tsc::canOrEq<EPT>));
+    static_assert(iff(tsc::isPrimitiveInteger<T>,tsc::canXorEq<EPT>));
     static_assert(iff(tsc::isPrimitiveInteger<T>,tsc::hasShiftLeftEq<EPT,EPT>));
     static_assert(iff(tsc::isPrimitiveInteger<T>,tsc::hasShiftRightEq<EPT,EPT>));
 
