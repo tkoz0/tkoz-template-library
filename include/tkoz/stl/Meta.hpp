@@ -186,11 +186,6 @@ struct _CopyCVImpl<const volatile T,U>: TypeValue<const volatile U> {};
 template <typename T, typename U>
 static constexpr bool isSame = _detail::_IsSameImpl<T,U>::value;
 
-/// is a type void (possibly cv qualified)
-template <typename T>
-static constexpr bool isVoid = isSame<T,void> || isSame<T,const void>
-    || isSame<T,volatile void> || isSame<T,const volatile void>;
-
 /// is type T the same as any of Us...
 template <typename T, typename ...Us>
 static constexpr bool isSameAsAny = (isSame<T,Us> || ...);
@@ -541,5 +536,17 @@ using SubscriptResult = decltype(declVal<T>()[declVal<Us>()...]);
 /// result type of calling T
 template <typename T, typename ...Us>
 using CallResult = decltype(declVal<T>()(declVal<Us>()...));
+
+//
+// same as specific types ignoring cvref
+//
+
+/// type is void (possibly cv qualified)
+template <typename T>
+static constexpr bool isVoid = isSame<meta::RemoveCVRef<T>,void>;
+
+/// type is bool (possibly cvref qualified)
+template <typename T>
+static constexpr bool isBool = isSame<meta::RemoveCVRef<T>,bool>;
 
 } // namespace tkoz::stl::meta

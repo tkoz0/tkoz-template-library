@@ -22,11 +22,11 @@ concept isSameAsAny = (isSame<T,Us> || ...);
 
 /// type is void (possibly cv qualified)
 template <typename T>
-concept isVoid = meta::isVoid<T>;
+concept isVoid = meta::isSame<meta::RemoveCVRef<T>,void>;
 
-/// type is bool (possibly cv qualified)
+/// type is bool (possibly cvref qualified)
 template <typename T>
-concept isBool = meta::isSame<T,meta::RemoveCV<bool>>;
+concept isBool = meta::isSame<meta::RemoveCVRef<T>,bool>;
 
 /// type is same ignoring const qualifier
 template <typename T, typename U>
@@ -51,12 +51,12 @@ concept isSameIgnoreCVRef = meta::isSameIgnoreCVRef<T,U>;
 /// type is float, double, or long double
 template <typename T>
 concept isPrimitiveFloatingPoint =
-    meta::isSameAsAny<meta::RemoveCV<T>,float,double,long double>;
+    meta::isSameAsAny<meta::RemoveCVRef<T>,float,double,long double>;
 
 /// type is char, unsigned char, or signed char
 template <typename T>
 concept isAnyChar =
-    meta::isSameAsAny<meta::RemoveCV<T>,char,unsigned char,signed char>;
+    meta::isSameAsAny<meta::RemoveCVRef<T>,char,unsigned char,signed char>;
 
 // char is signed even though char is different type from signed char
 static_assert(static_cast<char>(-1) < static_cast<char>(0));
@@ -78,13 +78,13 @@ static_assert(static_cast<unsigned long long>(-1)
 /// type is a primitive signed integer
 template <typename T>
 concept isPrimitiveSignedInteger =
-    meta::isSameAsAny<meta::RemoveCV<T>,char,signed char,signed short,
+    meta::isSameAsAny<meta::RemoveCVRef<T>,char,signed char,signed short,
                       signed int,signed long,signed long long>;
 
 /// type is a primitive unsigned integer
 template <typename T>
 concept isPrimitiveUnsignedInteger =
-    meta::isSameAsAny<meta::RemoveCV<T>,unsigned char,unsigned short,
+    meta::isSameAsAny<meta::RemoveCVRef<T>,unsigned char,unsigned short,
                       unsigned int,unsigned long,unsigned long long>;
 
 /// type is a primitive integer
