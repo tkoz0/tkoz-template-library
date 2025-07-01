@@ -16,13 +16,19 @@
 template class tkoz::stl::CString<char>;
 template class tkoz::stl::CString<wchar_t>;
 template class tkoz::stl::CString<int>;
+template class tkoz::stl::CString<char,false>;
+template class tkoz::stl::CString<wchar_t,false>;
+template class tkoz::stl::CString<int,false>;
 
 using CString = tkoz::stl::CString<char>;
+using CStringNoNull = tkoz::stl::CString<char,false>;
 using WCString = tkoz::stl::CString<wchar_t>;
+using WCStringNoNull = tkoz::stl::CString<wchar_t,false>;
 using IntString = tkoz::stl::CString<int>;
+using IntStringNoNull = tkoz::stl::CString<int,false>;
 
 // default argument is char
-static_assert(tkoz::stl::meta::isSame<CString,tkoz::stl::CString<>>);
+static_assert(tkoz::stl::meta::isSame<CString,tkoz::stl::CString<char,true>>);
 
 TEST_RUNNER_MAIN
 
@@ -401,13 +407,13 @@ TEST_CASE_CREATE(testPtrCmpEq)
         {
             TEST_ASSERT_TRUE(CString::ptrCmpEq(left,right));
             if (left && right)
-                TEST_ASSERT_TRUE(CString::ptrCmpEq<false>(left,right));
+                TEST_ASSERT_TRUE(CStringNoNull::ptrCmpEq(left,right));
         }
         else
         {
             TEST_ASSERT_FALSE(CString::ptrCmpEq(left,right));
             if (left && right)
-                TEST_ASSERT_FALSE(CString::ptrCmpEq<false>(left,right));
+                TEST_ASSERT_FALSE(CStringNoNull::ptrCmpEq(left,right));
         }
     }
 }
@@ -420,13 +426,13 @@ TEST_CASE_CREATE(testPtrCmpNe)
         {
             TEST_ASSERT_FALSE(CString::ptrCmpNe(left,right));
             if (left && right)
-                TEST_ASSERT_FALSE(CString::ptrCmpNe<false>(left,right));
+                TEST_ASSERT_FALSE(CStringNoNull::ptrCmpNe(left,right));
         }
         else
         {
             TEST_ASSERT_TRUE(CString::ptrCmpNe(left,right));
             if (left && right)
-                TEST_ASSERT_TRUE(CString::ptrCmpNe<false>(left,right));
+                TEST_ASSERT_TRUE(CStringNoNull::ptrCmpNe(left,right));
         }
     }
 }
@@ -437,7 +443,7 @@ TEST_CASE_CREATE(testPtrCmp3way)
     {
         TEST_ASSERT_EQ(CString::ptrCmp3way(left,right),cmp);
         if (left && right)
-            TEST_ASSERT_EQ(CString::ptrCmp3way<false>(left,right),cmp);
+            TEST_ASSERT_EQ(CStringNoNull::ptrCmp3way(left,right),cmp);
     }
 }
 
@@ -449,13 +455,13 @@ TEST_CASE_CREATE(testPtrCmpLt)
         {
             TEST_ASSERT_TRUE(CString::ptrCmpLt(left,right));
             if (left && right)
-                TEST_ASSERT_TRUE(CString::ptrCmpLt<false>(left,right));
+                TEST_ASSERT_TRUE(CStringNoNull::ptrCmpLt(left,right));
         }
         else
         {
             TEST_ASSERT_FALSE(CString::ptrCmpLt(left,right));
             if (left && right)
-                TEST_ASSERT_FALSE(CString::ptrCmpLt<false>(left,right));
+                TEST_ASSERT_FALSE(CStringNoNull::ptrCmpLt(left,right));
         }
     }
 }
@@ -468,13 +474,13 @@ TEST_CASE_CREATE(testPtrCmpLe)
         {
             TEST_ASSERT_FALSE(CString::ptrCmpLe(left,right));
             if (left && right)
-                TEST_ASSERT_FALSE(CString::ptrCmpLe<false>(left,right));
+                TEST_ASSERT_FALSE(CStringNoNull::ptrCmpLe(left,right));
         }
         else
         {
             TEST_ASSERT_TRUE(CString::ptrCmpLe(left,right));
             if (left && right)
-                TEST_ASSERT_TRUE(CString::ptrCmpLe<false>(left,right));
+                TEST_ASSERT_TRUE(CStringNoNull::ptrCmpLe(left,right));
         }
     }
 }
@@ -487,13 +493,13 @@ TEST_CASE_CREATE(testPtrCmpGt)
         {
             TEST_ASSERT_TRUE(CString::ptrCmpGt(left,right));
             if (left && right)
-                TEST_ASSERT_TRUE(CString::ptrCmpGt<false>(left,right));
+                TEST_ASSERT_TRUE(CStringNoNull::ptrCmpGt(left,right));
         }
         else
         {
             TEST_ASSERT_FALSE(CString::ptrCmpGt(left,right));
             if (left && right)
-                TEST_ASSERT_FALSE(CString::ptrCmpGt<false>(left,right));
+                TEST_ASSERT_FALSE(CStringNoNull::ptrCmpGt(left,right));
         }
     }
 }
@@ -506,13 +512,13 @@ TEST_CASE_CREATE(testPtrCmpGe)
         {
             TEST_ASSERT_FALSE(CString::ptrCmpGe(left,right));
             if (left && right)
-                TEST_ASSERT_FALSE(CString::ptrCmpGe<false>(left,right));
+                TEST_ASSERT_FALSE(CStringNoNull::ptrCmpGe(left,right));
         }
         else
         {
             TEST_ASSERT_TRUE(CString::ptrCmpGe(left,right));
             if (left && right)
-                TEST_ASSERT_TRUE(CString::ptrCmpGe<false>(left,right));
+                TEST_ASSERT_TRUE(CStringNoNull::ptrCmpGe(left,right));
         }
     }
 }
@@ -626,46 +632,43 @@ TEST_CASE_CREATE(testPtrWrap)
     c3[14] = 'z';
     c3[15] = 'e';
     c3[16] = '\0';
-    auto s3 = CString::ptrWrap<false>(c3);
+    auto s3 = CStringNoNull::ptrWrap(c3);
     TEST_ASSERT_EQ(s3.len(),16);
     TEST_ASSERT_EQ(s3,"VladiLENA Milize");
-}
 
-TEST_CASE_CREATE(testPtrWrapLen)
-{
-    auto s1 = CString::ptrWrap(nullptr,0);
-    TEST_ASSERT_TRUE(s1.isNull());
+    auto s4 = CString::ptrWrap(nullptr);
+    TEST_ASSERT_TRUE(s4.isNull());
 
-    char *c2 = new char[14];
-    TEST_ASSERT(c2);
-    c2[0] = 'S';
-    c2[1] = 'e';
-    c2[2] = 't';
-    c2[3] = 's';
-    c2[4] = 'u';
-    c2[5] = 'n';
-    c2[6] = 'a';
-    c2[7] = ' ';
-    c2[8] = 'Y';
-    c2[9] = 'u';
-    c2[10] = 'u';
-    c2[11] = 'k';
-    c2[12] = 'i';
-    c2[13] = '\0';
-    auto s2 = CString::ptrWrap(c2,13);
-    TEST_ASSERT_EQ(s2.len(),13);
-    TEST_ASSERT_EQ(s2,"Setsuna Yuuki");
+    char *c4 = new char[14];
+    TEST_ASSERT(c4);
+    c4[0] = 'S';
+    c4[1] = 'e';
+    c4[2] = 't';
+    c4[3] = 's';
+    c4[4] = 'u';
+    c4[5] = 'n';
+    c4[6] = 'a';
+    c4[7] = ' ';
+    c4[8] = 'Y';
+    c4[9] = 'u';
+    c4[10] = 'u';
+    c4[11] = 'k';
+    c4[12] = 'i';
+    c4[13] = '\0';
+    auto s5 = CString::ptrWrap(c4);
+    TEST_ASSERT_EQ(s5.len(),13);
+    TEST_ASSERT_EQ(s5,"Setsuna Yuuki");
 
-    char *c3 = new char[10];
-    TEST_ASSERT(c3);
-    c3[0] = 'V';
-    c3[1] = 'i';
-    c3[2] = 'v';
-    c3[3] = 'y';
-    c3[4] = '\0';
-    auto s3 = CString::ptrWrap(c3,4);
-    TEST_ASSERT_EQ(s3.len(),4);
-    TEST_ASSERT_EQ(s3,"Vivy");
+    char *c5 = new char[10];
+    TEST_ASSERT(c5);
+    c5[0] = 'V';
+    c5[1] = 'i';
+    c5[2] = 'v';
+    c5[3] = 'y';
+    c5[4] = '\0';
+    auto s6 = CString::ptrWrap(c5);
+    TEST_ASSERT_EQ(s6.len(),4);
+    TEST_ASSERT_EQ(s6,"Vivy");
 }
 
 TEST_CASE_CREATE(testPtrLen)
@@ -677,10 +680,10 @@ TEST_CASE_CREATE(testPtrLen)
     c1[2] = 'A';
     c1[3] = 'Z';
     c1[4] = '\0';
-    TEST_ASSERT_EQ(CString::ptrLen<false>(c1),4);
+    TEST_ASSERT_EQ(CStringNoNull::ptrLen(c1),4);
     TEST_ASSERT_TRUE(CString::ptrCmpEq(c1,"azAZ"));
     CString s1("");
-    TEST_ASSERT_TRUE(CString::ptrCmpEq<false>(s1.ptr(),""));
+    TEST_ASSERT_TRUE(CStringNoNull::ptrCmpEq(s1.ptr(),""));
 }
 
 TEST_CASE_CREATE(testPtrCopyNew)
@@ -692,7 +695,7 @@ TEST_CASE_CREATE(testPtrCopyNew)
     c1[2] = '\0';
     char *c2 = CString::ptrCopyNew(c1);
     TEST_ASSERT_EQ(c2,CString("[]"));
-    char *c3 = CString::ptrCopyNew<false>(c1);
+    char *c3 = CStringNoNull::ptrCopyNew(c1);
     TEST_ASSERT_EQ(CString::ptrLen(c3),2);
     delete[] c2;
     delete[] c3;
@@ -744,8 +747,8 @@ TEST_CASE_CREATE(testPtrConcatNew)
         delete[] c1;
         if (left && right)
         {
-            char *c2 = CString::ptrConcatNew<false>(left,right);
-            TEST_ASSERT_TRUE(CString::ptrCmpEq<false>(c2,concat));
+            char *c2 = CStringNoNull::ptrConcatNew(left,right);
+            TEST_ASSERT_TRUE(CStringNoNull::ptrCmpEq(c2,concat));
             delete[] c2;
         }
     }
@@ -761,8 +764,8 @@ TEST_CASE_CREATE(testPtrConcat)
             TEST_ASSERT_TRUE(CString::ptrCmpEq(c1,concat));
         if (left && right)
         {
-            CString::ptrConcat<false>(left,right,c1);
-            TEST_ASSERT_TRUE(CString::ptrCmpEq<false>(c1,concat));
+            CStringNoNull::ptrConcat(left,right,c1);
+            TEST_ASSERT_TRUE(CStringNoNull::ptrCmpEq(c1,concat));
         }
     }
 }
@@ -797,6 +800,44 @@ TEST_CASE_CREATE(testOpAddEq)
     }
 }
 
+TEST_CASE_CREATE(testSubscriptTypes)
+{
+    CString s1;
+    CString& ref = s1;
+    const CString& cref = s1;
+    using tkoz::stl::move;
+    static_cast<void>(s1);
+    static_cast<void>(ref);
+    static_cast<void>(cref);
+    using tkoz::stl::meta::isSame;
+
+    static_assert(isSame<char&,decltype(s1[0])>);
+    static_assert(isSame<char&,decltype(ref[0])>);
+    static_assert(isSame<const char&,decltype(cref[0])>);
+    static_assert(isSame<char&,decltype(move(s1)[0])>);
+}
+
+TEST_CASE_CREATE(testAtTypes)
+{
+    CString s1;
+    CString& ref = s1;
+    const CString& cref = s1;
+    using tkoz::stl::move;
+    static_cast<void>(s1);
+    static_cast<void>(ref);
+    static_cast<void>(cref);
+    using tkoz::stl::meta::isSame;
+
+    static_assert(isSame<char&,decltype(s1.at(0))>);
+    static_assert(isSame<char&,decltype(ref.at(0))>);
+    static_assert(isSame<const char&,decltype(cref.at(0))>);
+    static_assert(isSame<char&,decltype(move(s1).at(0))>);
+}
+
+////
+//TODO subscript modified to not support negative
+////
+
 TEST_CASE_CREATE(testSubscriptBool)
 {
     CString s1("");
@@ -826,9 +867,8 @@ T sc(U v)
     return static_cast<T>(v);
 }
 
-template <typename T>
-    requires tkoz::stl::concepts::isPrimitiveSignedInteger<T>
-void testSubscriptSignedImpl()
+template <tkoz::stl::concepts::isPrimitiveInteger T>
+void testSubscriptIntImpl()
 {
     CString s1("");
     TEST_ASSERT_EQ(s1[sc<T>(0)],'\0');
@@ -840,14 +880,8 @@ void testSubscriptSignedImpl()
     TEST_ASSERT_EQ(s2[sc<T>(2)],'i');
     TEST_ASSERT_EQ(s2[sc<T>(3)],']');
     TEST_ASSERT_EQ(s2[sc<T>(4)],'\0');
-    TEST_ASSERT_EQ(s2[sc<T>(-1)],']');
-    TEST_ASSERT_EQ(s2[sc<T>(-2)],'i');
-    TEST_ASSERT_EQ(s2[sc<T>(-3)],'[');
-    TEST_ASSERT_EQ(s2[sc<T>(-4)],'A');
-    tkoz::stl::swap(s2[sc<T>(1)],s2[sc<T>(-1)]);
+    tkoz::stl::swap(s2[sc<T>(1)],s2[sc<T>(3)]);
     TEST_ASSERT_EQ(s2,"A]i[");
-    TEST_ASSERT_EQ(&s2[sc<T>(2)],&s2[sc<T>(-2)]);
-    TEST_ASSERT_EQ(&s2[sc<T>(0)]+3,&s2[sc<T>(-1)]);
 
     CString s3("0123456789");
     TEST_ASSERT_EQ(s3[sc<T>(0)],'0');
@@ -855,94 +889,82 @@ void testSubscriptSignedImpl()
     TEST_ASSERT_EQ(s3[sc<T>(5)],'5');
     TEST_ASSERT_EQ(s3[sc<T>(9)],'9');
     TEST_ASSERT_EQ(s3[sc<T>(10)],'\0');
-    TEST_ASSERT_EQ(s3[sc<T>(-1)],'9');
-    TEST_ASSERT_EQ(s3[sc<T>(-2)],'8');
-    TEST_ASSERT_EQ(s3[sc<T>(-9)],'1');
-    TEST_ASSERT_EQ(s3[sc<T>(-10)],'0');
-    TEST_ASSERT_EQ(&s3[sc<T>(3)]+4,&s3[sc<T>(-3)]);
-}
+    TEST_ASSERT_EQ(&s3[sc<T>(2)]+7,&s3[sc<T>(9)]);
 
-template <typename T>
-    requires tkoz::stl::concepts::isPrimitiveUnsignedInteger<T>
-void testSubscriptUnsignedImpl()
-{
-    CString s1("");
-    TEST_ASSERT_EQ(s1[sc<T>(0)],'\0');
-    TEST_ASSERT_EQ(&s1[sc<T>(0)],s1.ptr());
+    CString s4("a+=b;");
+    TEST_ASSERT_EQ(s4[sc<T>(0)],'a');
+    TEST_ASSERT_EQ(s4[sc<T>(1)],'+');
+    TEST_ASSERT_EQ(s4[sc<T>(2)],'=');
+    TEST_ASSERT_EQ(s4[sc<T>(3)],'b');
+    TEST_ASSERT_EQ(s4[sc<T>(4)],';');
+    TEST_ASSERT_EQ(s4[sc<T>(5)],'\0');
+    tkoz::stl::swap(s4[sc<T>(0)],s4[sc<T>(3)]);
+    TEST_ASSERT_EQ(s4,"b+=a;");
+    TEST_ASSERT_EQ(&s4[sc<T>(0)]+3,&s4[sc<T>(3)]);
 
-    CString s2("a+=b");
-    TEST_ASSERT_EQ(s2[sc<T>(0)],'a');
-    TEST_ASSERT_EQ(s2[sc<T>(1)],'+');
-    TEST_ASSERT_EQ(s2[sc<T>(2)],'=');
-    TEST_ASSERT_EQ(s2[sc<T>(3)],'b');
-    TEST_ASSERT_EQ(s2[sc<T>(4)],'\0');
-    tkoz::stl::swap(s2[sc<T>(0)],s2[sc<T>(3)]);
-    TEST_ASSERT_EQ(s2,"b+=a");
-    TEST_ASSERT_EQ(&s2[sc<T>(0)]+3,&s2[sc<T>(3)]);
-
-    CString s3("0123456789");
-    TEST_ASSERT_EQ(s3[sc<T>(0)],'0');
-    TEST_ASSERT_EQ(s3[sc<T>(1)],'1');
-    TEST_ASSERT_EQ(s3[sc<T>(2)],'2');
-    TEST_ASSERT_EQ(s3[sc<T>(3)],'3');
-    TEST_ASSERT_EQ(s3[sc<T>(4)],'4');
-    TEST_ASSERT_EQ(s3[sc<T>(5)],'5');
-    TEST_ASSERT_EQ(s3[sc<T>(6)],'6');
-    TEST_ASSERT_EQ(s3[sc<T>(7)],'7');
-    TEST_ASSERT_EQ(s3[sc<T>(8)],'8');
-    TEST_ASSERT_EQ(s3[sc<T>(9)],'9');
-    TEST_ASSERT_EQ(s3[sc<T>(10)],'\0');
-    TEST_ASSERT_EQ(&s3[sc<T>(3)]+4,&s3[sc<T>(7)]);
+    CString s5("forty two");
+    TEST_ASSERT_EQ(s5[sc<T>(0)],'f');
+    TEST_ASSERT_EQ(s5[sc<T>(1)],'o');
+    TEST_ASSERT_EQ(s5[sc<T>(2)],'r');
+    TEST_ASSERT_EQ(s5[sc<T>(3)],'t');
+    TEST_ASSERT_EQ(s5[sc<T>(4)],'y');
+    TEST_ASSERT_EQ(s5[sc<T>(5)],' ');
+    TEST_ASSERT_EQ(s5[sc<T>(6)],'t');
+    TEST_ASSERT_EQ(s5[sc<T>(7)],'w');
+    TEST_ASSERT_EQ(s5[sc<T>(8)],'o');
+    TEST_ASSERT_EQ(s5[sc<T>(9)],'\0');
+    TEST_ASSERT_EQ(&s5[sc<T>(3)]+4,&s5[sc<T>(7)]);
+    TEST_ASSERT_EQ(s5,"forty two");
 }
 
 TEST_CASE_CREATE(testSubscriptSchar)
 {
-    testSubscriptSignedImpl<signed char>();
+    testSubscriptIntImpl<signed char>();
 }
 
 TEST_CASE_CREATE(testSubscriptSshort)
 {
-    testSubscriptSignedImpl<signed short>();
+    testSubscriptIntImpl<signed short>();
 }
 
 TEST_CASE_CREATE(testSubscriptSint)
 {
-    testSubscriptSignedImpl<signed int>();
+    testSubscriptIntImpl<signed int>();
 }
 
 TEST_CASE_CREATE(testSubscriptSlong)
 {
-    testSubscriptSignedImpl<signed long>();
+    testSubscriptIntImpl<signed long>();
 }
 
 TEST_CASE_CREATE(testSubscriptSll)
 {
-    testSubscriptSignedImpl<signed long long>();
+    testSubscriptIntImpl<signed long long>();
 }
 
 TEST_CASE_CREATE(testSubscriptUchar)
 {
-    testSubscriptUnsignedImpl<unsigned char>();
+    testSubscriptIntImpl<unsigned char>();
 }
 
 TEST_CASE_CREATE(testSubscriptUshort)
 {
-    testSubscriptUnsignedImpl<unsigned short>();
+    testSubscriptIntImpl<unsigned short>();
 }
 
 TEST_CASE_CREATE(testSubscriptUint)
 {
-    testSubscriptUnsignedImpl<unsigned int>();
+    testSubscriptIntImpl<unsigned int>();
 }
 
 TEST_CASE_CREATE(testSubscriptUlong)
 {
-    testSubscriptUnsignedImpl<unsigned long>();
+    testSubscriptIntImpl<unsigned long>();
 }
 
 TEST_CASE_CREATE(testSubscriptUll)
 {
-    testSubscriptUnsignedImpl<unsigned long long>();
+    testSubscriptIntImpl<unsigned long long>();
 }
 
 TEST_CASE_CREATE(testSubscriptOther)
@@ -961,29 +983,27 @@ TEST_CASE_CREATE(testSubscriptOther)
     TEST_ASSERT_EQ(s2[8],'8');
     TEST_ASSERT_EQ(s2[9],'9');
     TEST_ASSERT_EQ(s2[10],'\0');
-    TEST_ASSERT_EQ(s2[-1],'9');
-    TEST_ASSERT_EQ(s2[-2],'8');
-    TEST_ASSERT_EQ(s2[-5],'5');
-    TEST_ASSERT_EQ(s2[-9],'1');
-    TEST_ASSERT_EQ(s2[-10],'0');
+    // "negative indexing" for operator[] not supporting it directly
+    usize_t l = s2.len();
+    TEST_ASSERT_EQ(s2[l-1],'9');
+    TEST_ASSERT_EQ(s2[l-2],'8');
+    TEST_ASSERT_EQ(s2[l-5],'5');
+    TEST_ASSERT_EQ(s2[l-9],'1');
+    TEST_ASSERT_EQ(s2[l-10],'0');
 
     CString s3("AB");
     TEST_ASSERT_EQ(s3[false],'A');
     TEST_ASSERT_EQ(s3[true],'B');
     TEST_ASSERT_EQ(s3[(short)0],'A');
     TEST_ASSERT_EQ(s3[(long)1],'B');
-    TEST_ASSERT_EQ(s3[(long long)-1],'B');
-    TEST_ASSERT_EQ(s3[(signed char)-2],'A');
     tkoz::stl::swap(s3[0],s3[1]);
     TEST_ASSERT_EQ(s3,"BA");
     s3[1] = 'C';
     TEST_ASSERT_EQ(s3,"BC");
-    TEST_ASSERT_EQ(&s3[0],&s3[-2]);
-    TEST_ASSERT_EQ(&s3[1],&s3[-1]);
 
     CString *s4 = new CString("(480)(915)(7236)");
-    TEST_ASSERT_EQ((*s4)[(signed char)-8],'5');
-    TEST_ASSERT_EQ((*s4)[-12],')');
+    TEST_ASSERT_EQ((*s4)[(signed char)(s4->len()-8)],'5');
+    TEST_ASSERT_EQ((*s4)[s4->len()-12],')');
     TEST_ASSERT_EQ((*s4)[(unsigned long long)10],'(');
     delete s4;
 }
