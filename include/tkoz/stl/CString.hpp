@@ -19,9 +19,10 @@ namespace tkoz::stl
 /// This class wraps a dynamically allocated C string (a null-terminated array
 /// of characters) and manages the memory. It may also store the null pointer
 /// which is different from the empty string, and also has size 0. Behavior is
-/// undefined if a null character is inserted anywhere other than at the end.
-/// This string is mutable but cannot be resized except by assignment to another
-/// string. Operations with regular C strings are supported, and in most
+/// undefined if a null character is inserted anywhere other than at the end or
+/// if the null terminator is changed.
+/// This string is mutable but cannot be resized except by assignment with
+/// another string. Operations with regular C strings are supported, and in most
 /// contexts assume the length of the C string is unknown.
 template <typename _CharType = char, bool _allowNull = true>
 class CString
@@ -35,9 +36,6 @@ public:
     static constexpr bool allowNull = _allowNull;
 
 private:
-
-    //TODO make template parameters start with _ and typedef/define them in class
-    //TODO template parameter for null character
 
     /// pointer to the null terminated string value or nullptr
     CharType *_ptr;
@@ -646,6 +644,7 @@ public:
     /// other
     /// - rename CString to CStringTemplate and typedef CString with char
     /// - maybe split up declarations and definitions
+    /// - template parameter for null character or character traits
 
     /// \todo other member functions
     /// - operator std::string (implicit conversion)
