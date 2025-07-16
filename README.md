@@ -135,3 +135,4 @@ Some of these ideas are better for other libraries
 - tree that keeps track of subtree stats/info
 - expression templates
 - macros for custom operators such as if and only if
+- put tests into a library somehow with a way to run them
